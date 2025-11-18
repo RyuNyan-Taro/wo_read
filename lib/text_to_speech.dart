@@ -8,7 +8,7 @@ class TextToSpeechService {
   }
 
   Future<void> _initTts() async {
-    await _flutterTts.setLanguage('ja-JA');
+    await _flutterTts.setLanguage('ja-JP');
     await _flutterTts.setPitch(1.0);
     await _flutterTts.setSpeechRate(0.5);
   }

@@ -6,21 +6,87 @@ import 'package:wo_read/text_to_speech.dart';
 class HiraganaPage extends StatefulWidget {
   const HiraganaPage({super.key});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   @override
   State<HiraganaPage> createState() => _HiraganaPageState();
 }
 
 class _HiraganaPageState extends State<HiraganaPage> {
+  int _hiraganaId = 0;
   String _hiragana = "あ";
+  final Map<int, String> _hiraganaExamples = {
+    0: "あめ",
+    1: "いぬ",
+    2: "うさぎ",
+    3: "えんぴつ",
+    4: "おかし",
+    5: "かさ",
+    6: "きつね",
+    7: "くま",
+    8: "けーき",
+    9: "こおり",
+    10: "さかな",
+    11: "しか",
+    12: "すし",
+    13: "せんせい",
+    14: "そら",
+    15: "たこ",
+    16: "ちず",
+    17: "つき",
+    18: "てぶくろ",
+    19: "とり",
+    20: "なす",
+    21: "にわとり",
+    22: "ぬいぐるみ",
+    23: "ねこ",
+    24: "のり",
+    25: "はな",
+    26: "ひこうき",
+    27: "ふね",
+    28: "へび",
+    29: "ほし",
+    30: "まめ",
+    31: "みかん",
+    32: "むし",
+    33: "めがね",
+    34: "もも",
+    35: "やま",
+    36: "ゆき",
+    37: "よる",
+    38: "らいおん",
+    39: "りんご",
+    40: "るびー",
+    41: "れもん",
+    42: "ろうそく",
+    43: "わに",
+    44: "をとこ",
+    45: "えんぴつ",
+    46: "がっこう",
+    47: "ぎんこう",
+    48: "ぐんて",
+    49: "げーむ",
+    50: "ごはん",
+    51: "ざっそう",
+    52: "じてんしゃ",
+    53: "ずぼん",
+    54: "ぜんぶ",
+    55: "ぞう",
+    56: "だいこん",
+    57: "ぢしん",
+    58: "づくえ",
+    59: "でんき",
+    60: "どあ",
+    61: "ばす",
+    62: "びーる",
+    63: "ぶた",
+    64: "べんとう",
+    65: "ぼうし",
+    66: "ぱん",
+    67: "ぴざ",
+    68: "ぷーる",
+    69: "ぺん",
+    70: "ぽすと",
+  };
+  String _example = "";
 
   final List<String> _hiraganaList = [
     // Basic Hiragana (あ行 to わ行)
@@ -47,11 +113,15 @@ class _HiraganaPageState extends State<HiraganaPage> {
 
   final TextToSpeechService _ttsService = TextToSpeechService();
 
-  void _upDateText() {
+  Future<void> _upDateText() async {
     setState(() {
-      _hiragana = _hiraganaList[random.nextInt(71)];
+      _hiraganaId = random.nextInt(71);
+      _hiragana = _hiraganaList[_hiraganaId];
+      _example = _hiraganaExamples[_hiraganaId]!;
     });
     _ttsService.speak(_hiragana);
+    await Future.delayed(Duration(milliseconds: 1000));
+    _ttsService.speak(_example);
   }
 
   @override
