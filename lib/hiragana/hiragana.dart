@@ -2,7 +2,8 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:wo_read/hiragana/example.dart';
+import 'package:wo_read/hiragana/models/example.dart';
+import 'package:wo_read/hiragana/models/hiragana_data.dart';
 import 'package:wo_read/hiragana/text_to_speech.dart';
 
 class HiraganaPage extends StatefulWidget {
@@ -13,111 +14,17 @@ class HiraganaPage extends StatefulWidget {
 }
 
 class _HiraganaPageState extends State<HiraganaPage> {
+  final TextToSpeechService _ttsService = TextToSpeechService();
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  final random = Random();
+
+  bool _isProcessing = false;
   int _hiraganaId = 0;
   String _hiragana = "あ";
-  final Map<int, Example> _hiraganaExamples = {
-    0: Example(reading: "あめ", imagePath: "assets/images/rain.png"),
-    1: Example(reading: "いぬ", imagePath: "assets/images/dog.png"),
-    2: Example(reading: "うさぎ", imagePath: "assets/images/rabbit.png"),
-    3: Example(reading: "えんぴつ", imagePath: "assets/images/pen.png"),
-    4: Example(reading: "おかし", imagePath: "assets/images/foods.png"),
-    5: Example(reading: "かさ", imagePath: "assets/images/umbrella.png"),
-    6: Example(reading: "きつね", imagePath: "assets/images/fox.png"),
-    7: Example(reading: "くまくらいしさく", imagePath: "assets/images/bear.png"),
-    8: Example(reading: "けーき", imagePath: "assets/images/cake.png"),
-    9: Example(reading: "こおり", imagePath: "assets/images/ice.png"),
-    10: Example(reading: "さく", imagePath: "assets/images/saku.jpeg"),
-    11: Example(reading: "しか", imagePath: "assets/images/deer.png"),
-    12: Example(reading: "すし", imagePath: "assets/images/sushi.png"),
-    13: Example(reading: "せんべい", imagePath: "assets/images/senbei.png"),
-    14: Example(reading: "そら", imagePath: "assets/images/sky.jpg"),
-    15: Example(reading: "たこ", imagePath: ""),
-    16: Example(reading: "ちず", imagePath: ""),
-    17: Example(reading: "つき", imagePath: ""),
-    18: Example(reading: "てぶくろ", imagePath: ""),
-    19: Example(reading: "とり", imagePath: ""),
-    20: Example(reading: "なす", imagePath: ""),
-    21: Example(reading: "にわとり", imagePath: ""),
-    22: Example(reading: "ぬいぐるみ", imagePath: ""),
-    23: Example(reading: "ねこ", imagePath: ""),
-    24: Example(reading: "のり", imagePath: ""),
-    25: Example(reading: "はな", imagePath: ""),
-    26: Example(reading: "ひこうき", imagePath: ""),
-    27: Example(reading: "ふね", imagePath: ""),
-    28: Example(reading: "へび", imagePath: ""),
-    29: Example(reading: "ほし", imagePath: ""),
-    30: Example(reading: "まめ", imagePath: ""),
-    31: Example(reading: "みかん", imagePath: ""),
-    32: Example(reading: "むし", imagePath: ""),
-    33: Example(reading: "めがね", imagePath: ""),
-    34: Example(reading: "もも", imagePath: ""),
-    35: Example(reading: "やま", imagePath: ""),
-    36: Example(reading: "ゆき", imagePath: ""),
-    37: Example(reading: "よる", imagePath: ""),
-    38: Example(reading: "らいおん", imagePath: ""),
-    39: Example(reading: "りんご", imagePath: ""),
-    40: Example(reading: "るびー", imagePath: ""),
-    41: Example(reading: "れもん", imagePath: ""),
-    42: Example(reading: "ろうそく", imagePath: ""),
-    43: Example(reading: "わに", imagePath: ""),
-    44: Example(reading: "をとこ", imagePath: ""),
-    45: Example(reading: "えんぴつ", imagePath: ""),
-    46: Example(reading: "がっこう", imagePath: ""),
-    47: Example(reading: "ぎんこう", imagePath: ""),
-    48: Example(reading: "ぐんて", imagePath: ""),
-    49: Example(reading: "げーむ", imagePath: ""),
-    50: Example(reading: "ごはん", imagePath: ""),
-    51: Example(reading: "ざっそう", imagePath: ""),
-    52: Example(reading: "じてんしゃ", imagePath: ""),
-    53: Example(reading: "ずぼん", imagePath: ""),
-    54: Example(reading: "ぜんぶ", imagePath: ""),
-    55: Example(reading: "ぞう", imagePath: ""),
-    56: Example(reading: "だいこん", imagePath: ""),
-    57: Example(reading: "ぢしん", imagePath: ""),
-    58: Example(reading: "づくえ", imagePath: ""),
-    59: Example(reading: "でんき", imagePath: ""),
-    60: Example(reading: "どあ", imagePath: ""),
-    61: Example(reading: "ばす", imagePath: ""),
-    62: Example(reading: "びーる", imagePath: ""),
-    63: Example(reading: "ぶた", imagePath: ""),
-    64: Example(reading: "べんとう", imagePath: ""),
-    65: Example(reading: "ぼうし", imagePath: ""),
-    66: Example(reading: "ぱん", imagePath: ""),
-    67: Example(reading: "ぴざ", imagePath: ""),
-    68: Example(reading: "ぷーる", imagePath: ""),
-    69: Example(reading: "ぺん", imagePath: ""),
-    70: Example(reading: "ぽすと", imagePath: ""),
-  };
-  final List<String> _hiraganaList = [
-    // Basic Hiragana (あ行 to わ行)
-    "あ", "い", "う", "え", "お", // あ行
-    "か", "き", "く", "け", "こ", // か行
-    "さ", "し", "す", "せ", "そ", // さ行
-    "た", "ち", "つ", "て", "と", // た行
-    "な", "に", "ぬ", "ね", "の", // な行
-    "は", "ひ", "ふ", "へ", "ほ", // は行
-    "ま", "み", "む", "め", "も", // ま行
-    "や", "ゆ", "よ", // や行
-    "ら", "り", "る", "れ", "ろ", // ら行
-    "わ", "を", // わ行
-    "ん", // ん
-    // Dakuon (濁音)
-    "が", "ぎ", "ぐ", "げ", "ご", // が行
-    "ざ", "じ", "ず", "ぜ", "ぞ", // ざ行
-    "だ", "ぢ", "づ", "で", "ど", // だ行
-    "ば", "び", "ぶ", "べ", "ぼ", // ば行
-    // Handakuon (半濁音)
-    "ぱ", "ぴ", "ぷ", "ぺ", "ぽ", // ぱ行
-  ];
-  final random = Random();
   Example _example = Example(
     reading: "あめ",
     imagePath: "assets/images/rain.png",
   );
-  bool _isProcessing = false;
-
-  final TextToSpeechService _ttsService = TextToSpeechService();
-  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void dispose() {
@@ -132,8 +39,8 @@ class _HiraganaPageState extends State<HiraganaPage> {
       _isProcessing = true;
       _hiraganaId = random.nextInt(15);
       // _hiraganaId = 0;
-      _hiragana = _hiraganaList[_hiraganaId];
-      _example = _hiraganaExamples[_hiraganaId]!;
+      _hiragana = JapaneseData.hiraganaList[_hiraganaId];
+      _example = JapaneseData.examples[_hiraganaId]!;
     });
 
     try {
