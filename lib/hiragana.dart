@@ -15,11 +15,11 @@ class _HiraganaPageState extends State<HiraganaPage> {
   int _hiraganaId = 0;
   String _hiragana = "あ";
   final Map<int, Example> _hiraganaExamples = {
-    0: Example(reading: "あめ", imagePath: ""),
-    1: Example(reading: "いぬ", imagePath: ""),
-    2: Example(reading: "うさぎ", imagePath: ""),
-    3: Example(reading: "えんぴつ", imagePath: ""),
-    4: Example(reading: "おかし", imagePath: ""),
+    0: Example(reading: "あめ", imagePath: "assets/images/rain.png"),
+    1: Example(reading: "いぬ", imagePath: "assets/images/dog.png"),
+    2: Example(reading: "うさぎ", imagePath: "assets/images/rabbit.png"),
+    3: Example(reading: "えんぴつ", imagePath: "assets/images/pen.png"),
+    4: Example(reading: "おかし", imagePath: "assets/images/foods.png"),
     5: Example(reading: "かさ", imagePath: ""),
     6: Example(reading: "きつね", imagePath: ""),
     7: Example(reading: "くま", imagePath: ""),
@@ -116,7 +116,7 @@ class _HiraganaPageState extends State<HiraganaPage> {
 
   Future<void> _upDateText() async {
     setState(() {
-      _hiraganaId = random.nextInt(71);
+      _hiraganaId = random.nextInt(5);
       _hiragana = _hiraganaList[_hiraganaId];
       _example = _hiraganaExamples[_hiraganaId]!;
     });
@@ -138,6 +138,14 @@ class _HiraganaPageState extends State<HiraganaPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Image.asset(
+                  _example.imagePath,
+                  height: 200,
+                  fit: BoxFit.contain,
+                ),
+              ),
               Text(_hiragana, style: TextStyle(fontSize: 200)),
             ],
           ),
