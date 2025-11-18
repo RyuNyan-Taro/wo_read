@@ -133,10 +133,10 @@ class _HiraganaPageState extends State<HiraganaPage> {
       _hiragana = _hiraganaList[_hiraganaId];
       _example = _hiraganaExamples[_hiraganaId]!;
     });
-    // _ttsService.speak(_hiragana);
-    await _audioPlayer.play(AssetSource('audio/a.m4a'));
+    _ttsService.speak(_hiragana);
+    // await _audioPlayer.play(AssetSource('audio/a.m4a'));
     await Future.delayed(Duration(milliseconds: 1000));
-    // _ttsService.speak(_example.reading);
+    _ttsService.speak(_example.reading);
   }
 
   @override
