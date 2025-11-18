@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:wo_read/text_to_speech.dart';
 
 class HiraganaPage extends StatefulWidget {
   const HiraganaPage({super.key});
@@ -44,10 +45,13 @@ class _HiraganaPageState extends State<HiraganaPage> {
   ];
   final random = Random();
 
+  final TextToSpeechService _ttsService = TextToSpeechService();
+
   void _upDateText() {
     setState(() {
       _hiragana = _hiraganaList[random.nextInt(71)];
     });
+    _ttsService.speak(_hiragana);
   }
 
   @override
