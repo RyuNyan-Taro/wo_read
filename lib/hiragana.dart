@@ -88,7 +88,6 @@ class _HiraganaPageState extends State<HiraganaPage> {
     69: Example(reading: "ぺん", imagePath: ""),
     70: Example(reading: "ぽすと", imagePath: ""),
   };
-
   final List<String> _hiraganaList = [
     // Basic Hiragana (あ行 to わ行)
     "あ", "い", "う", "え", "お", // あ行
@@ -111,11 +110,11 @@ class _HiraganaPageState extends State<HiraganaPage> {
     "ぱ", "ぴ", "ぷ", "ぺ", "ぽ", // ぱ行
   ];
   final random = Random();
-
   Example _example = Example(
     reading: "あめ",
     imagePath: "assets/images/rain.png",
   );
+  bool _isProcessing = false;
 
   final TextToSpeechService _ttsService = TextToSpeechService();
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -127,16 +126,29 @@ class _HiraganaPageState extends State<HiraganaPage> {
   }
 
   Future<void> _upDateText() async {
+    if (_isProcessing) return;
+
     setState(() {
+      _isProcessing = true;
       _hiraganaId = random.nextInt(15);
       // _hiraganaId = 0;
       _hiragana = _hiraganaList[_hiraganaId];
       _example = _hiraganaExamples[_hiraganaId]!;
     });
-    _ttsService.speak(_hiragana);
-    // await _audioPlayer.play(AssetSource('audio/a.m4a'));
-    await Future.delayed(Duration(milliseconds: 1000));
-    _ttsService.speak(_example.reading);
+
+    try {
+      _ttsService.speak(_hiragana);
+      // await _audioPlayer.play(AssetSource('audio/a.m4a'));
+      int speakTimeMillisecond = 250 * _example.reading.length;
+
+      await Future.delayed(Duration(milliseconds: 1000));
+      _ttsService.speak(_example.reading);
+      await Future.delayed(Duration(milliseconds: speakTimeMillisecond));
+    } finally {
+      setState(() {
+        _isProcessing = false;
+      });
+    }
   }
 
   @override
