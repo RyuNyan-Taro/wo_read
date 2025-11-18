@@ -20,12 +20,12 @@ class _HiraganaPageState extends State<HiraganaPage> {
     2: Example(reading: "うさぎ", imagePath: "assets/images/rabbit.png"),
     3: Example(reading: "えんぴつ", imagePath: "assets/images/pen.png"),
     4: Example(reading: "おかし", imagePath: "assets/images/foods.png"),
-    5: Example(reading: "かさ", imagePath: ""),
-    6: Example(reading: "きつね", imagePath: ""),
-    7: Example(reading: "くま", imagePath: ""),
-    8: Example(reading: "けーき", imagePath: ""),
-    9: Example(reading: "こおり", imagePath: ""),
-    10: Example(reading: "さかな", imagePath: ""),
+    5: Example(reading: "かさ", imagePath: "assets/images/umbrella.png"),
+    6: Example(reading: "きつね", imagePath: "assets/images/fox.png"),
+    7: Example(reading: "くまくらいしさく", imagePath: "assets/images/bear.png"),
+    8: Example(reading: "けーき", imagePath: "assets/images/cake.png"),
+    9: Example(reading: "こおり", imagePath: "assets/images/ice.png"),
+    10: Example(reading: "さく", imagePath: "assets/images/saku.jpeg"),
     11: Example(reading: "しか", imagePath: ""),
     12: Example(reading: "すし", imagePath: ""),
     13: Example(reading: "せんせい", imagePath: ""),
@@ -116,7 +116,8 @@ class _HiraganaPageState extends State<HiraganaPage> {
 
   Future<void> _upDateText() async {
     setState(() {
-      _hiraganaId = random.nextInt(5);
+      _hiraganaId = random.nextInt(11);
+      // _hiraganaId = 10;
       _hiragana = _hiraganaList[_hiraganaId];
       _example = _hiraganaExamples[_hiraganaId]!;
     });
@@ -139,10 +140,10 @@ class _HiraganaPageState extends State<HiraganaPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(0.0),
                 child: Image.asset(
                   _example.imagePath,
-                  height: 200,
+                  height: 400,
                   fit: BoxFit.contain,
                 ),
               ),
