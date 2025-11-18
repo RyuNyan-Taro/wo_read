@@ -29,7 +29,7 @@ class _HiraganaPageState extends State<HiraganaPage> {
     11: Example(reading: "しか", imagePath: "assets/images/deer.png"),
     12: Example(reading: "すし", imagePath: "assets/images/sushi.png"),
     13: Example(reading: "せんべい", imagePath: "assets/images/senbei.png"),
-    14: Example(reading: "そら", imagePath: "assets/images/sky.png"),
+    14: Example(reading: "そら", imagePath: "assets/images/sky.jpg"),
     15: Example(reading: "たこ", imagePath: ""),
     16: Example(reading: "ちず", imagePath: ""),
     17: Example(reading: "つき", imagePath: ""),
@@ -87,7 +87,6 @@ class _HiraganaPageState extends State<HiraganaPage> {
     69: Example(reading: "ぺん", imagePath: ""),
     70: Example(reading: "ぽすと", imagePath: ""),
   };
-  Example _example = Example(reading: "あめ", imagePath: "");
 
   final List<String> _hiraganaList = [
     // Basic Hiragana (あ行 to わ行)
@@ -112,12 +111,17 @@ class _HiraganaPageState extends State<HiraganaPage> {
   ];
   final random = Random();
 
+  Example _example = Example(
+    reading: "あめ",
+    imagePath: "assets/images/rain.png",
+  );
+
   final TextToSpeechService _ttsService = TextToSpeechService();
 
   Future<void> _upDateText() async {
     setState(() {
       _hiraganaId = random.nextInt(15);
-      // _hiraganaId = 10;
+      // _hiraganaId = 0;
       _hiragana = _hiraganaList[_hiraganaId];
       _example = _hiraganaExamples[_hiraganaId]!;
     });
