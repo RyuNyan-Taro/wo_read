@@ -57,19 +57,16 @@ class _HiraganaPageState extends State<HiraganaPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('Hiragana'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(_hiragana, style: Theme.of(context).textTheme.headlineMedium),
-          ],
+      body: InkWell(
+        onTap: _upDateText,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(_hiragana, style: TextStyle(fontSize: 200)),
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _upDateText,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
