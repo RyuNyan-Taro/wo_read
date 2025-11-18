@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:wo_read/example.dart';
 import 'package:wo_read/text_to_speech.dart';
@@ -117,6 +118,13 @@ class _HiraganaPageState extends State<HiraganaPage> {
   );
 
   final TextToSpeechService _ttsService = TextToSpeechService();
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
 
   Future<void> _upDateText() async {
     setState(() {
@@ -125,9 +133,10 @@ class _HiraganaPageState extends State<HiraganaPage> {
       _hiragana = _hiraganaList[_hiraganaId];
       _example = _hiraganaExamples[_hiraganaId]!;
     });
-    _ttsService.speak(_hiragana);
+    // _ttsService.speak(_hiragana);
+    await _audioPlayer.play(AssetSource('audio/a.m4a'));
     await Future.delayed(Duration(milliseconds: 1000));
-    _ttsService.speak(_example.reading);
+    // _ttsService.speak(_example.reading);
   }
 
   @override
