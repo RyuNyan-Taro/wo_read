@@ -37,7 +37,7 @@ class _HiraganaPageState extends State<HiraganaPage> {
 
     setState(() {
       _isProcessing = true;
-      _hiraganaId = random.nextInt(15);
+      _hiraganaId = random.nextInt(45);
       // _hiraganaId = 0;
       _hiragana = JapaneseData.hiraganaList[_hiraganaId];
       _example = JapaneseData.examples[_hiraganaId]!;
