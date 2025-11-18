@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:wo_read/example.dart';
-import 'package:wo_read/text_to_speech.dart';
+import 'package:wo_read/hiragana/example.dart';
+import 'package:wo_read/hiragana/text_to_speech.dart';
 
 class HiraganaPage extends StatefulWidget {
   const HiraganaPage({super.key});
