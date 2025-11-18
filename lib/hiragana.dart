@@ -26,10 +26,10 @@ class _HiraganaPageState extends State<HiraganaPage> {
     8: Example(reading: "けーき", imagePath: "assets/images/cake.png"),
     9: Example(reading: "こおり", imagePath: "assets/images/ice.png"),
     10: Example(reading: "さく", imagePath: "assets/images/saku.jpeg"),
-    11: Example(reading: "しか", imagePath: ""),
-    12: Example(reading: "すし", imagePath: ""),
-    13: Example(reading: "せんせい", imagePath: ""),
-    14: Example(reading: "そら", imagePath: ""),
+    11: Example(reading: "しか", imagePath: "assets/images/deer.png"),
+    12: Example(reading: "すし", imagePath: "assets/images/sushi.png"),
+    13: Example(reading: "せんべい", imagePath: "assets/images/senbei.png"),
+    14: Example(reading: "そら", imagePath: "assets/images/sky.png"),
     15: Example(reading: "たこ", imagePath: ""),
     16: Example(reading: "ちず", imagePath: ""),
     17: Example(reading: "つき", imagePath: ""),
@@ -116,7 +116,7 @@ class _HiraganaPageState extends State<HiraganaPage> {
 
   Future<void> _upDateText() async {
     setState(() {
-      _hiraganaId = random.nextInt(11);
+      _hiraganaId = random.nextInt(15);
       // _hiraganaId = 10;
       _hiragana = _hiraganaList[_hiraganaId];
       _example = _hiraganaExamples[_hiraganaId]!;
