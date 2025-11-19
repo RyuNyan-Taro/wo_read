@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wo_read/Hiragana.dart';
+import 'package:wo_read/hiragana/hiragana.dart';
 
 void main() {
   runApp(const MyApp());
