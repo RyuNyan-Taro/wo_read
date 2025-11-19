@@ -41,7 +41,7 @@ class JapaneseData {
     14: Example(reading: "そら", imagePath: "assets/images/sky.jpg"),
     15: Example(
       reading: "たこ",
-      imagePath: "assets/images/charactor_takoyaki_tako.png",
+      imagePath: "assets/images/character_takoyaki_tako.png",
     ),
     16: Example(
       reading: "ちず",
