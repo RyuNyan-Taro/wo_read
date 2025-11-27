@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wo_read/hiragana/hiragana.dart';
+import 'package:wo_read/record/record.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -8,7 +9,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     const List<(String, Widget)> _pages = [
       ('カルタ', HiraganaPage()),
-      ('成長記録', HiraganaPage()),
+      ('成長記録', RecordPage()),
     ];
 
     return Scaffold(
