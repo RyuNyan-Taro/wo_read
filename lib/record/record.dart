@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:wo_read/record/models/record_item.dart';
+import 'package:wo_read/record/service/record_service.dart';
 
-class _RecordItem {
-  final DateTime date;
-  final String content;
-
-  const _RecordItem({required this.date, required this.content});
-}
-
-class RecordPage extends StatelessWidget {
+class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
 
-  static final List<_RecordItem> _records = [
-    _RecordItem(
-      date: DateTime(2021, 1, 1, 0, 0),
-      content: 'ものすごいとっっっっっっっっっっっっっっっcdddddっs',
-    ),
-    _RecordItem(date: DateTime(2021, 1, 2, 0, 0), content: 'test_2'),
-  ];
+  @override
+  State<RecordPage> createState() => _RecordPageState();
+}
+
+class _RecordPageState extends State<RecordPage> {
+  List<RecordItem> _records = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getRecords();
+  }
+
+  Future<void> _getRecords() async {
+    final RecordService recordService = RecordService();
+    _records = await recordService.getRecords();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +41,18 @@ class RecordPage extends StatelessWidget {
 }
 
 class _RecordCard extends StatelessWidget {
-  final _RecordItem record;
+  final RecordItem record;
 
   const _RecordCard({required this.record});
 
   @override
   Widget build(BuildContext context) {
-    final _formatter = DateFormat('MM/dd HH:mm');
+    final formatter = DateFormat('MM/dd HH:mm');
 
     return Card(
       child: Row(
         children: [
-          Text(_formatter.format(record.date)),
+          Text(formatter.format(record.date)),
           Text(' '),
           Expanded(
             child: Text(
