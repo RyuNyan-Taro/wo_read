@@ -6,6 +6,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const List<(String, Widget)> _pages = [
+      ('カルタ', HiraganaPage()),
+      ('成長記録', HiraganaPage()),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -14,16 +19,19 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () => const HiraganaPage(),
-              child: const Text('カルタ'),
-            ),
-            ElevatedButton(
-              onPressed: () => const HiraganaPage(),
-              child: const Text('成長記録'),
-            ),
-          ],
+          children: _pages
+              .map(
+                (page) => ElevatedButton(
+                  onPressed: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => page.$2),
+                    ),
+                  },
+                  child: Text(page.$1),
+                ),
+              )
+              .toList(),
         ),
       ),
     );
