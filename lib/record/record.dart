@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wo_read/record/models/record_item.dart';
+import 'package:wo_read/record/screens/add_record.dart';
 import 'package:wo_read/record/service/record_service.dart';
 
 class RecordPage extends StatefulWidget {
@@ -45,6 +46,18 @@ class _RecordPageState extends State<RecordPage> {
                   .map((record) => _RecordCard(record: record))
                   .toList(),
             ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return AddRecordPage();
+              },
+            ),
+          );
+        },
+        child: Icon(Icons.add),
+      ),
     );
   }
 }
