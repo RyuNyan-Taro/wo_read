@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class _RecordItem {
   final DateTime date;
@@ -13,7 +14,7 @@ class RecordPage extends StatelessWidget {
   static final List<_RecordItem> _records = [
     _RecordItem(
       date: DateTime(2021, 1, 1, 0, 0),
-      content: 'ものすごいとっっっっっっっっっっっっっっっっs',
+      content: 'ものすごいとっっっっっっっっっっっっっっっcdddddっs',
     ),
     _RecordItem(date: DateTime(2021, 1, 2, 0, 0), content: 'test_2'),
   ];
@@ -41,11 +42,13 @@ class _RecordCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _formatter = DateFormat('MM/dd HH:mm');
+
     return Card(
       child: Row(
         children: [
-          Text(record.date.toString()),
-          Text(': '),
+          Text(_formatter.format(record.date)),
+          Text(' '),
           Expanded(
             child: Text(
               record.content,
