@@ -9,7 +9,9 @@ class RecordService {
   Future<List<RecordItem>> getRecords() async {
     final List<Map<String, dynamic>> response = await _supabase
         .from(_tableName)
-        .select();
+        .select()
+        .order('timestamp', ascending: false)
+        .limit(100);
 
     return response
         .map(
