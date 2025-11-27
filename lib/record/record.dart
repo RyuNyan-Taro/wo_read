@@ -11,17 +11,24 @@ class RecordPage extends StatefulWidget {
 }
 
 class _RecordPageState extends State<RecordPage> {
-  List<RecordItem> _records = [];
+  List<RecordItem>? records;
 
   @override
   void initState() {
     super.initState();
-    _getRecords();
+
+    if (records == null) {
+      _getRecords();
+    }
   }
 
   Future<void> _getRecords() async {
     final RecordService recordService = RecordService();
-    _records = await recordService.getRecords();
+    final List<RecordItem> items = await recordService.getRecords();
+
+    setState(() {
+      records = items;
+    });
   }
 
   @override
@@ -31,11 +38,13 @@ class _RecordPageState extends State<RecordPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('Glow record'),
       ),
-      body: Column(
-        children: _records
-            .map((record) => _RecordCard(record: record))
-            .toList(),
-      ),
+      body: records == null
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: records!
+                  .map((record) => _RecordCard(record: record))
+                  .toList(),
+            ),
     );
   }
 }
