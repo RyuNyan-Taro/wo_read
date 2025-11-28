@@ -16,6 +16,7 @@ class RecordService {
     return response
         .map(
           (data) => RecordItem(
+            id: data['id'],
             date: DateTime.parse(data['timestamp']),
             content: data['content'],
           ),
@@ -31,5 +32,20 @@ class RecordService {
       'timestamp': date.toString(),
       'content': content,
     });
+  }
+
+  Future<void> updateRecord({
+    required int id,
+    required DateTime date,
+    required String content,
+  }) async {
+    await _supabase
+        .from(_tableName)
+        .update({'timestamp': date.toString(), 'content': content})
+        .eq('id', id);
+  }
+
+  Future<void> deleteRecord({required int id}) async {
+    await _supabase.from(_tableName).delete().eq('id', id);
   }
 }

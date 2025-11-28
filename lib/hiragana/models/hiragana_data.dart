@@ -41,19 +41,22 @@ class JapaneseData {
     14: Example(reading: "そら", imagePath: "assets/images/sky.jpg"),
     15: Example(
       reading: "たこ",
-      imagePath: "assets/images/charactor_takoyaki_tako.png",
+      imagePath: "assets/images/character_takoyaki_tako.png",
     ),
     16: Example(
       reading: "ちず",
       imagePath: "assets/images/map_book_chizuchou.png",
     ),
-    17: Example(reading: "つき", imagePath: "assets/images/moon.png"),
+    17: Example(reading: "つき", imagePath: "assets/images/moon.jpeg"),
     18: Example(reading: "てぶくろ", imagePath: "assets/images/tebukuro.png"),
     19: Example(
       reading: "とり",
       imagePath: "assets/images/bird_aoitori_bluebird.png",
     ),
-    20: Example(reading: "なす", imagePath: "assets/images/.png"),
+    20: Example(
+      reading: "なす",
+      imagePath: "assets/images/vegetable_kyouyasai_kamonasu.png",
+    ),
     21: Example(
       reading: "にわとり",
       imagePath: "assets/images/bird_niwatori_chabo.png",
