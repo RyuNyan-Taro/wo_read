@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wo_read/record/models/record_item.dart';
 import 'package:wo_read/record/screens/add_record.dart';
+import 'package:wo_read/record/screens/modify_record.dart';
 import 'package:wo_read/record/service/record_service.dart';
 
 class RecordPage extends StatefulWidget {
@@ -43,7 +44,10 @@ class _RecordPageState extends State<RecordPage> {
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: records!
-                  .map((record) => _RecordCard(record: record))
+                  .map(
+                    (record) =>
+                        _RecordCard(record: record, backAction: _getRecords),
+                  )
                   .toList(),
             ),
       floatingActionButton: FloatingActionButton(
@@ -65,8 +69,9 @@ class _RecordPageState extends State<RecordPage> {
 
 class _RecordCard extends StatelessWidget {
   final RecordItem record;
+  final Function() backAction;
 
-  const _RecordCard({required this.record});
+  const _RecordCard({required this.record, required this.backAction});
 
   @override
   Widget build(BuildContext context) {
@@ -77,10 +82,11 @@ class _RecordCard extends StatelessWidget {
         await Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
-              return AddRecordPage();
+              return ModifyRecordPage(recordItem: record);
             },
           ),
         );
+        backAction();
       },
       child: Card(
         child: Row(

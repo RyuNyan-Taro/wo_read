@@ -39,9 +39,9 @@ class RecordService {
     required DateTime date,
     required String content,
   }) async {
-    await _supabase.from(_tableName).update({
-      'timestamp': date.toString(),
-      'content': content,
-    });
+    await _supabase
+        .from(_tableName)
+        .update({'timestamp': date.toString(), 'content': content})
+        .eq('id', id);
   }
 }
