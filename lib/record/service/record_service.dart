@@ -16,6 +16,7 @@ class RecordService {
     return response
         .map(
           (data) => RecordItem(
+            id: data['id'],
             date: DateTime.parse(data['timestamp']),
             content: data['content'],
           ),

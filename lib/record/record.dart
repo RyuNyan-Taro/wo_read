@@ -72,20 +72,31 @@ class _RecordCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final formatter = DateFormat('MM/dd HH:mm');
 
-    return Card(
-      child: Row(
-        children: [
-          Text(formatter.format(record.date)),
-          Text(' '),
-          Expanded(
-            child: Text(
-              record.content,
-              overflow: TextOverflow.ellipsis,
-              softWrap: true,
-              maxLines: 3,
-            ),
+    return InkWell(
+      onTap: () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return AddRecordPage();
+            },
           ),
-        ],
+        );
+      },
+      child: Card(
+        child: Row(
+          children: [
+            Text(formatter.format(record.date)),
+            Text(' '),
+            Expanded(
+              child: Text(
+                record.content,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+                maxLines: 3,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
