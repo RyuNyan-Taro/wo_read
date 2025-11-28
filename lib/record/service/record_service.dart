@@ -44,4 +44,8 @@ class RecordService {
         .update({'timestamp': date.toString(), 'content': content})
         .eq('id', id);
   }
+
+  Future<void> deleteRecord({required int id}) async {
+    await _supabase.from(_tableName).delete().eq('id', id);
+  }
 }

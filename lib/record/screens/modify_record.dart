@@ -56,6 +56,31 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
     );
   }
 
+  Future<void> _deleteRecord() async {
+    recordService.deleteRecord(id: recordItem.id);
+
+    if (!mounted) return;
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Success'),
+          content: const Text('記録が削除されたよ'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +115,19 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
               labelText: "content",
             ),
           ),
-          ElevatedButton(onPressed: _updateRecord, child: const Text('記録を変更')),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: _updateRecord,
+                child: const Text('記録を変更'),
+              ),
+              ElevatedButton(
+                onPressed: _deleteRecord,
+                child: const Text('記録を削除', style: TextStyle(color: Colors.red)),
+              ),
+            ],
+          ),
         ],
       ),
     );
