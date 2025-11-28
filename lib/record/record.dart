@@ -47,14 +47,15 @@ class _RecordPageState extends State<RecordPage> {
                   .toList(),
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
+        onPressed: () async {
+          await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
                 return AddRecordPage();
               },
             ),
           );
+          _getRecords();
         },
         child: Icon(Icons.add),
       ),

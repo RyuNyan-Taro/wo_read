@@ -16,6 +16,27 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
   Future<void> _saveRecord() async {
     recordService.addRecord(date: date, content: descriptionController.text);
+
+    if (!mounted) return;
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Success'),
+          content: const Text('記録が追加されたよ'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
