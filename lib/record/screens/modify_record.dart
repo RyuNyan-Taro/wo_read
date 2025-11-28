@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/record/models/record_item.dart';
 
 import '../service/record_service.dart';
@@ -36,24 +37,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
 
     if (!mounted) return;
 
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Success'),
-          content: const Text('記録が変更されたよ'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+    await showSuccessDialog(context: context, content: '記録が変更されたよ');
   }
 
   Future<void> _deleteRecord() async {
@@ -61,24 +45,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
 
     if (!mounted) return;
 
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Success'),
-          content: const Text('記録が削除されたよ'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+    await showSuccessDialog(context: context, content: '記録が削除されたよ');
   }
 
   @override
