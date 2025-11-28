@@ -33,4 +33,15 @@ class RecordService {
       'content': content,
     });
   }
+
+  Future<void> updateRecord({
+    required int id,
+    required DateTime date,
+    required String content,
+  }) async {
+    await _supabase.from(_tableName).update({
+      'timestamp': date.toString(),
+      'content': content,
+    });
+  }
 }
