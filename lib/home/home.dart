@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wo_read/hair/hair.dart';
 import 'package:wo_read/hiragana/hiragana.dart';
 import 'package:wo_read/record/record.dart';
 
@@ -7,9 +8,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const List<(String, Widget)> _pages = [
+    const List<(String, Widget)> pages = [
       ('カルタ', HiraganaPage()),
       ('成長記録', RecordPage()),
+      ('ヘアカタログ', HairPage()),
     ];
 
     return Scaffold(
@@ -20,7 +22,7 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: _pages
+          children: pages
               .map(
                 (page) => ElevatedButton(
                   onPressed: () => {
