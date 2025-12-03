@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:wo_read/hair/screens/character_card.dart';
 
 class HairPage extends StatelessWidget {
   const HairPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text('Hair'),
+      ),
+      body: Column(
+        children: [
+          CharacterCard(name: 'アリエル'),
+          CharacterCard(name: 'ラプンツェル'),
+        ],
+      ),
+    );
   }
 }
