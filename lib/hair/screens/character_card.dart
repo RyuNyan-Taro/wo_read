@@ -8,23 +8,26 @@ class CharacterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        width: double.infinity,
-        height: 180,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(image.path),
-            fit: BoxFit.cover,
+    return InkWell(
+      onTap: () => {print('test')},
+      child: Card(
+        child: Container(
+          width: double.infinity,
+          height: 180,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(image.path),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Align(
-          alignment: Alignment.bottomLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, bottom: 8),
-            child: Text(
-              image.name,
-              style: TextStyle(fontSize: 40, color: Colors.white),
+          child: Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, bottom: 8),
+              child: Text(
+                image.name,
+                style: TextStyle(fontSize: 40, color: Colors.white),
+              ),
             ),
           ),
         ),
