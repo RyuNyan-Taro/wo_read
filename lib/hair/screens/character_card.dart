@@ -9,6 +9,7 @@ class CharacterCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      // TODO: add link to the character hair movie list page
       onTap: () => {print('test')},
       child: Card(
         child: Container(
