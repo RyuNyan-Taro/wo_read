@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wo_read/hair/models/image_data.dart';
+import 'package:wo_read/hair/screens/movie.dart';
 
 class CharacterCard extends StatelessWidget {
   final CharacterImage image;
@@ -10,7 +11,12 @@ class CharacterCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       // TODO: add link to the character hair movie list page
-      onTap: () => {print('test')},
+      onTap: () => {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MoviePage()),
+        ),
+      },
       child: Card(
         child: Container(
           width: double.infinity,
