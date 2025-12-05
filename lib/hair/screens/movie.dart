@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:wo_read/hair/models/character_data.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MoviePage extends StatefulWidget {
-  const MoviePage({super.key});
+  final CharacterKey characterKey;
+  const MoviePage({super.key, required this.characterKey});
 
   @override
   _MoviePageState createState() => _MoviePageState();
@@ -11,12 +13,11 @@ class MoviePage extends StatefulWidget {
 class _MoviePageState extends State<MoviePage> {
   late List<YoutubePlayerController> _controllers;
 
-  static const List<String> videoIds = ['NRcTvCXj5y0', 'V6lOXWYf5QU'];
-
   @override
   void initState() {
     super.initState();
-    _controllers = videoIds
+    final List<String>? videoIds = MovieId[widget.characterKey];
+    _controllers = (videoIds ?? [])
         .map(
           (String id) => YoutubePlayerController(
             initialVideoId: id,
@@ -28,27 +29,6 @@ class _MoviePageState extends State<MoviePage> {
           ),
         )
         .toList();
-
-    @override
-    void initState() {
-      super.initState();
-      _controllers = videoIds
-          .map(
-            (String id) => YoutubePlayerController(
-              initialVideoId: id,
-              flags: const YoutubePlayerFlags(
-                autoPlay: true,
-                mute: true,
-                enableCaption: true,
-              ),
-            ),
-          )
-          .toList();
-    }
-
-    for (YoutubePlayerController controller in _controllers) {
-      print(controller.metadata);
-    }
   }
 
   @override

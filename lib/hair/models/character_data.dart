@@ -50,3 +50,14 @@ final Map<CharacterKey, CharacterImage> imageData = {
     path: 'assets/images/hair/rapunzel.jpeg',
   ),
 };
+
+final Map<CharacterKey, List<String>> MovieId = {
+  CharacterKey.jasmine: [],
+  CharacterKey.anna: [],
+  CharacterKey.belle: [],
+  CharacterKey.cinderella: [],
+  CharacterKey.elsa: [],
+  CharacterKey.hans: [],
+  CharacterKey.judy: [],
+  CharacterKey.rapunzel: [],
+};
