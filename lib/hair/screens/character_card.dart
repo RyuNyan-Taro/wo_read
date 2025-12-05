@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:wo_read/hair/models/image_data.dart';
+import 'package:wo_read/hair/models/character_data.dart';
 import 'package:wo_read/hair/screens/movie.dart';
 
 class CharacterCard extends StatelessWidget {
-  final CharacterImage image;
+  final CharacterKey characterKey;
 
-  const CharacterCard({super.key, required this.image});
+  const CharacterCard({super.key, required this.characterKey});
 
   @override
   Widget build(BuildContext context) {
+    final CharacterImage? image = imageData[characterKey];
+
     return InkWell(
       // TODO: add link to the character hair movie list page
       onTap: () => {
@@ -23,7 +25,7 @@ class CharacterCard extends StatelessWidget {
           height: 180,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(image.path),
+              image: AssetImage(image!.path),
               fit: BoxFit.cover,
             ),
           ),
