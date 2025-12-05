@@ -6,7 +6,7 @@ class CharacterImage {
 }
 
 final List<CharacterImage> imageData = [
-  CharacterImage(name: 'ジャスミン', path: 'assets/images/hair/aladdin.jpeg'),
+  CharacterImage(name: 'ジャスミン', path: 'assets/images/hair/jasmine.jpeg'),
   CharacterImage(name: 'アナ', path: 'assets/images/hair/anna.jpeg'),
   CharacterImage(name: 'ベル', path: 'assets/images/hair/belle.jpeg'),
   CharacterImage(name: 'シンデレラ', path: 'assets/images/hair/cinderella.jpeg'),
