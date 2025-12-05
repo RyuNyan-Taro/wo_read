@@ -44,17 +44,19 @@ class _MoviePageState extends State<MoviePage> {
     return Scaffold(
       appBar: AppBar(title: const Text('YouTube Video Player')),
       body: Center(
-        child: Column(
-          children: _controllers
-              .map(
-                (controller) => Card(
-                  child: YoutubePlayer(
-                    controller: controller,
-                    showVideoProgressIndicator: true,
+        child: SingleChildScrollView(
+          child: Column(
+            children: _controllers
+                .map(
+                  (controller) => Card(
+                    child: YoutubePlayer(
+                      controller: controller,
+                      showVideoProgressIndicator: true,
+                    ),
                   ),
-                ),
-              )
-              .toList(),
+                )
+                .toList(),
+          ),
         ),
       ),
     );
