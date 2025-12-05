@@ -23,7 +23,7 @@ class _HiraganaPageState extends State<HiraganaPage> {
   String _hiragana = "あ";
   Example _example = Example(
     reading: "あめ",
-    imagePath: "assets/images/rain.png",
+    imagePath: "assets/images/hiragana/rain.png",
   );
 
   @override
