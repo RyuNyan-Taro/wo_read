@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wo_read/hair/models/image_data.dart';
+import 'package:wo_read/hair/models/character_data.dart';
 import 'package:wo_read/hair/screens/character_card.dart';
 
 class HairPage extends StatelessWidget {
@@ -14,8 +14,8 @@ class HairPage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: imageData
-              .map((CharacterImage image) => CharacterCard(image: image))
+          children: CharacterKey.values
+              .map((key) => CharacterCard(characterKey: key))
               .toList(),
         ),
       ),
