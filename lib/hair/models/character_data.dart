@@ -86,5 +86,11 @@ final Map<CharacterKey, List<String>> MovieId = {
     'FVlApzbbgt8',
     '1puSElhsU1o',
   ],
-  CharacterKey.rapunzel: [],
+  CharacterKey.rapunzel: [
+    '5JZR3aSXZFg',
+    'PJ5ipAm0fF8',
+    '4Exhvp-S-oE',
+    '6E2ZGtMQdYs',
+    'T216hcAd-Dg',
+  ],
 };
