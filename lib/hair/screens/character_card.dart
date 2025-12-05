@@ -16,7 +16,9 @@ class CharacterCard extends StatelessWidget {
       onTap: () => {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MoviePage()),
+          MaterialPageRoute(
+            builder: (context) => MoviePage(characterKey: characterKey),
+          ),
         ),
       },
       child: Card(

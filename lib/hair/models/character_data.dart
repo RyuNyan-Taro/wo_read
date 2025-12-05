@@ -50,3 +50,47 @@ final Map<CharacterKey, CharacterImage> imageData = {
     path: 'assets/images/hair/rapunzel.jpeg',
   ),
 };
+
+final Map<CharacterKey, List<String>> MovieId = {
+  CharacterKey.jasmine: [
+    'cuWnyBQQ5cA',
+    'GSoi5mtAcxE',
+    'pGIL3LyT1zk',
+    'qpWe21wYIMM',
+  ],
+  CharacterKey.anna: [
+    'V6lOXWYf5QU',
+    'rvcl5o_zlME',
+    '3PgNXn-Td08',
+    '5Y5t2jpi4YQ',
+    'x9e3g6H2wf0',
+  ],
+  CharacterKey.belle: [
+    '6InTkPNEvKg',
+    'TjbTgz1uWVk',
+    'mPKsfuUDDPs',
+    'Loi4uP3l6zw',
+    '1s2o_7b08Nw',
+  ],
+  CharacterKey.cinderella: ['9eC6XMewadw', 'AplhjXDy638', 'xjiHiLXz7jA'],
+  CharacterKey.elsa: [
+    'jnTBCJo9OeY',
+    '_MiOuZcy7T0',
+    'ADVjMGwhjfg',
+    'RUKi8_7RKa8',
+  ],
+  CharacterKey.hans: ['SXN0JGoQjks', 'ttDxfRufp_s', 'I2zZkpJ30TM'],
+  CharacterKey.judy: [
+    'oPjNqpsMxM8',
+    'GbAPU72iAM0',
+    'FVlApzbbgt8',
+    '1puSElhsU1o',
+  ],
+  CharacterKey.rapunzel: [
+    '5JZR3aSXZFg',
+    'PJ5ipAm0fF8',
+    '4Exhvp-S-oE',
+    '6E2ZGtMQdYs',
+    'T216hcAd-Dg',
+  ],
+};
