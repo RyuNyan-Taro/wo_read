@@ -68,23 +68,9 @@ class _MoviePageState extends State<MoviePage> {
           children: _controllers
               .map(
                 (controller) => Card(
-                  child: Column(
-                    children: [
-                      YoutubePlayer(
-                        controller: controller,
-                        showVideoProgressIndicator: true,
-                      ),
-                      ValueListenableBuilder(
-                        valueListenable: controller,
-                        builder: (context, value, child) {
-                          return Text(
-                            controller.metadata.title.isEmpty
-                                ? 'Loading...'
-                                : controller.metadata.title,
-                          );
-                        },
-                      ),
-                    ],
+                  child: YoutubePlayer(
+                    controller: controller,
+                    showVideoProgressIndicator: true,
                   ),
                 ),
               )
