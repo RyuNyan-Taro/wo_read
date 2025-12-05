@@ -80,6 +80,11 @@ final Map<CharacterKey, List<String>> MovieId = {
     'RUKi8_7RKa8',
   ],
   CharacterKey.hans: ['SXN0JGoQjks', 'ttDxfRufp_s', 'I2zZkpJ30TM'],
-  CharacterKey.judy: [],
+  CharacterKey.judy: [
+    'oPjNqpsMxM8',
+    'GbAPU72iAM0',
+    'FVlApzbbgt8',
+    '1puSElhsU1o',
+  ],
   CharacterKey.rapunzel: [],
 };
