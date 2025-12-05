@@ -52,7 +52,12 @@ final Map<CharacterKey, CharacterImage> imageData = {
 };
 
 final Map<CharacterKey, List<String>> MovieId = {
-  CharacterKey.jasmine: [],
+  CharacterKey.jasmine: [
+    'cuWnyBQQ5cA',
+    'GSoi5mtAcxE',
+    'pGIL3LyT1zk',
+    'qpWe21wYIMM',
+  ],
   CharacterKey.anna: [],
   CharacterKey.belle: [],
   CharacterKey.cinderella: [],
