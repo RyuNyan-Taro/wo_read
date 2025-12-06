@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parameterized_test/parameterized_test.dart';
 import 'package:wo_read/record/models/lunar_age.dart';
+import 'package:wo_read/record/use_cases/lunar_age_use_case.dart';
 
 void main() {
   parameterizedTest(
@@ -11,15 +12,15 @@ void main() {
       [DateTime(2022, 2, 28), LunarAge(year: 0, month: 9)],
       [DateTime(2021, 5, 31), LunarAge(year: 0, month: 0)],
     ],
-    (DateTime datetime, LunarAge expect) {
+    (DateTime datetime, LunarAge expectAge) {
       final DateTime birthDay = DateTime(2021, 6, 1);
       final LunarAge result = convertToLunarAge(
-        dateTime: datetime,
-        birthDay: birthDay,
+        datetime: datetime,
+        birthday: birthDay,
       );
 
-      expect(result.year, expect.year);
-      expect(result.month, expect.month);
+      expect(result.year, expectAge.year);
+      expect(result.month, expectAge.month);
     },
   );
 }
