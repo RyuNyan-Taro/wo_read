@@ -38,20 +38,8 @@ class HomePage extends StatelessWidget {
               .toList(),
         ),
       ),
-      floatingActionButton: Stack(
-        children: [
-          Positioned(
-            bottom: 20,
-            right: 20,
-            child: addRecordButton(context: context),
-          ),
-          Positioned(
-            bottom: 20,
-            left: 40,
-            child: addRecordButton(context: context),
-          ),
-        ],
-      ),
+      floatingActionButton: addRecordButton(context: context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
