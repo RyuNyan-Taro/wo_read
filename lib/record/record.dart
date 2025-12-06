@@ -13,6 +13,7 @@ class RecordPage extends StatefulWidget {
 }
 
 class _RecordPageState extends State<RecordPage> {
+  // TODO: modify to set lunarAge groups
   List<RecordItem>? records;
 
   @override
@@ -58,6 +59,7 @@ class _RecordPageState extends State<RecordPage> {
   }
 }
 
+// TODO: modify to add lunarAge title
 class _RecordCard extends StatelessWidget {
   final RecordItem record;
   final Function() backAction;
