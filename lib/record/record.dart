@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:wo_read/common/add_record_button.dart';
 import 'package:wo_read/record/models/record_item.dart';
-import 'package:wo_read/record/screens/add_record.dart';
 import 'package:wo_read/record/screens/modify_record.dart';
 import 'package:wo_read/record/service/record_service.dart';
 
@@ -50,18 +50,9 @@ class _RecordPageState extends State<RecordPage> {
                   )
                   .toList(),
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return AddRecordPage();
-              },
-            ),
-          );
-          _getRecords();
-        },
-        child: Icon(Icons.add),
+      floatingActionButton: addRecordButton(
+        context: context,
+        returnAction: _getRecords,
       ),
     );
   }

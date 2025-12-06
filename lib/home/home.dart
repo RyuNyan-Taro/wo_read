@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wo_read/common/add_record_button.dart';
 import 'package:wo_read/hair/hair.dart';
 import 'package:wo_read/hiragana/hiragana.dart';
 import 'package:wo_read/record/record.dart';
@@ -36,6 +37,20 @@ class HomePage extends StatelessWidget {
               )
               .toList(),
         ),
+      ),
+      floatingActionButton: Stack(
+        children: [
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: addRecordButton(context: context),
+          ),
+          Positioned(
+            bottom: 20,
+            left: 40,
+            child: addRecordButton(context: context),
+          ),
+        ],
       ),
     );
   }
