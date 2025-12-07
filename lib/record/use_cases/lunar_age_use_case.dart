@@ -22,11 +22,9 @@ LunarAge convertToLunarAge({
     month = datetime.month - actualBirthday.month;
   }
 
-  if (actualBirthday.day < datetime.day) {
-    month += 1;
-  }
+  print(month);
 
-  if (_isSpanningMonthLessThanOneMonth(datetime, actualBirthday)) {
+  if (datetime.day < actualBirthday.day) {
     month -= 1;
   }
 
