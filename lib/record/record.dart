@@ -16,7 +16,6 @@ class RecordPage extends StatefulWidget {
 }
 
 class _RecordPageState extends State<RecordPage> {
-  // TODO: modify to set lunarAge groups
   List<RecordItem>? records;
 
   @override
@@ -65,13 +64,41 @@ Widget _recordsSet(List<RecordItem> records, Function() backAction) {
   print(lunarAgeGroup);
 
   return Column(
-    children: records
-        .map((record) => _RecordCard(record: record, backAction: backAction))
+    children: lunarAgeGroup.entries
+        .map(
+          (entry) => _lunarAgeRecords(
+            lunarAge: entry.key,
+            records: entry.value,
+            backAction: backAction,
+          ),
+        )
         .toList(),
   );
 }
 
-// TODO: modify to add lunarAge title
+Widget _lunarAgeRecords({
+  required LunarAge lunarAge,
+  required List<RecordItem> records,
+  required Function() backAction,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: EdgeInsetsGeometry.only(top: 8, bottom: 4, left: 4),
+        child: Text('${lunarAge.year}年${lunarAge.month}ヶ月'),
+      ),
+      Column(
+        children: records
+            .map(
+              (record) => _RecordCard(record: record, backAction: backAction),
+            )
+            .toList(),
+      ),
+    ],
+  );
+}
+
 class _RecordCard extends StatelessWidget {
   final RecordItem record;
   final Function() backAction;
