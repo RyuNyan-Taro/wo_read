@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:wo_read/common/add_record_button.dart';
+import 'package:wo_read/record/models/lunar_age.dart';
 import 'package:wo_read/record/models/record_item.dart';
 import 'package:wo_read/record/screens/modify_record.dart';
 import 'package:wo_read/record/service/record_service.dart';
+import 'package:wo_read/record/use_cases/lunar_age_use_case.dart';
 
 class RecordPage extends StatefulWidget {
   const RecordPage({super.key});
@@ -43,20 +46,40 @@ class _RecordPageState extends State<RecordPage> {
       ),
       body: records == null
           ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: records!
-                  .map(
-                    (record) =>
-                        _RecordCard(record: record, backAction: _getRecords),
-                  )
-                  .toList(),
-            ),
+          : _RecordsSet(records!, _getRecords),
       floatingActionButton: addRecordButton(
         context: context,
         returnAction: _getRecords,
       ),
     );
   }
+}
+
+Widget _RecordsSet(List<RecordItem> records, Function() backAction) {
+  final DateTime birthday = DateTime.parse(
+    dotenv.env['CHILD_BIRTHDAY'] ?? '1970-01-01 00:00:00',
+  );
+
+  final Map<LunarAge, List<RecordItem>> lunarAgeAndRecords = {};
+
+  for (RecordItem record in records) {
+    final LunarAge lunarAge = convertToLunarAge(
+      datetime: record.date,
+      birthday: birthday,
+    );
+    if (lunarAgeAndRecords[lunarAge] == null) {
+      lunarAgeAndRecords[lunarAge] = [];
+    }
+    lunarAgeAndRecords[lunarAge]!.add(record);
+  }
+
+  print(lunarAgeAndRecords);
+
+  return Column(
+    children: records
+        .map((record) => _RecordCard(record: record, backAction: backAction))
+        .toList(),
+  );
 }
 
 // TODO: modify to add lunarAge title
