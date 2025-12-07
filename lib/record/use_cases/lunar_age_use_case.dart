@@ -22,12 +22,13 @@ LunarAge convertToLunarAge({
     month = datetime.month - actualBirthday.month;
   }
 
-  if (actualBirthday.day < datetime.day) {
-    month += 1;
+  if (datetime.day < actualBirthday.day) {
+    month -= 1;
   }
 
-  if (_isSpanningMonthLessThanOneMonth(datetime, actualBirthday)) {
-    month -= 1;
+  if (datetime.month != actualBirthday.month &&
+      _isComparisonBetweenMonthEnds(datetime, actualBirthday)) {
+    month += 1;
   }
 
   return LunarAge(year: year, month: month);
@@ -54,6 +55,25 @@ bool _isFasterThanBirth(DateTime datetime, DateTime birthday) {
   return birthday.year >= datetime.year && birthday.month > datetime.month;
 }
 
-bool _isSpanningMonthLessThanOneMonth(DateTime datetime, DateTime birthday) {
-  return birthday.month + 1 == datetime.month && birthday.day > datetime.month;
+bool _isComparisonBetweenMonthEnds(DateTime datetime, DateTime birthday) {
+  return _isMonthEnd(datetime) && _isMonthEnd(birthday);
+}
+
+bool _isMonthEnd(DateTime datetime) {
+  const Map<int, int> endDay = {
+    1: 31,
+    2: 28,
+    3: 31,
+    4: 30,
+    5: 31,
+    6: 30,
+    7: 31,
+    8: 31,
+    9: 30,
+    10: 31,
+    11: 30,
+    12: 31,
+  };
+
+  return datetime.day >= endDay[datetime.month]!;
 }

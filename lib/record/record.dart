@@ -61,8 +61,6 @@ Widget _recordsSet(List<RecordItem> records, Function() backAction) {
 
   final LunarAgeGroup lunarAgeGroup = groupByLunarAge(records, birthday);
 
-  print(lunarAgeGroup);
-
   return Column(
     children: lunarAgeGroup.entries
         .map(
