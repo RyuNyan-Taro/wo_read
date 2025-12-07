@@ -46,7 +46,7 @@ class _RecordPageState extends State<RecordPage> {
       ),
       body: records == null
           ? const Center(child: CircularProgressIndicator())
-          : _RecordsSet(records!, _getRecords),
+          : _recordsSet(records!, _getRecords),
       floatingActionButton: addRecordButton(
         context: context,
         returnAction: _getRecords,
@@ -55,7 +55,7 @@ class _RecordPageState extends State<RecordPage> {
   }
 }
 
-Widget _RecordsSet(List<RecordItem> records, Function() backAction) {
+Widget _recordsSet(List<RecordItem> records, Function() backAction) {
   final DateTime birthday = DateTime.parse(
     dotenv.env['CHILD_BIRTHDAY'] ?? '1970-01-01 00:00:00',
   );
