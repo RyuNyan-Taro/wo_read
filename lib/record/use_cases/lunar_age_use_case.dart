@@ -1,4 +1,5 @@
 import 'package:wo_read/record/models/lunar_age.dart';
+import 'package:wo_read/record/models/record_item.dart';
 
 LunarAge convertToLunarAge({
   required DateTime datetime,
@@ -30,6 +31,23 @@ LunarAge convertToLunarAge({
   }
 
   return LunarAge(year: year, month: month);
+}
+
+LunarAgeGroup groupByLunarAge(List<RecordItem> records, DateTime birthday) {
+  final LunarAgeGroup lunarAgeGroup = {};
+
+  for (RecordItem record in records) {
+    final LunarAge lunarAge = convertToLunarAge(
+      datetime: record.date,
+      birthday: birthday,
+    );
+    if (lunarAgeGroup[lunarAge] == null) {
+      lunarAgeGroup[lunarAge] = [];
+    }
+    lunarAgeGroup[lunarAge]!.add(record);
+  }
+
+  return lunarAgeGroup;
 }
 
 bool _isFasterThanBirth(DateTime datetime, DateTime birthday) {

@@ -60,20 +60,9 @@ Widget _RecordsSet(List<RecordItem> records, Function() backAction) {
     dotenv.env['CHILD_BIRTHDAY'] ?? '1970-01-01 00:00:00',
   );
 
-  final Map<LunarAge, List<RecordItem>> lunarAgeAndRecords = {};
+  final LunarAgeGroup lunarAgeGroup = groupByLunarAge(records, birthday);
 
-  for (RecordItem record in records) {
-    final LunarAge lunarAge = convertToLunarAge(
-      datetime: record.date,
-      birthday: birthday,
-    );
-    if (lunarAgeAndRecords[lunarAge] == null) {
-      lunarAgeAndRecords[lunarAge] = [];
-    }
-    lunarAgeAndRecords[lunarAge]!.add(record);
-  }
-
-  print(lunarAgeAndRecords);
+  print(lunarAgeGroup);
 
   return Column(
     children: records

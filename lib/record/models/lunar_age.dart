@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:wo_read/record/models/record_item.dart';
 
 class LunarAge extends Equatable {
   final int year;
@@ -9,3 +10,5 @@ class LunarAge extends Equatable {
   @override
   List<Object?> get props => [year, month];
 }
+
+typedef LunarAgeGroup = Map<LunarAge, List<RecordItem>>;
