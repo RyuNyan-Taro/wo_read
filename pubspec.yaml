@@ -58,7 +58,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
 
-flutter_icons:
+flutter_launcher_icons:
   ios: true
   image_path: "assets/images/launcher/icon_ios.png"
   remove_alpha_ios: true
