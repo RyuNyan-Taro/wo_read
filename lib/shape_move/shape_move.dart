@@ -19,12 +19,6 @@ class _ShapeMovePageState extends State<ShapeMovePage> {
         position.dy + details.delta.dy,
       );
     });
-
-    print('globalPosition: ${details.globalPosition}');
-    print('localPosition: ${details.localPosition}');
-    print('delta: ${details.delta}');
-    print('primaryDelta: ${details.primaryDelta}');
-    print('sourceTimeStamp: ${details.sourceTimeStamp}');
   }
 
   @override
