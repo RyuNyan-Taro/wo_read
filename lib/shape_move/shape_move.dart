@@ -12,11 +12,11 @@ class ShapeMovePage extends StatefulWidget {
 class _ShapeMovePageState extends State<ShapeMovePage> {
   Offset position = Offset(0, 0);
 
-  void _onPanUpdate(DragUpdateDetails details, bool isHorizontal) {
+  void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
       position = Offset(
-        position.dx + (isHorizontal ? details.primaryDelta! : 0),
-        position.dy + (!isHorizontal ? details.primaryDelta! : 0),
+        position.dx + details.delta.dx,
+        position.dy + details.delta.dy,
       );
     });
 
@@ -40,8 +40,7 @@ class _ShapeMovePageState extends State<ShapeMovePage> {
             left: position.dx,
             top: position.dy,
             child: GestureDetector(
-              onHorizontalDragUpdate: (details) => _onPanUpdate(details, true),
-              onVerticalDragUpdate: (details) => _onPanUpdate(details, false),
+              onPanUpdate: (details) => _onPanUpdate(details),
               child: Container(
                 width: 100,
                 height: 100,
