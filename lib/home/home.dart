@@ -3,6 +3,7 @@ import 'package:wo_read/common/add_record_button.dart';
 import 'package:wo_read/hair/hair.dart';
 import 'package:wo_read/hiragana/hiragana.dart';
 import 'package:wo_read/record/record.dart';
+import 'package:wo_read/shape_move/shape_move.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -13,6 +14,7 @@ class HomePage extends StatelessWidget {
       ('カルタ', HiraganaPage()),
       ('成長記録', RecordPage()),
       ('ヘアカタログ', HairPage()),
+      ('ジェスチャー', ShapeMovePage()),
     ];
 
     return Scaffold(
