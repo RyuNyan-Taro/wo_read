@@ -12,7 +12,21 @@ class ShapeMovePage extends StatefulWidget {
 class _ShapeMovePageState extends State<ShapeMovePage> {
   Offset position = Offset(0, 0);
 
-  void _onPanUpdate(DragUpdateDetails details, bool isHorizontal) {}
+  void _onPanUpdate(DragUpdateDetails details, bool isHorizontal) {
+    setState(() {
+      position = Offset(
+        position.dx + (isHorizontal ? details.primaryDelta! : 0),
+        position.dy + (!isHorizontal ? details.primaryDelta! : 0),
+      );
+    });
+
+    print('globalPosition: ${details.globalPosition}');
+    print('localPosition: ${details.localPosition}');
+    print('delta: ${details.delta}');
+    print('primaryDelta: ${details.primaryDelta}');
+    print('sourceTimeStamp: ${details.sourceTimeStamp}');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +37,8 @@ class _ShapeMovePageState extends State<ShapeMovePage> {
       body: Stack(
         children: [
           Positioned(
+            left: position.dx,
+            top: position.dy,
             child: GestureDetector(
               onHorizontalDragUpdate: (details) => _onPanUpdate(details, true),
               onVerticalDragUpdate: (details) => _onPanUpdate(details, false),
