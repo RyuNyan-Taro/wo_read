@@ -15,6 +15,7 @@ class _ShapeMovePageState extends State<ShapeMovePage> {
   void _onPanUpdate(DragUpdateDetails details, Size widgetSize) {
     final double xPos = position.dx + details.delta.dx;
     final double yPos = position.dx + details.delta.dx;
+    final double yPos = position.dy + details.delta.dy;
     setState(() {
       position = Offset(
         xPos <= widgetSize.width ? xPos : position.dx,
