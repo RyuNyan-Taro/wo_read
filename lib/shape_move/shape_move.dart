@@ -12,17 +12,21 @@ class ShapeMovePage extends StatefulWidget {
 class _ShapeMovePageState extends State<ShapeMovePage> {
   Offset position = Offset(0, 0);
 
-  void _onPanUpdate(DragUpdateDetails details) {
+  void _onPanUpdate(DragUpdateDetails details, Size widgetSize) {
+    final double xPos = position.dx + details.delta.dx;
+    final double yPos = position.dx + details.delta.dx;
     setState(() {
       position = Offset(
-        position.dx + details.delta.dx,
-        position.dy + details.delta.dy,
+        xPos <= widgetSize.width ? xPos : position.dx,
+        yPos <= widgetSize.height ? yPos : position.dy,
       );
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final Size widgetSize = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -34,7 +38,7 @@ class _ShapeMovePageState extends State<ShapeMovePage> {
             left: position.dx,
             top: position.dy,
             child: GestureDetector(
-              onPanUpdate: (details) => _onPanUpdate(details),
+              onPanUpdate: (details) => _onPanUpdate(details, widgetSize),
               child: Container(
                 width: 100,
                 height: 100,
