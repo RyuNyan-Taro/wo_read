@@ -7,27 +7,26 @@ LunarAge convertToLunarAge({
 }) {
   // From the Japan low, the base date is one day before of the birthday
   // ref: https://sayumi-aug.hateblo.jp/entry/2022/03/01/160427
-  final DateTime actualBirthday = birthday.add(Duration(days: -1));
-  final Duration duration = datetime.difference(actualBirthday);
+  final Duration duration = datetime.difference(birthday);
   final int year = duration.inDays ~/ 365;
   int month = 0;
 
-  if (_isFasterThanBirth(datetime, actualBirthday)) {
+  if (_isFasterThanBirth(datetime, birthday)) {
     return LunarAge(year: year, month: month);
   }
 
-  if (actualBirthday.month > datetime.month) {
-    month = datetime.month + 12 - actualBirthday.month;
+  if (birthday.month > datetime.month) {
+    month = datetime.month + 12 - birthday.month;
   } else {
-    month = datetime.month - actualBirthday.month;
+    month = datetime.month - birthday.month;
   }
 
-  if (datetime.day < actualBirthday.day) {
+  if (datetime.day < birthday.day) {
     month -= 1;
   }
 
-  if (datetime.month != actualBirthday.month &&
-      _isComparisonBetweenMonthEnds(datetime, actualBirthday)) {
+  if (datetime.month != birthday.month &&
+      _isComparisonBetweenMonthEnds(datetime, birthday)) {
     month += 1;
   }
 
