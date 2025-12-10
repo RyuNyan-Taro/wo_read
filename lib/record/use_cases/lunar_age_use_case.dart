@@ -25,8 +25,6 @@ LunarAge convertToLunarAge({
     month -= 1;
   }
 
-  print(month);
-
   if (datetime.month != birthday.month &&
       _isComparisonBetweenMonthEnds(datetime, birthday)) {
     month += 1;
