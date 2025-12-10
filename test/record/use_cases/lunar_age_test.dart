@@ -7,8 +7,8 @@ void main() {
   parameterizedTest(
     'input DateTime is converted to lunar age',
     [
-      [DateTime(2021, 6, 1), LunarAge(year: 0, month: 0)],
-      [DateTime(2022, 5, 31), LunarAge(year: 1, month: 0)],
+      [DateTime(2021, 6, 2), LunarAge(year: 0, month: 0)],
+      [DateTime(2022, 6, 1), LunarAge(year: 1, month: 0)],
       [DateTime(2022, 2, 28), LunarAge(year: 0, month: 9)],
       [DateTime(2021, 5, 31), LunarAge(year: 0, month: 0)],
     ],
