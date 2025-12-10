@@ -61,16 +61,18 @@ Widget _recordsSet(List<RecordItem> records, Function() backAction) {
 
   final LunarAgeGroup lunarAgeGroup = groupByLunarAge(records, birthday);
 
-  return Column(
-    children: lunarAgeGroup.entries
-        .map(
-          (entry) => _lunarAgeRecords(
-            lunarAge: entry.key,
-            records: entry.value,
-            backAction: backAction,
-          ),
-        )
-        .toList(),
+  return SingleChildScrollView(
+    child: Column(
+      children: lunarAgeGroup.entries
+          .map(
+            (entry) => _lunarAgeRecords(
+              lunarAge: entry.key,
+              records: entry.value,
+              backAction: backAction,
+            ),
+          )
+          .toList(),
+    ),
   );
 }
 
