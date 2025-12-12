@@ -48,6 +48,13 @@ class Shapes extends _$Shapes {
 
     return false;
   }
+
+  bool judgeAnyConflict(Offset myBox) {
+    for (MovingShape shape in state) {
+      if (_isConflicted(shape, myBox)) return true;
+    }
+    return false;
+  }
 }
 
 bool _isConflicted(MovingShape other, Offset modPos) {

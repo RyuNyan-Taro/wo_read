@@ -27,7 +27,14 @@ class _ShapeMovePageState extends ConsumerState<ShapeMovePage> {
             left: 0,
             top: 0,
             child: InkWell(
-              onTap: () => {print('tapped')},
+              onTap: () => {
+                if (ref
+                    .read(shapesProvider.notifier)
+                    .judgeAnyConflict(Offset(0, 0)))
+                  {print('conflict')}
+                else
+                  {print('tapped')},
+              },
               child: Container(
                 width: 100,
                 height: 100,
