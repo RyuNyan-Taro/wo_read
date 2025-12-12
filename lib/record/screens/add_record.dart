@@ -59,7 +59,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
               labelText: "content",
             ),
           ),
-          ElevatedButton(onPressed: _saveRecord, child: const Text('記録を追加')),
+          ElevatedButton(onPressed: _saveRecord, child: const Text('追加')),
         ],
       ),
     );
