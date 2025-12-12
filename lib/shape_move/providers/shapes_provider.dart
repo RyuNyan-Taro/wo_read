@@ -26,4 +26,35 @@ class Shapes extends _$Shapes {
   void clear() {
     state = [];
   }
+
+  bool judgeConflict(int myId, Offset modPos) {
+    final List<MovingShape> others = [];
+    MovingShape myShape = MovingShape(position: Offset(0, 0), id: 0);
+
+    for (MovingShape shape in state) {
+      if (shape.id == myId) {
+        myShape = shape;
+        continue;
+      }
+      others.add(shape);
+    }
+
+    if (others.isEmpty) return false;
+
+    for (MovingShape other in others) {
+      if (_isConflicted(myShape, other, modPos)) return true;
+    }
+
+    return false;
+  }
+}
+
+bool _isConflicted(MovingShape myShape, MovingShape other, Offset modPos) {
+  if (other.position.dx <= modPos.dx &&
+      modPos.dx <= other.position.dx + 100 &&
+      other.position.dy <= modPos.dy &&
+      modPos.dy <= other.position.dy + 100) {
+    print('conflict');
+  }
+  return false;
 }
