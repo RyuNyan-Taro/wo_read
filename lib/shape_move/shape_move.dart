@@ -21,7 +21,27 @@ class _ShapeMovePageState extends ConsumerState<ShapeMovePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('Shape move'),
       ),
-      body: Stack(children: shapes),
+      body: Stack(children: [_addBox(ref), ...shapes]),
     );
   }
+}
+
+Widget _addBox(WidgetRef ref) {
+  return Positioned(
+    left: 0,
+    top: 0,
+    child: InkWell(
+      onTap: () => {
+        if (ref.read(shapesProvider.notifier).judgeAnyConflict(Offset(0, 0)))
+          {print('conflict')}
+        else
+          {print('tapped')},
+      },
+      child: Container(
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+      ),
+    ),
+  );
 }
