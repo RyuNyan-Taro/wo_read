@@ -10,9 +10,9 @@ part 'shapes_provider.g.dart';
 class Shapes extends _$Shapes {
   @override
   List<MovingShape> build() => [
-    MovingShape(position: Offset(0, 0)),
-    MovingShape(position: Offset(100, 100)),
-    MovingShape(position: Offset(200, 200)),
+    MovingShape(position: Offset(0, 0), id: 0),
+    MovingShape(position: Offset(100, 100), id: 1),
+    MovingShape(position: Offset(200, 200), id: 2),
   ];
 
   void add(MovingShape value) {

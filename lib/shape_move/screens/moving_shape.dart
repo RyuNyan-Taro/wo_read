@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 class MovingShape extends StatefulWidget {
   final Offset position;
-  const MovingShape({super.key, required this.position});
+  final int id;
+  const MovingShape({super.key, required this.position, required this.id});
 
   @override
   _MovingShapeState createState() => _MovingShapeState();
