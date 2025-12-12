@@ -107,7 +107,7 @@ class _RecordCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat('MM/dd HH:mm');
+    final formatter = DateFormat('MM/dd');
 
     return InkWell(
       onTap: () async {
