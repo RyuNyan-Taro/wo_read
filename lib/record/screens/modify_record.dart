@@ -85,13 +85,10 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: _updateRecord,
-                child: const Text('記録を変更'),
-              ),
+              ElevatedButton(onPressed: _updateRecord, child: const Text('変更')),
               ElevatedButton(
                 onPressed: _deleteRecord,
-                child: const Text('記録を削除', style: TextStyle(color: Colors.red)),
+                child: const Text('削除', style: TextStyle(color: Colors.red)),
               ),
             ],
           ),
