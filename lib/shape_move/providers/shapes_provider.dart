@@ -59,11 +59,21 @@ class Shapes extends _$Shapes {
 }
 
 bool _isConflicted(MovingShape myShape, MovingShape other, Offset modPos) {
-  if (other.position.dx <= modPos.dx &&
-      modPos.dx <= other.position.dx + 100 &&
-      other.position.dy <= modPos.dy &&
-      modPos.dy <= other.position.dy + 100) {
-    print('conflict');
+  final List<Offset> edgePositions = [
+    modPos,
+    Offset(modPos.dx, modPos.dy + 100),
+    Offset(modPos.dx + 100, modPos.dy),
+    Offset(modPos.dx + 100, modPos.dy + 100),
+  ];
+
+  for (Offset edge in edgePositions) {
+    if (other.position.dx <= edge.dx &&
+        edge.dx <= other.position.dx + 100 &&
+        other.position.dy <= edge.dy &&
+        edge.dy <= other.position.dy + 100) {
+      print('conflict');
+    }
   }
+
   return false;
 }
