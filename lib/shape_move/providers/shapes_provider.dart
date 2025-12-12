@@ -38,27 +38,19 @@ class Shapes extends _$Shapes {
   }
 
   bool judgeConflict(int myId, Offset modPos) {
-    final List<MovingShape> others = [];
-    MovingShape myShape = MovingShape(position: Offset(0, 0), id: 0);
-
-    for (MovingShape shape in state) {
-      if (shape.id == myId) {
-        myShape = shape;
-        continue;
-      }
-      others.add(shape);
-    }
-    if (others.isEmpty) return false;
+    final List<MovingShape> others = state
+        .where((shape) => shape.id != myId)
+        .toList();
 
     for (MovingShape other in others) {
-      if (_isConflicted(myShape, other, modPos)) return true;
+      if (_isConflicted(other, modPos)) return true;
     }
 
     return false;
   }
 }
 
-bool _isConflicted(MovingShape myShape, MovingShape other, Offset modPos) {
+bool _isConflicted(MovingShape other, Offset modPos) {
   final List<Offset> edgePositions = [
     modPos,
     Offset(modPos.dx, modPos.dy + 100),
