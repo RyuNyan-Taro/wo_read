@@ -1,16 +1,19 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wo_read/shape_move/providers/shapes_provider.dart';
 
-class MovingShape extends StatefulWidget {
+class MovingShape extends ConsumerStatefulWidget {
   final Offset position;
-  const MovingShape({super.key, required this.position});
+  final int id;
+  const MovingShape({super.key, required this.position, required this.id});
 
   @override
   _MovingShapeState createState() => _MovingShapeState();
 }
 
-class _MovingShapeState extends State<MovingShape> {
+class _MovingShapeState extends ConsumerState<MovingShape> {
   static const double headerMargin = 80;
 
   late Offset position;
@@ -30,6 +33,19 @@ class _MovingShapeState extends State<MovingShape> {
     final double xPos = max(0, position.dx + details.delta.dx);
     final double yPos = max(0, position.dy + details.delta.dy);
 
+    final Offset modPos = Offset(
+      xPos + shapeWidth <= widgetSize.width ? xPos : position.dx,
+      yPos + shapeHeight + headerMargin <= widgetSize.height
+          ? yPos
+          : position.dy,
+    );
+
+    final bool conflict = ref
+        .read(shapesProvider.notifier)
+        .judgeConflict(widget.id, modPos);
+
+    if (conflict) return;
+
     setState(() {
       position = Offset(
         xPos + shapeWidth <= widgetSize.width ? xPos : position.dx,
@@ -38,6 +54,7 @@ class _MovingShapeState extends State<MovingShape> {
             : position.dy,
       );
     });
+    ref.read(shapesProvider.notifier).updatePosition(widget.id, modPos);
   }
 
   @override
