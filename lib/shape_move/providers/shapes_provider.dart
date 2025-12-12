@@ -71,7 +71,7 @@ bool _isConflicted(MovingShape myShape, MovingShape other, Offset modPos) {
         edge.dx <= other.position.dx + 100 &&
         other.position.dy <= edge.dy &&
         edge.dy <= other.position.dy + 100) {
-      print('conflict');
+      return true;
     }
   }
 
