@@ -27,15 +27,13 @@ class _ShapeMovePageState extends ConsumerState<ShapeMovePage> {
 }
 
 Widget _addBox(WidgetRef ref) {
+  final notifier = ref.read(shapesProvider.notifier);
   return Positioned(
     left: 0,
     top: 0,
     child: InkWell(
       onTap: () => {
-        if (ref.read(shapesProvider.notifier).judgeAnyConflict(Offset(0, 0)))
-          {print('conflict')}
-        else
-          {print('tapped')},
+        if (!notifier.judgeAnyConflict(Offset(0, 0))) {notifier.add()},
       },
       child: Container(
         width: 100,

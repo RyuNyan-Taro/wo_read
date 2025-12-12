@@ -15,8 +15,9 @@ class Shapes extends _$Shapes {
     MovingShape(position: Offset(200, 200), id: 2),
   ];
 
-  void add(MovingShape value) {
-    state = [...state, value];
+  void add() {
+    final int lastId = state[state.length - 1].id;
+    state = [...state, MovingShape(position: Offset(0, 0), id: lastId + 1)];
   }
 
   void remove(MovingShape value) {
