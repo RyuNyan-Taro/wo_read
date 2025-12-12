@@ -7,7 +7,17 @@ import 'package:wo_read/shape_move/providers/shapes_provider.dart';
 class MovingShape extends ConsumerStatefulWidget {
   final Offset position;
   final int id;
-  const MovingShape({super.key, required this.position, required this.id});
+  final IconData icon;
+  final Color iconColor;
+  final Color shapeColor;
+  const MovingShape({
+    super.key,
+    required this.position,
+    required this.id,
+    required this.icon,
+    required this.iconColor,
+    required this.shapeColor,
+  });
 
   @override
   _MovingShapeState createState() => _MovingShapeState();
@@ -69,12 +79,12 @@ class _MovingShapeState extends ConsumerState<MovingShape> {
         child: Container(
           width: 100,
           height: 100,
-          color: Colors.blue,
+          decoration: BoxDecoration(
+            color: widget.shapeColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Center(
-            child: Text(
-              'Drag me',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
+            child: Icon(widget.icon, size: 100, color: widget.iconColor),
           ),
         ),
       ),
