@@ -54,6 +54,7 @@ class _MovingShapeState extends ConsumerState<MovingShape> {
             : position.dy,
       );
     });
+    ref.read(shapesProvider.notifier).updatePosition(widget.id, modPos);
   }
 
   @override

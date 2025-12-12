@@ -23,6 +23,16 @@ class Shapes extends _$Shapes {
     state = state.where((x) => x != value).toList();
   }
 
+  void updatePosition(int id, Offset newPosition) {
+    state = [
+      for (final shape in state)
+        if (shape.id == id)
+          MovingShape(position: newPosition, id: shape.id)
+        else
+          shape,
+    ];
+  }
+
   void clear() {
     state = [];
   }
@@ -38,7 +48,6 @@ class Shapes extends _$Shapes {
       }
       others.add(shape);
     }
-
     if (others.isEmpty) return false;
 
     for (MovingShape other in others) {

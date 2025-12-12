@@ -16,7 +16,6 @@ class _ShapeMovePageState extends ConsumerState<ShapeMovePage> {
   @override
   Widget build(BuildContext context) {
     final List<MovingShape> shapes = ref.watch(shapesProvider);
-    print(shapes);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
