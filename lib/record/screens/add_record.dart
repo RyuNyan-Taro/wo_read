@@ -52,6 +52,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
           ),
           TextFormField(
             key: formKey,
+            autofocus: true,
             controller: descriptionController,
             decoration: const InputDecoration(
               // icon: Icon(Icons.email),
