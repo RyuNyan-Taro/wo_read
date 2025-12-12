@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/record/models/record_item.dart';
 
@@ -50,6 +51,8 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final formatter = DateFormat('MM/dd');
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Modify record'),
@@ -71,7 +74,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
                 });
               }
             },
-            child: Text(date.toString()),
+            child: Text(formatter.format(date)),
           ),
           TextFormField(
             key: formKey,
@@ -85,13 +88,10 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: _updateRecord,
-                child: const Text('記録を変更'),
-              ),
+              ElevatedButton(onPressed: _updateRecord, child: const Text('変更')),
               ElevatedButton(
                 onPressed: _deleteRecord,
-                child: const Text('記録を削除', style: TextStyle(color: Colors.red)),
+                child: const Text('削除', style: TextStyle(color: Colors.red)),
               ),
             ],
           ),

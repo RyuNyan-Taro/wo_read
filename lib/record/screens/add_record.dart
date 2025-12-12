@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/record/service/record_service.dart';
 
@@ -25,6 +26,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final formatter = DateFormat('MM/dd');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add record'),
@@ -46,7 +48,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
                 });
               }
             },
-            child: Text(date.toString()),
+            child: Text(formatter.format(date)),
           ),
           TextFormField(
             key: formKey,
@@ -57,7 +59,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
               labelText: "content",
             ),
           ),
-          ElevatedButton(onPressed: _saveRecord, child: const Text('記録を追加')),
+          ElevatedButton(onPressed: _saveRecord, child: const Text('追加')),
         ],
       ),
     );
