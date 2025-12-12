@@ -33,10 +33,7 @@ Widget _addBox(WidgetRef ref) {
     top: 0,
     child: InkWell(
       onTap: () => {
-        if (notifier.judgeAnyConflict(Offset(0, 0)))
-          {print('conflict')}
-        else
-          {notifier.add()},
+        if (!notifier.judgeAnyConflict(Offset(0, 0))) {notifier.add()},
       },
       child: Container(
         width: 100,
