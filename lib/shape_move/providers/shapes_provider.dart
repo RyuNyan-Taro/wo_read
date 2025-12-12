@@ -1,5 +1,6 @@
-import 'dart:ui';
+import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../screens/moving_shape.dart';
@@ -10,14 +11,41 @@ part 'shapes_provider.g.dart';
 class Shapes extends _$Shapes {
   @override
   List<MovingShape> build() => [
-    MovingShape(position: Offset(0, 0), id: 0),
-    MovingShape(position: Offset(100, 100), id: 1),
-    MovingShape(position: Offset(200, 200), id: 2),
+    MovingShape(
+      position: Offset(0, 0),
+      id: 0,
+      icon: _getRandomIconData(),
+      iconColor: _getRandomColor(),
+      shapeColor: _getRandomColor(),
+    ),
+    MovingShape(
+      position: Offset(100, 100),
+      id: 1,
+      icon: _getRandomIconData(),
+      iconColor: _getRandomColor(),
+      shapeColor: _getRandomColor(),
+    ),
+    MovingShape(
+      position: Offset(200, 200),
+      id: 2,
+      icon: _getRandomIconData(),
+      iconColor: _getRandomColor(),
+      shapeColor: _getRandomColor(),
+    ),
   ];
 
   void add() {
     final int lastId = state[state.length - 1].id;
-    state = [...state, MovingShape(position: Offset(0, 0), id: lastId + 1)];
+    state = [
+      ...state,
+      MovingShape(
+        position: Offset(0, 0),
+        id: lastId + 1,
+        icon: _getRandomIconData(),
+        iconColor: _getRandomColor(),
+        shapeColor: _getRandomColor(),
+      ),
+    ];
   }
 
   void remove(MovingShape value) {
@@ -28,7 +56,13 @@ class Shapes extends _$Shapes {
     state = [
       for (final shape in state)
         if (shape.id == id)
-          MovingShape(position: newPosition, id: shape.id)
+          MovingShape(
+            position: newPosition,
+            id: shape.id,
+            icon: shape.icon,
+            iconColor: shape.iconColor,
+            shapeColor: shape.shapeColor,
+          )
         else
           shape,
     ];
@@ -76,4 +110,23 @@ bool _isConflicted(MovingShape other, Offset modPos) {
   }
 
   return false;
+}
+
+IconData _getRandomIconData() {
+  final Random random = Random();
+  final int minCodePoint = 0xe000;
+  final int maxCodePoint = 0xf8ff;
+  final int randomCodePoint =
+      minCodePoint + random.nextInt(maxCodePoint - minCodePoint);
+  return IconData(randomCodePoint, fontFamily: 'MaterialIcons');
+}
+
+Color _getRandomColor() {
+  final Random random = Random();
+  return Color.fromRGBO(
+    random.nextInt(256),
+    random.nextInt(256),
+    random.nextInt(256),
+    1,
+  );
 }
