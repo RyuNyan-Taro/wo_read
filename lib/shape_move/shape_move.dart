@@ -32,6 +32,7 @@ Widget _addBox(WidgetRef ref) {
     left: 0,
     top: 0,
     child: InkWell(
+      highlightColor: Colors.red.shade300,
       onTap: () => {
         if (!notifier.judgeAnyConflict(Offset(0, 0))) {notifier.add()},
       },
