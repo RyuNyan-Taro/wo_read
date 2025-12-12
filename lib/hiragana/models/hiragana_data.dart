@@ -112,8 +112,8 @@ class JapaneseData {
       imagePath: "assets/images/hiragana/bug_mark07_kanabun.png",
     ),
     33: Example(
-      reading: "めがね",
-      imagePath: "assets/images/hiragana/megane_case.png",
+      reading: "メロメロパンチ",
+      imagePath: "assets/images/hiragana/meromero_panch.jpg",
     ),
     34: Example(
       reading: "もも",
