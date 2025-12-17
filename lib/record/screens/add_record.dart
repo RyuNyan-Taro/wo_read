@@ -33,8 +33,6 @@ class _AddRecordPageState extends State<AddRecordPage> {
       labels: labels,
     );
 
-    print('labels: $labels');
-
     if (!mounted) return;
 
     await showSuccessDialog(context: context, content: '記録が追加されたよ');
