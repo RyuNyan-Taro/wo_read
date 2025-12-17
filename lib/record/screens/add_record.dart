@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wo_read/common/success_dialog.dart';
+import 'package:wo_read/record/models/record_item.dart';
+import 'package:wo_read/record/service/label_service.dart';
 import 'package:wo_read/record/service/record_service.dart';
 
 class AddRecordPage extends StatefulWidget {
@@ -15,9 +17,21 @@ class _AddRecordPageState extends State<AddRecordPage> {
   final formKey = GlobalKey<FormState>();
   final descriptionController = TextEditingController();
   final RecordService recordService = RecordService();
+  final LabelService labelService = LabelService();
 
   Future<void> _saveRecord() async {
-    recordService.addRecord(date: date, content: descriptionController.text);
+    LabelResult labels;
+    try {
+      labels = await labelService.getLabels(descriptionController.text);
+    } catch (e) {
+      labels = LabelResult(feeling: FeelingType.none, denver: DenverType.none);
+    }
+
+    recordService.addRecord(
+      date: date,
+      content: descriptionController.text,
+      labels: labels,
+    );
 
     if (!mounted) return;
 
