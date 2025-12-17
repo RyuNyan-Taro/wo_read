@@ -27,10 +27,13 @@ class RecordService {
   Future<void> addRecord({
     required DateTime date,
     required String content,
+    required LabelResult labels,
   }) async {
     await _supabase.from(_tableName).insert({
       'timestamp': date.toString(),
       'content': content,
+      'feeling': labels.feeling.name,
+      'denver': labels.denver.name,
     });
   }
 

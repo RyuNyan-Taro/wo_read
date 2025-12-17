@@ -20,9 +20,17 @@ class _AddRecordPageState extends State<AddRecordPage> {
   final LabelService labelService = LabelService();
 
   Future<void> _saveRecord() async {
-    recordService.addRecord(date: date, content: descriptionController.text);
-    final LabelResult labels = await labelService.getLabels(
-      descriptionController.text,
+    LabelResult labels;
+    try {
+      labels = await labelService.getLabels(descriptionController.text);
+    } catch (e) {
+      labels = LabelResult(feeling: FeelingType.none, denver: DenverType.none);
+    }
+
+    recordService.addRecord(
+      date: date,
+      content: descriptionController.text,
+      labels: labels,
     );
 
     print('labels: $labels');
