@@ -4,7 +4,7 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 class LabelService {
   var apiKey = dotenv.get('GOOGLE_AI_API_KEY');
   late final GenerativeModel _gemini = GenerativeModel(
-    model: 'gemini-pro',
+    model: 'gemini-2.5-flash',
     apiKey: apiKey,
   );
 
