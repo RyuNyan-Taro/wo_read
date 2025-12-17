@@ -20,10 +20,11 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
   Future<void> _saveRecord() async {
     recordService.addRecord(date: date, content: descriptionController.text);
-    final String? denverLabel = await labelService.getDenverLabel(
+    final String? labels = await labelService.getLabels(
       descriptionController.text,
     );
-    print('denverLabel: $denverLabel');
+
+    print('labels: $labels');
 
     if (!mounted) return;
 

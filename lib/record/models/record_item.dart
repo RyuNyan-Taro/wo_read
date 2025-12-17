@@ -9,3 +9,5 @@ class RecordItem {
     required this.content,
   });
 }
+
+enum
