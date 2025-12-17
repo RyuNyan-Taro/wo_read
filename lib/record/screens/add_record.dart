@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wo_read/common/success_dialog.dart';
+import 'package:wo_read/record/models/record_item.dart';
 import 'package:wo_read/record/service/label_service.dart';
 import 'package:wo_read/record/service/record_service.dart';
 
@@ -20,7 +21,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
   Future<void> _saveRecord() async {
     recordService.addRecord(date: date, content: descriptionController.text);
-    final String? labels = await labelService.getLabels(
+    final LabelResult labels = await labelService.getLabels(
       descriptionController.text,
     );
 
