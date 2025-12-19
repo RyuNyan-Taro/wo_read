@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:wo_read/record/models/record_item.dart';
+import 'package:wo_read/record/use_cases/convert_enum_use_case.dart';
 
 const String _tableName = 'glow_record';
 
@@ -19,6 +20,8 @@ class RecordService {
             id: data['id'],
             date: DateTime.parse(data['timestamp']),
             content: data['content'],
+            feeling: convertToFeelingType(label: data['feeling']),
+            denver: convertToDenverType(label: data['denver']),
           ),
         )
         .toList();
