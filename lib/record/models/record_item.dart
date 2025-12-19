@@ -2,11 +2,15 @@ class RecordItem {
   final int id;
   final DateTime date;
   final String content;
+  final FeelingType feeling;
+  final DenverType denver;
 
   const RecordItem({
     required this.id,
     required this.date,
     required this.content,
+    required this.feeling,
+    required this.denver,
   });
 }
 
