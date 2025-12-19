@@ -125,6 +125,10 @@ class _RecordCard extends StatelessWidget {
           children: [
             Text(formatter.format(record.date)),
             Text(' '),
+            Text(record.feeling.name.substring(0, 2)),
+            Text(' '),
+            Text(record.denver.name.substring(0, 2)),
+            Text(' '),
             Expanded(
               child: Text(
                 record.content,
