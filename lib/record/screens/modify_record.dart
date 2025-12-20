@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/record/models/record_item.dart';
@@ -122,6 +123,16 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
                       denver = convertToDenverType(label: newValue);
                     });
                   }
+                },
+              ),
+              IconButton(
+                icon: SvgPicture.asset(
+                  'assets/images/icon/ai.svg',
+                  width: 24,
+                  height: 24,
+                ),
+                onPressed: () {
+                  // アクション
                 },
               ),
             ],

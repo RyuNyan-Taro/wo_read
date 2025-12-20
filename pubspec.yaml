@@ -87,6 +87,7 @@ flutter:
     - assets/images/hiragana/
     - assets/images/hair/
     - assets/images/launcher/
+    - assets/images/icon/
     - assets/audio/
     - .env
 
