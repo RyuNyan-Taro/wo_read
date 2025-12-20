@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/record/models/record_item.dart';
+import 'package:wo_read/record/screens/error_response_dialog.dart';
 import 'package:wo_read/record/service/label_service.dart';
 import 'package:wo_read/record/use_cases/convert_enum_use_case.dart';
 
@@ -63,6 +64,14 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
     final LabelResult labels = await labelService.getLabels(
       descriptionController.text,
     );
+
+    if (!mounted) return;
+
+    if (labels.status == ResponseStatus.exceededQuota) {
+      await errorResponseDialog(context: context, status: labels.status);
+      return;
+    }
+
     if (feeling == FeelingType.none) {
       setState(() {
         feeling = labels.feeling;
