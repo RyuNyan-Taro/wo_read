@@ -105,7 +105,6 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
                   }
                 },
               ),
-              // TODO: add denver and feeling to update contents
               DropdownButton(
                 value: denver.name,
                 items: DenverType.values
@@ -125,15 +124,20 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
                   }
                 },
               ),
-              IconButton(
-                icon: SvgPicture.asset(
-                  'assets/images/icon/ai.svg',
-                  width: 24,
-                  height: 24,
+              Visibility(
+                visible:
+                    recordItem.feeling == FeelingType.none ||
+                    recordItem.denver == DenverType.none,
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    'assets/images/icon/ai.svg',
+                    width: 24,
+                    height: 24,
+                  ),
+                  onPressed: () {
+                    // アクション
+                  },
                 ),
-                onPressed: () {
-                  // アクション
-                },
               ),
             ],
           ),
