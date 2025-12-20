@@ -22,7 +22,7 @@ class LabelService {
 
     final content = [Content.text(prompt)];
     late ResponseStatus status = ResponseStatus.unknown;
-    late GenerateContentResponse response;
+    GenerateContentResponse? response;
 
     try {
       response = await _gemini.generateContent(content);
@@ -32,7 +32,18 @@ class LabelService {
       }
     }
 
+    status = ResponseStatus.unknown;
+
+    if (response == null) {
+      return LabelResult(
+        status: status,
+        feeling: FeelingType.none,
+        denver: DenverType.none,
+      );
+    }
+
     final String? responseText = response.text;
+
     if (responseText == null) {
       return LabelResult(
         status: status,
