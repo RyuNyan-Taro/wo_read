@@ -67,7 +67,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
 
     if (!mounted) return;
 
-    if (labels.status == ResponseStatus.exceededQuota) {
+    if (labels.status != ResponseStatus.success) {
       await errorResponseDialog(context: context, status: labels.status);
       return;
     }

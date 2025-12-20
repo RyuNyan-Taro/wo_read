@@ -32,8 +32,6 @@ class LabelService {
       }
     }
 
-    status = ResponseStatus.unknown;
-
     if (response == null) {
       return LabelResult(
         status: status,

@@ -6,7 +6,7 @@ Future<void> errorResponseDialog({
   required ResponseStatus status,
 }) {
   if (_errorTextJp[status] == null) {
-    throw ('unknown status');
+    status = ResponseStatus.unknown;
   }
 
   return showDialog(
