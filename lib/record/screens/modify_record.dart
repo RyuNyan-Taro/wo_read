@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/record/models/record_item.dart';
+import 'package:wo_read/record/use_cases/convert_enum_use_case.dart';
 
 import '../service/record_service.dart';
 
@@ -18,6 +19,8 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
   final formKey = GlobalKey<FormState>();
   late DateTime date;
   late RecordItem recordItem;
+  late FeelingType feeling;
+  late DenverType denver;
   late var descriptionController = TextEditingController();
   final RecordService recordService = RecordService();
 
@@ -25,6 +28,8 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
   void initState() {
     super.initState();
     recordItem = widget.recordItem;
+    feeling = recordItem.feeling;
+    denver = recordItem.denver;
     descriptionController.text = recordItem.content;
     date = recordItem.date;
   }
@@ -75,6 +80,50 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
               }
             },
             child: Text(formatter.format(date)),
+          ),
+          Row(
+            children: [
+              DropdownButton(
+                value: feeling.name,
+                items: FeelingType.values
+                    .map(
+                      (feeling) => DropdownMenuItem(
+                        value: feeling.name,
+                        child: Text(feeling.name),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (String? newValue) {
+                  // Handle the change
+                  if (newValue != null) {
+                    setState(() {
+                      feeling = convertToFeelingType(label: newValue);
+                    });
+                  }
+                },
+              ),
+              // TODO: convert display names to Japanese
+              // TODO: add denver and feeling to update contents
+              DropdownButton(
+                value: denver.name,
+                items: DenverType.values
+                    .map(
+                      (denver) => DropdownMenuItem(
+                        value: denver.name,
+                        child: Text(denver.name),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (String? newValue) {
+                  // Handle the change
+                  if (newValue != null) {
+                    setState(() {
+                      denver = convertToDenverType(label: newValue);
+                    });
+                  }
+                },
+              ),
+            ],
           ),
           TextFormField(
             key: formKey,
