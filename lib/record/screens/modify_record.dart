@@ -95,15 +95,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
         children: [
           _buildDatePicker(context),
           _buildTypeSelectors(context),
-          TextFormField(
-            key: formKey,
-            controller: descriptionController,
-            decoration: const InputDecoration(
-              // icon: Icon(Icons.email),
-              border: OutlineInputBorder(), // 外枠付きデザイン
-              labelText: "content",
-            ),
-          ),
+          _buildContentField(context),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -195,6 +187,18 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildContentField(BuildContext context) {
+    return TextFormField(
+      key: formKey,
+      controller: descriptionController,
+      decoration: const InputDecoration(
+        // icon: Icon(Icons.email),
+        border: OutlineInputBorder(), // 外枠付きデザイン
+        labelText: "content",
+      ),
     );
   }
 }
