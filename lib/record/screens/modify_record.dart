@@ -22,9 +22,6 @@ class ModifyRecordPage extends StatefulWidget {
 class _ModifyRecordPageState extends State<ModifyRecordPage> {
   final formKey = GlobalKey<FormState>();
   late DateTime date;
-  late RecordItem recordItem;
-  late FeelingType feeling;
-  late DenverType denver;
   late var descriptionController = TextEditingController();
   final RecordService recordService = RecordService();
   final LabelService labelService = LabelService();
@@ -33,12 +30,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
   @override
   void initState() {
     super.initState();
-    recordItem = widget.recordItem;
-    feeling = recordItem.feeling;
-    denver = recordItem.denver;
-    descriptionController.text = recordItem.content;
-    date = recordItem.date;
-    _controller = ModifyRecordController(originalItem: recordItem);
+    _controller = ModifyRecordController(originalItem: widget.recordItem);
   }
 
   Future<void> _updateRecord() async {
@@ -58,9 +50,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
   }
 
   Future<void> _autoDecideTypes() async {
-    final LabelResult labels = await labelService.getLabels(
-      descriptionController.text,
-    );
+    final LabelResult labels = await _controller.getAutoLabels();
 
     if (!mounted) return;
 
@@ -69,16 +59,12 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
       return;
     }
 
-    if (feeling == FeelingType.none) {
-      setState(() {
-        feeling = labels.feeling;
-      });
-    }
-    if (denver == DenverType.none) {
-      setState(() {
-        denver = labels.denver;
-      });
-    }
+    setState(() {
+      if (_controller.feeling == FeelingType.none)
+        _controller.feeling = labels.feeling;
+      if (_controller.denver == DenverType.none)
+        _controller.denver = labels.denver;
+    });
   }
 
   @override
@@ -124,7 +110,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
     return Row(
       children: [
         DropdownButton(
-          value: feeling.name,
+          value: _controller.feeling.name,
           items: FeelingType.values
               .map(
                 (feeling) => DropdownMenuItem(
@@ -137,13 +123,13 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
             // Handle the change
             if (newValue != null) {
               setState(() {
-                feeling = convertToFeelingType(label: newValue);
+                _controller.feeling = convertToFeelingType(label: newValue);
               });
             }
           },
         ),
         DropdownButton(
-          value: denver.name,
+          value: _controller.denver.name,
           items: DenverType.values
               .map(
                 (denver) => DropdownMenuItem(
@@ -156,15 +142,15 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
             // Handle the change
             if (newValue != null) {
               setState(() {
-                denver = convertToDenverType(label: newValue);
+                _controller.denver = convertToDenverType(label: newValue);
               });
             }
           },
         ),
         Visibility(
           visible:
-              recordItem.feeling == FeelingType.none ||
-              recordItem.denver == DenverType.none,
+              _controller.feeling == FeelingType.none ||
+              _controller.denver == DenverType.none,
           child: IconButton(
             icon: SvgPicture.asset(
               'assets/images/icon/ai.svg',

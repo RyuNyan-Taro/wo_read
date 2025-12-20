@@ -47,4 +47,8 @@ class ModifyRecordController {
       return false;
     }
   }
+
+  Future<LabelResult> getAutoLabels() async {
+    return await _labelService.getLabels(descriptionController.text);
+  }
 }
