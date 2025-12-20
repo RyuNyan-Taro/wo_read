@@ -24,7 +24,11 @@ class _AddRecordPageState extends State<AddRecordPage> {
     try {
       labels = await labelService.getLabels(descriptionController.text);
     } catch (e) {
-      labels = LabelResult(feeling: FeelingType.none, denver: DenverType.none);
+      labels = LabelResult(
+        status: ResponseStatus.unknown,
+        feeling: FeelingType.none,
+        denver: DenverType.none,
+      );
     }
 
     recordService.addRecord(
