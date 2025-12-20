@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/record/models/record_item.dart';
+import 'package:wo_read/record/service/label_service.dart';
 import 'package:wo_read/record/use_cases/convert_enum_use_case.dart';
 
 import '../service/record_service.dart';
@@ -23,6 +25,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
   late DenverType denver;
   late var descriptionController = TextEditingController();
   final RecordService recordService = RecordService();
+  final LabelService labelService = LabelService();
 
   @override
   void initState() {
@@ -54,6 +57,22 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
     if (!mounted) return;
 
     await showSuccessDialog(context: context, content: '記録が削除されたよ');
+  }
+
+  Future<void> _autoDecideTypes() async {
+    final LabelResult labels = await labelService.getLabels(
+      descriptionController.text,
+    );
+    if (feeling == FeelingType.none) {
+      setState(() {
+        feeling = labels.feeling;
+      });
+    }
+    if (denver == DenverType.none) {
+      setState(() {
+        denver = labels.denver;
+      });
+    }
   }
 
   @override
@@ -104,7 +123,6 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
                   }
                 },
               ),
-              // TODO: add denver and feeling to update contents
               DropdownButton(
                 value: denver.name,
                 items: DenverType.values
@@ -123,6 +141,19 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
                     });
                   }
                 },
+              ),
+              Visibility(
+                visible:
+                    recordItem.feeling == FeelingType.none ||
+                    recordItem.denver == DenverType.none,
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    'assets/images/icon/ai.svg',
+                    width: 24,
+                    height: 24,
+                  ),
+                  onPressed: _autoDecideTypes,
+                ),
               ),
             ],
           ),
