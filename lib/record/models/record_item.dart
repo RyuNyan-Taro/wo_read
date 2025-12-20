@@ -24,11 +24,18 @@ enum DenverType {
 
 enum FeelingType { none, happiness, anger, sorrow, pleasure }
 
+enum ResponseStatus { unknown, success, exceededQuota }
+
 class LabelResult {
+  final ResponseStatus status;
   final FeelingType feeling;
   final DenverType denver;
 
-  LabelResult({required this.feeling, required this.denver});
+  LabelResult({
+    required this.status,
+    required this.feeling,
+    required this.denver,
+  });
 }
 
 const Map<FeelingType, String> feelingToJp = {
