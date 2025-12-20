@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:wo_read/common/success_dialog.dart';
+import 'package:wo_read/record/controllers/modify_record_controller.dart';
 import 'package:wo_read/record/models/record_item.dart';
 import 'package:wo_read/record/screens/error_response_dialog.dart';
 import 'package:wo_read/record/service/label_service.dart';
@@ -27,6 +28,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
   late var descriptionController = TextEditingController();
   final RecordService recordService = RecordService();
   final LabelService labelService = LabelService();
+  late final ModifyRecordController _controller;
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
     denver = recordItem.denver;
     descriptionController.text = recordItem.content;
     date = recordItem.date;
+    _controller = ModifyRecordController(originalItem: recordItem);
   }
 
   Future<void> _updateRecord() async {
