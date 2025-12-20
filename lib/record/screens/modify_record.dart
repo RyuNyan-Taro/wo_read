@@ -21,7 +21,6 @@ class ModifyRecordPage extends StatefulWidget {
 
 class _ModifyRecordPageState extends State<ModifyRecordPage> {
   final formKey = GlobalKey<FormState>();
-  late DateTime date;
   late var descriptionController = TextEditingController();
   final RecordService recordService = RecordService();
   final LabelService labelService = LabelService();
@@ -92,17 +91,17 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
       onPressed: () async {
         final selectedDate = await showDatePicker(
           context: context,
-          initialDate: date,
+          initialDate: _controller.date,
           firstDate: DateTime(2000),
           lastDate: DateTime.now(),
         );
         if (selectedDate != null) {
           setState(() {
-            date = selectedDate;
+            _controller.date = selectedDate;
           });
         }
       },
-      child: Text(formatter.format(date)),
+      child: Text(formatter.format(_controller.date)),
     );
   }
 
