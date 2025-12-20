@@ -94,61 +94,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
       body: Column(
         children: [
           _buildDatePicker(context),
-          Row(
-            children: [
-              DropdownButton(
-                value: feeling.name,
-                items: FeelingType.values
-                    .map(
-                      (feeling) => DropdownMenuItem(
-                        value: feeling.name,
-                        child: Text(feelingToJp[feeling]!),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (String? newValue) {
-                  // Handle the change
-                  if (newValue != null) {
-                    setState(() {
-                      feeling = convertToFeelingType(label: newValue);
-                    });
-                  }
-                },
-              ),
-              DropdownButton(
-                value: denver.name,
-                items: DenverType.values
-                    .map(
-                      (denver) => DropdownMenuItem(
-                        value: denver.name,
-                        child: Text(denverToJp[denver]!),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (String? newValue) {
-                  // Handle the change
-                  if (newValue != null) {
-                    setState(() {
-                      denver = convertToDenverType(label: newValue);
-                    });
-                  }
-                },
-              ),
-              Visibility(
-                visible:
-                    recordItem.feeling == FeelingType.none ||
-                    recordItem.denver == DenverType.none,
-                child: IconButton(
-                  icon: SvgPicture.asset(
-                    'assets/images/icon/ai.svg',
-                    width: 24,
-                    height: 24,
-                  ),
-                  onPressed: _autoDecideTypes,
-                ),
-              ),
-            ],
-          ),
+          _buildTypeSelectors(context),
           TextFormField(
             key: formKey,
             controller: descriptionController,
@@ -191,6 +137,64 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
         }
       },
       child: Text(formatter.format(date)),
+    );
+  }
+
+  Widget _buildTypeSelectors(BuildContext context) {
+    return Row(
+      children: [
+        DropdownButton(
+          value: feeling.name,
+          items: FeelingType.values
+              .map(
+                (feeling) => DropdownMenuItem(
+                  value: feeling.name,
+                  child: Text(feelingToJp[feeling]!),
+                ),
+              )
+              .toList(),
+          onChanged: (String? newValue) {
+            // Handle the change
+            if (newValue != null) {
+              setState(() {
+                feeling = convertToFeelingType(label: newValue);
+              });
+            }
+          },
+        ),
+        DropdownButton(
+          value: denver.name,
+          items: DenverType.values
+              .map(
+                (denver) => DropdownMenuItem(
+                  value: denver.name,
+                  child: Text(denverToJp[denver]!),
+                ),
+              )
+              .toList(),
+          onChanged: (String? newValue) {
+            // Handle the change
+            if (newValue != null) {
+              setState(() {
+                denver = convertToDenverType(label: newValue);
+              });
+            }
+          },
+        ),
+        Visibility(
+          visible:
+              recordItem.feeling == FeelingType.none ||
+              recordItem.denver == DenverType.none,
+          child: IconButton(
+            icon: SvgPicture.asset(
+              'assets/images/icon/ai.svg',
+              width: 24,
+              height: 24,
+            ),
+            onPressed: _autoDecideTypes,
+          ),
+        ),
+      ],
     );
   }
 }
