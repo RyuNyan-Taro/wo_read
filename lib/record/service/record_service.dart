@@ -44,10 +44,17 @@ class RecordService {
     required int id,
     required DateTime date,
     required String content,
+    required FeelingType feeling,
+    required DenverType denver,
   }) async {
     await _supabase
         .from(_tableName)
-        .update({'timestamp': date.toString(), 'content': content})
+        .update({
+          'timestamp': date.toString(),
+          'content': content,
+          'feeling': feeling.name,
+          'denver': denver.name,
+        })
         .eq('id', id);
   }
 

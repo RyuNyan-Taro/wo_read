@@ -39,6 +39,8 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
       id: recordItem.id,
       date: date,
       content: descriptionController.text,
+      feeling: feeling,
+      denver: denver,
     );
 
     if (!mounted) return;
