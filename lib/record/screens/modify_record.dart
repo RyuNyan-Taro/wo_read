@@ -96,16 +96,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
           _buildDatePicker(context),
           _buildTypeSelectors(context),
           _buildContentField(context),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(onPressed: _updateRecord, child: const Text('変更')),
-              ElevatedButton(
-                onPressed: _deleteRecord,
-                child: const Text('削除', style: TextStyle(color: Colors.red)),
-              ),
-            ],
-          ),
+          _buildActionButtons(context),
         ],
       ),
     );
@@ -199,6 +190,19 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
         border: OutlineInputBorder(), // 外枠付きデザイン
         labelText: "content",
       ),
+    );
+  }
+
+  Widget _buildActionButtons(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(onPressed: _updateRecord, child: const Text('変更')),
+        ElevatedButton(
+          onPressed: _deleteRecord,
+          child: const Text('削除', style: TextStyle(color: Colors.red)),
+        ),
+      ],
     );
   }
 }
