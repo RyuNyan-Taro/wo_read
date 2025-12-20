@@ -38,4 +38,13 @@ class ModifyRecordController {
       return false;
     }
   }
+
+  Future<bool> deleteRecord() async {
+    try {
+      await _recordService.deleteRecord(id: originalItem.id);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

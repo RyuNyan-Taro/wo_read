@@ -50,11 +50,11 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
   }
 
   Future<void> _deleteRecord() async {
-    recordService.deleteRecord(id: recordItem.id);
+    final bool success = await _controller.deleteRecord();
 
-    if (!mounted) return;
-
-    await showSuccessDialog(context: context, content: '記録が削除されたよ');
+    if (success && mounted) {
+      await showSuccessDialog(context: context, content: '記録が削除されたよ');
+    }
   }
 
   Future<void> _autoDecideTypes() async {
