@@ -89,7 +89,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
                     .map(
                       (feeling) => DropdownMenuItem(
                         value: feeling.name,
-                        child: Text(feeling.name),
+                        child: Text(feelingToJp[feeling]!),
                       ),
                     )
                     .toList(),
