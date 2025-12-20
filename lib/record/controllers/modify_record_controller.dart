@@ -9,7 +9,6 @@ class ModifyRecordController {
   final LabelService _labelService = LabelService();
 
   late DateTime date;
-  late RecordItem recordItem;
   late FeelingType feeling;
   late DenverType denver;
   final TextEditingController descriptionController = TextEditingController();
