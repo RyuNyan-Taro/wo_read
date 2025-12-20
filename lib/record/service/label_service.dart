@@ -21,12 +21,36 @@ class LabelService {
         "「$text」";
 
     final content = [Content.text(prompt)];
-    final response = await _gemini.generateContent(content);
+    late ResponseStatus status = ResponseStatus.unknown;
+    GenerateContentResponse? response;
+
+    try {
+      response = await _gemini.generateContent(content);
+    } catch (e) {
+      if (e.toString().split(', ')[0] == 'You exceeded your current quota') {
+        status = ResponseStatus.exceededQuota;
+      }
+    }
+
+    if (response == null) {
+      return LabelResult(
+        status: status,
+        feeling: FeelingType.none,
+        denver: DenverType.none,
+      );
+    }
 
     final String? responseText = response.text;
+
     if (responseText == null) {
-      return LabelResult(feeling: FeelingType.none, denver: DenverType.none);
+      return LabelResult(
+        status: status,
+        feeling: FeelingType.none,
+        denver: DenverType.none,
+      );
     }
+
+    status = ResponseStatus.success;
 
     final labels = responseText.split(", ");
 
@@ -40,6 +64,6 @@ class LabelService {
       orElse: () => DenverType.none,
     );
 
-    return LabelResult(feeling: feeling, denver: denver);
+    return LabelResult(status: status, feeling: feeling, denver: denver);
   }
 }
