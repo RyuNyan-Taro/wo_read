@@ -20,4 +20,23 @@ class ModifyRecordController {
     denver = originalItem.denver;
     descriptionController.text = originalItem.content;
   }
+
+  void dispose() {
+    descriptionController.dispose();
+  }
+
+  Future<bool> updateRecord() async {
+    try {
+      await _recordService.updateRecord(
+        id: originalItem.id,
+        date: date,
+        content: descriptionController.text,
+        feeling: feeling,
+        denver: denver,
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

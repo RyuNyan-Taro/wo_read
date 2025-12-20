@@ -42,17 +42,11 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
   }
 
   Future<void> _updateRecord() async {
-    recordService.updateRecord(
-      id: recordItem.id,
-      date: date,
-      content: descriptionController.text,
-      feeling: feeling,
-      denver: denver,
-    );
+    final bool success = await _controller.updateRecord();
 
-    if (!mounted) return;
-
-    await showSuccessDialog(context: context, content: '記録が変更されたよ');
+    if (success && mounted) {
+      await showSuccessDialog(context: context, content: '記録が変更されたよ');
+    }
   }
 
   Future<void> _deleteRecord() async {
@@ -187,7 +181,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
   Widget _buildContentField(BuildContext context) {
     return TextFormField(
       key: formKey,
-      controller: descriptionController,
+      controller: _controller.descriptionController,
       decoration: const InputDecoration(
         // icon: Icon(Icons.email),
         border: OutlineInputBorder(), // 外枠付きデザイン
