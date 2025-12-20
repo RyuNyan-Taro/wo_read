@@ -86,8 +86,6 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat('MM/dd');
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Modify record'),
@@ -95,22 +93,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
       ),
       body: Column(
         children: [
-          ElevatedButton(
-            onPressed: () async {
-              final selectedDate = await showDatePicker(
-                context: context,
-                initialDate: date,
-                firstDate: DateTime(2000),
-                lastDate: DateTime.now(),
-              );
-              if (selectedDate != null) {
-                setState(() {
-                  date = selectedDate;
-                });
-              }
-            },
-            child: Text(formatter.format(date)),
-          ),
+          _buildDatePicker(context),
           Row(
             children: [
               DropdownButton(
@@ -187,6 +170,27 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDatePicker(BuildContext context) {
+    final formatter = DateFormat('MM/dd');
+
+    return ElevatedButton(
+      onPressed: () async {
+        final selectedDate = await showDatePicker(
+          context: context,
+          initialDate: date,
+          firstDate: DateTime(2000),
+          lastDate: DateTime.now(),
+        );
+        if (selectedDate != null) {
+          setState(() {
+            date = selectedDate;
+          });
+        }
+      },
+      child: Text(formatter.format(date)),
     );
   }
 }
