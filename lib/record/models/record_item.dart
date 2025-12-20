@@ -38,3 +38,11 @@ const Map<FeelingType, String> feelingToJp = {
   FeelingType.sorrow: '悲しい',
   FeelingType.pleasure: '楽しい',
 };
+
+const Map<DenverType, String> denverToJp = {
+  DenverType.none: '無し',
+  DenverType.personalSocial: '社会性',
+  DenverType.fineMotorAdaptive: '器用・精神',
+  DenverType.language: '言語',
+  DenverType.grossMotor: '運動',
+};

@@ -102,7 +102,6 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
                   }
                 },
               ),
-              // TODO: convert display names to Japanese
               // TODO: add denver and feeling to update contents
               DropdownButton(
                 value: denver.name,
@@ -110,7 +109,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
                     .map(
                       (denver) => DropdownMenuItem(
                         value: denver.name,
-                        child: Text(denver.name),
+                        child: Text(denverToJp[denver]!),
                       ),
                     )
                     .toList(),
