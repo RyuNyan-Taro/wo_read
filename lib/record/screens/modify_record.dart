@@ -5,10 +5,7 @@ import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/record/controllers/modify_record_controller.dart';
 import 'package:wo_read/record/models/record_item.dart';
 import 'package:wo_read/record/screens/error_response_dialog.dart';
-import 'package:wo_read/record/service/label_service.dart';
 import 'package:wo_read/record/use_cases/convert_enum_use_case.dart';
-
-import '../service/record_service.dart';
 
 class ModifyRecordPage extends StatefulWidget {
   final RecordItem recordItem;
@@ -21,9 +18,6 @@ class ModifyRecordPage extends StatefulWidget {
 
 class _ModifyRecordPageState extends State<ModifyRecordPage> {
   final formKey = GlobalKey<FormState>();
-  late var descriptionController = TextEditingController();
-  final RecordService recordService = RecordService();
-  final LabelService labelService = LabelService();
   late final ModifyRecordController _controller;
 
   @override
@@ -59,10 +53,12 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
     }
 
     setState(() {
-      if (_controller.feeling == FeelingType.none)
+      if (_controller.feeling == FeelingType.none) {
         _controller.feeling = labels.feeling;
-      if (_controller.denver == DenverType.none)
+      }
+      if (_controller.denver == DenverType.none) {
         _controller.denver = labels.denver;
+      }
     });
   }
 
