@@ -4,7 +4,7 @@ import 'package:wo_read/record/service/label_service.dart';
 import 'package:wo_read/record/service/record_service.dart';
 
 class AddRecordController {
-  final _descriptionController = TextEditingController();
+  final descriptionController = TextEditingController();
   final RecordService _recordService = RecordService();
   final LabelService _labelService = LabelService();
 
@@ -15,13 +15,13 @@ class AddRecordController {
   }
 
   void dispose() {
-    _descriptionController.dispose();
+    descriptionController.dispose();
   }
 
   Future<bool> saveRecord() async {
     late LabelResult labels;
     try {
-      labels = await _labelService.getLabels(_descriptionController.text);
+      labels = await _labelService.getLabels(descriptionController.text);
     } catch (e) {
       labels = LabelResult(
         status: ResponseStatus.unknown,
@@ -33,7 +33,7 @@ class AddRecordController {
     try {
       await _recordService.addRecord(
         date: date,
-        content: _descriptionController.text,
+        content: descriptionController.text,
         labels: labels,
       );
       return true;
