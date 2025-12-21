@@ -53,10 +53,12 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
     }
 
     setState(() {
-      if (_controller.feeling == FeelingType.none)
+      if (_controller.feeling == FeelingType.none) {
         _controller.feeling = labels.feeling;
-      if (_controller.denver == DenverType.none)
+      }
+      if (_controller.denver == DenverType.none) {
         _controller.denver = labels.denver;
+      }
     });
   }
 
