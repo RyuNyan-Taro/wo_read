@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wo_read/common/success_dialog.dart';
-import 'package:wo_read/record/models/record_item.dart';
-import 'package:wo_read/record/service/label_service.dart';
-import 'package:wo_read/record/service/record_service.dart';
+import 'package:wo_read/record/controllers/add_record_controller.dart';
 
 class AddRecordPage extends StatefulWidget {
   const AddRecordPage({super.key});
@@ -13,33 +11,21 @@ class AddRecordPage extends StatefulWidget {
 }
 
 class _AddRecordPageState extends State<AddRecordPage> {
-  DateTime date = DateTime.now();
   final formKey = GlobalKey<FormState>();
-  final descriptionController = TextEditingController();
-  final RecordService recordService = RecordService();
-  final LabelService labelService = LabelService();
+  final AddRecordController _controller = AddRecordController();
+
+  @override
+  dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 
   Future<void> _saveRecord() async {
-    LabelResult labels;
-    try {
-      labels = await labelService.getLabels(descriptionController.text);
-    } catch (e) {
-      labels = LabelResult(
-        status: ResponseStatus.unknown,
-        feeling: FeelingType.none,
-        denver: DenverType.none,
-      );
+    final bool success = await _controller.saveRecord();
+
+    if (success && mounted) {
+      await showSuccessDialog(context: context, content: '記録が追加されたよ');
     }
-
-    recordService.addRecord(
-      date: date,
-      content: descriptionController.text,
-      labels: labels,
-    );
-
-    if (!mounted) return;
-
-    await showSuccessDialog(context: context, content: '記録が追加されたよ');
   }
 
   @override
@@ -56,22 +42,22 @@ class _AddRecordPageState extends State<AddRecordPage> {
             onPressed: () async {
               final selectedDate = await showDatePicker(
                 context: context,
-                initialDate: date,
+                initialDate: _controller.date,
                 firstDate: DateTime(2000),
                 lastDate: DateTime.now(),
               );
               if (selectedDate != null) {
                 setState(() {
-                  date = selectedDate;
+                  _controller.date = selectedDate;
                 });
               }
             },
-            child: Text(formatter.format(date)),
+            child: Text(formatter.format(_controller.date)),
           ),
           TextFormField(
             key: formKey,
             autofocus: true,
-            controller: descriptionController,
+            controller: _controller.descriptionController,
             decoration: const InputDecoration(
               // icon: Icon(Icons.email),
               border: OutlineInputBorder(), // 外枠付きデザイン
