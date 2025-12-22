@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/record/controllers/add_record_controller.dart';
+import 'package:wo_read/record/screens/action_indicator.dart';
 
 class AddRecordPage extends StatefulWidget {
   const AddRecordPage({super.key});
@@ -63,7 +64,12 @@ class _AddRecordPageState extends State<AddRecordPage> {
               labelText: "content",
             ),
           ),
-          ElevatedButton(onPressed: _saveRecord, child: const Text('追加')),
+          ElevatedButton(
+            onPressed: () {
+              showActionIndicator(context, _saveRecord());
+            },
+            child: const Text('追加'),
+          ),
         ],
       ),
     );
