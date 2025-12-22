@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/record/controllers/modify_record_controller.dart';
 import 'package:wo_read/record/models/record_item.dart';
+import 'package:wo_read/record/screens/action_indicator.dart';
 import 'package:wo_read/record/screens/error_response_dialog.dart';
 import 'package:wo_read/record/use_cases/convert_enum_use_case.dart';
 
@@ -175,9 +176,16 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ElevatedButton(onPressed: _updateRecord, child: const Text('変更')),
         ElevatedButton(
-          onPressed: _deleteRecord,
+          onPressed: () {
+            showActionIndicator(context, _updateRecord());
+          },
+          child: const Text('変更'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            showActionIndicator(context, _deleteRecord());
+          },
           child: const Text('削除', style: TextStyle(color: Colors.red)),
         ),
       ],
