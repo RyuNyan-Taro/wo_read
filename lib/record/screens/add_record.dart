@@ -59,7 +59,6 @@ class _AddRecordPageState extends State<AddRecordPage> {
             autofocus: true,
             controller: _controller.descriptionController,
             decoration: const InputDecoration(
-              // icon: Icon(Icons.email),
               border: OutlineInputBorder(), // 外枠付きデザイン
               labelText: "content",
             ),
