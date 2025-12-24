@@ -41,25 +41,27 @@ class _GalleryPageState extends State<GalleryPage> {
       body: galleries == null
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              child: Column(
-                children: galleries!
-                    .map(
-                      (gallery) => InkWell(
-                        onTap: () async {
-                          await Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return ModifyCategoryPage(gallery: gallery);
-                              },
-                            ),
-                          );
-                        },
-                        child: Image.network(gallery.url),
-                      ),
-                    )
-                    .toList(),
-              ),
+              child: Column(children: _galleriesList(galleries!)),
             ),
     );
+  }
+
+  List<Widget> _galleriesList(List<GalleryItem> galleries) {
+    return galleries
+        .map(
+          (gallery) => InkWell(
+            onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return ModifyCategoryPage(gallery: gallery);
+                  },
+                ),
+              );
+            },
+            child: Image.network(gallery.url),
+          ),
+        )
+        .toList();
   }
 }
