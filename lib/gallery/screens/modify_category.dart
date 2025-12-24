@@ -11,7 +11,6 @@ class ModifyCategoryPage extends StatefulWidget {
 
 class _ModifyCategoryPageState extends State<ModifyCategoryPage> {
   @override
-  // TODO: add category modify page when tap the image
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -19,7 +18,23 @@ class _ModifyCategoryPageState extends State<ModifyCategoryPage> {
         title: Text('modify_category'),
       ),
       body: Column(
-        children: [Image.network(widget.gallery.url, width: 100, height: 100)],
+        children: [
+          Image.network(widget.gallery.url, width: 100, height: 100),
+          // TODO: add actual category list
+          // TODO: add update selected category button
+          // TODO: add the above process in the service
+          Row(
+            children: [
+              Checkbox(
+                value: true,
+                onChanged: (bool? check) {
+                  print(check);
+                },
+              ),
+              Text(' ${widget.gallery.url.split('/')[8]}'),
+            ],
+          ),
+        ],
       ),
     );
   }
