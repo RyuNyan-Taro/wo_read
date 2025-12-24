@@ -1,5 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:wo_read/gallery/models/gallery_item.dart';
 
 class GalleryService {
   final _supabase = SupabaseClient(
@@ -7,7 +8,7 @@ class GalleryService {
     dotenv.env['SECONDARY_SUPABASE_ANON_KEY'] ?? '',
   );
 
-  Future<List<String>> getGalleryUrls() async {
+  Future<List<GalleryItem>> getGalleryUrls() async {
     final PostgrestList response = await _supabase
         .from('photo_name')
         .select()
@@ -16,6 +17,13 @@ class GalleryService {
     final String directory =
         dotenv.env['SECONDARY_SUPABASE_PHOTO_DIRECTORY'] ?? '';
 
-    return response.map((data) => '$url/$directory/${data['name']}').toList();
+    return response
+        .map(
+          (data) => GalleryItem(
+            id: data['id'],
+            url: '$url/$directory/${data['name']}',
+          ),
+        )
+        .toList();
   }
 }
