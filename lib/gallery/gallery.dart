@@ -38,10 +38,13 @@ class _GalleryPageState extends State<GalleryPage> {
       ),
       body: galleries == null
           ? const Center(child: CircularProgressIndicator())
-          : Column(
-              // TODO: show image from url
-              // TODO: add category modify page when tap the image
-              children: galleries!.map((gallery) => Text(gallery)).toList(),
+          : SingleChildScrollView(
+              child: Column(
+                // TODO: add category modify page when tap the image
+                children: galleries!
+                    .map((gallery) => Image.network(gallery))
+                    .toList(),
+              ),
             ),
     );
   }
