@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wo_read/gallery/screens/modify_category.dart';
 import 'package:wo_read/gallery/service/gallery_service.dart';
 
 class GalleryPage extends StatefulWidget {
@@ -40,9 +41,21 @@ class _GalleryPageState extends State<GalleryPage> {
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
-                // TODO: add category modify page when tap the image
                 children: galleries!
-                    .map((gallery) => Image.network(gallery))
+                    .map(
+                      (gallery) => InkWell(
+                        onTap: () async {
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return ModifyCategoryPage(gallery: gallery);
+                              },
+                            ),
+                          );
+                        },
+                        child: Image.network(gallery),
+                      ),
+                    )
                     .toList(),
               ),
             ),
