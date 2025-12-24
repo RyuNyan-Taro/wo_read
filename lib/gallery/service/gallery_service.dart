@@ -12,7 +12,10 @@ class GalleryService {
         .from('photo_name')
         .select()
         .limit(100);
+    final String url = dotenv.env['SECONDARY_SUPABASE_URL'] ?? '';
+    final String directory =
+        dotenv.env['SECONDARY_SUPABASE_PHOTO_DIRECTORY'] ?? '';
 
-    return response.map((data) => data['name'] as String).toList();
+    return response.map((data) => '$url/$directory/${data['name']}').toList();
   }
 }
