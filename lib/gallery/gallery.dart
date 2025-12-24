@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wo_read/gallery/models/gallery_item.dart';
 import 'package:wo_read/gallery/screens/modify_category.dart';
 import 'package:wo_read/gallery/service/gallery_service.dart';
 
@@ -10,7 +11,7 @@ class GalleryPage extends StatefulWidget {
 }
 
 class _GalleryPageState extends State<GalleryPage> {
-  List<String>? galleries;
+  List<GalleryItem>? galleries;
 
   @override
   void initState() {
@@ -23,7 +24,7 @@ class _GalleryPageState extends State<GalleryPage> {
 
   Future<void> _getGalleries() async {
     final GalleryService galleryService = GalleryService();
-    final List<String> items = await galleryService.getGalleryUrls();
+    final List<GalleryItem> items = await galleryService.getGalleryUrls();
 
     setState(() {
       galleries = items;
@@ -53,7 +54,7 @@ class _GalleryPageState extends State<GalleryPage> {
                             ),
                           );
                         },
-                        child: Image.network(gallery),
+                        child: Image.network(gallery.url),
                       ),
                     )
                     .toList(),

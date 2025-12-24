@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:wo_read/gallery/models/gallery_item.dart';
 
 class ModifyCategoryPage extends StatefulWidget {
-  final String gallery;
+  final GalleryItem gallery;
   const ModifyCategoryPage({super.key, required this.gallery});
 
   @override
