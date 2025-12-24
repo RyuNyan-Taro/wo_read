@@ -36,9 +36,11 @@ class _GalleryPageState extends State<GalleryPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('gallery'),
       ),
-      body: Column(
-        children: galleries!.map((gallery) => Text(gallery)).toList(),
-      ),
+      body: galleries == null
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: galleries!.map((gallery) => Text(gallery)).toList(),
+            ),
     );
   }
 }
