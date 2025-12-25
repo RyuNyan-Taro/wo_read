@@ -26,4 +26,13 @@ class GalleryService {
         )
         .toList();
   }
+
+  Future<List<String>> getCategories() async {
+    final PostgrestList response = await _supabase
+        .from('photo_category')
+        .select()
+        .limit(100);
+
+    return response.map((data) => data['category'] as String).toList();
+  }
 }

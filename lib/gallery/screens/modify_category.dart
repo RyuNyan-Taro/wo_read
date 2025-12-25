@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wo_read/gallery/models/gallery_item.dart';
+import 'package:wo_read/gallery/service/gallery_service.dart';
 
 class ModifyCategoryPage extends StatefulWidget {
   final GalleryItem gallery;
@@ -10,6 +11,25 @@ class ModifyCategoryPage extends StatefulWidget {
 }
 
 class _ModifyCategoryPageState extends State<ModifyCategoryPage> {
+  List<String>? categories;
+  final GalleryService galleryService = GalleryService();
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (categories == null) {
+      _getCategories();
+    }
+  }
+
+  Future<void> _getCategories() async {
+    final List<String> setCategories = await galleryService.getCategories();
+    setState(() {
+      categories = setCategories;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,25 +37,33 @@ class _ModifyCategoryPageState extends State<ModifyCategoryPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('modify_category'),
       ),
-      body: Column(
-        children: [
-          Image.network(widget.gallery.url, width: 100, height: 100),
-          // TODO: add actual category list
-          // TODO: add update selected category button
-          // TODO: add the above process in the service
-          Row(
-            children: [
-              Checkbox(
-                value: true,
-                onChanged: (bool? check) {
-                  print(check);
-                },
-              ),
-              Text(' ${widget.gallery.url.split('/')[8]}'),
-            ],
-          ),
-        ],
-      ),
+      body: categories == null
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children:
+                  [
+                    Image.network(widget.gallery.url, width: 100, height: 100),
+                    // TODO: add actual category list
+                    // TODO: add update selected category button
+                    // TODO: add the above process in the service
+                    Text('Name: ${widget.gallery.url.split('/')[8]}'),
+                  ] +
+                  categories!
+                      .map(
+                        (category) => Row(
+                          children: [
+                            Checkbox(
+                              value: true,
+                              onChanged: (bool? check) {
+                                print(check);
+                              },
+                            ),
+                            Text(category),
+                          ],
+                        ),
+                      )
+                      .toList(),
+            ),
     );
   }
 }
