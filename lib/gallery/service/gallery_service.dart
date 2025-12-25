@@ -92,12 +92,10 @@ class GalleryService {
           'category_id': categoryResponse['id'],
         });
       }
+    }
 
-      if (newRelations.isNotEmpty) {
-        await _supabase
-            .from('photo_url_category_relation')
-            .insert(newRelations);
-      }
+    if (newRelations.isNotEmpty) {
+      await _supabase.from('photo_url_category_relation').insert(newRelations);
     }
   }
 }
