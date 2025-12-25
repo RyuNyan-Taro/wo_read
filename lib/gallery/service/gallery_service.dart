@@ -67,4 +67,37 @@ class GalleryService {
         category: selectedCategories.contains(category),
     };
   }
+
+  Future<void> updateCategories(
+    Map<String, bool> selectedCategories,
+    int id,
+  ) async {
+    await _supabase
+        .from('photo_url_category_relation')
+        .delete()
+        .eq('photo_id', id);
+
+    final List<Map<String, dynamic>> newRelations = [];
+
+    for (var category in selectedCategories.entries) {
+      if (category.value) {
+        final categoryResponse = await _supabase
+            .from('photo_category')
+            .select('id')
+            .eq('category', category.key)
+            .single();
+
+        newRelations.add({
+          'photo_id': id,
+          'category_id': categoryResponse['id'],
+        });
+      }
+
+      if (newRelations.isNotEmpty) {
+        await _supabase
+            .from('photo_url_category_relation')
+            .insert(newRelations);
+      }
+    }
+  }
 }

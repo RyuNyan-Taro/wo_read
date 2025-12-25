@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:wo_read/common/action_indicator.dart';
+import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/gallery/models/gallery_item.dart';
 import 'package:wo_read/gallery/service/gallery_service.dart';
 
@@ -26,9 +28,19 @@ class _ModifyCategoryPageState extends State<ModifyCategoryPage> {
   Future<void> _getCategories() async {
     final Map<String, bool> selectedCategoriesResponse = await galleryService
         .getSelectedCategories(widget.gallery.id);
-    setState(() async {
+    setState(() {
       selectedCategories = selectedCategoriesResponse;
     });
+  }
+
+  Future<void> _updateCategories() async {
+    await galleryService.updateCategories(
+      selectedCategories!,
+      widget.gallery.id,
+    );
+    if (mounted) {
+      await showSuccessDialog(context: context, content: '更新されたよ');
+    }
   }
 
   @override
@@ -64,7 +76,15 @@ class _ModifyCategoryPageState extends State<ModifyCategoryPage> {
                             ),
                           )
                           .toList() ??
-                      []),
+                      []) +
+                  [
+                    ElevatedButton(
+                      onPressed: () {
+                        showActionIndicator(context, _updateCategories());
+                      },
+                      child: const Text('変更'),
+                    ),
+                  ],
             ),
     );
   }
