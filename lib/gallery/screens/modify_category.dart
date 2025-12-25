@@ -11,22 +11,23 @@ class ModifyCategoryPage extends StatefulWidget {
 }
 
 class _ModifyCategoryPageState extends State<ModifyCategoryPage> {
-  List<String>? categories;
+  Map<String, bool>? selectedCategories;
   final GalleryService galleryService = GalleryService();
 
   @override
   void initState() {
     super.initState();
 
-    if (categories == null) {
+    if (selectedCategories == null) {
       _getCategories();
     }
   }
 
   Future<void> _getCategories() async {
-    final List<String> setCategories = await galleryService.getCategories();
-    setState(() {
-      categories = setCategories;
+    final Map<String, bool> selectedCategoriesResponse = await galleryService
+        .getSelectedCategories(widget.gallery.id);
+    setState(() async {
+      selectedCategories = selectedCategoriesResponse;
     });
   }
 
@@ -37,32 +38,33 @@ class _ModifyCategoryPageState extends State<ModifyCategoryPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('modify_category'),
       ),
-      body: categories == null
+      body: selectedCategories == null
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children:
                   [
                     Image.network(widget.gallery.url, width: 100, height: 100),
-                    // TODO: add actual category list
-                    // TODO: add update selected category button
-                    // TODO: add the above process in the service
                     Text('Name: ${widget.gallery.url.split('/')[8]}'),
                   ] +
-                  categories!
-                      .map(
-                        (category) => Row(
-                          children: [
-                            Checkbox(
-                              value: true,
-                              onChanged: (bool? check) {
-                                print(check);
-                              },
+                  (selectedCategories?.entries
+                          .map(
+                            (entry) => Row(
+                              children: [
+                                Checkbox(
+                                  value: entry.value, // Get the boolean value
+                                  onChanged: (bool? check) {
+                                    setState(() {
+                                      selectedCategories![entry.key] =
+                                          check ?? false;
+                                    });
+                                  },
+                                ),
+                                Text(entry.key), // Get the category name
+                              ],
                             ),
-                            Text(category),
-                          ],
-                        ),
-                      )
-                      .toList(),
+                          )
+                          .toList() ??
+                      []),
             ),
     );
   }

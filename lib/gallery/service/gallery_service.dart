@@ -35,4 +35,36 @@ class GalleryService {
 
     return response.map((data) => data['category'] as String).toList();
   }
+
+  Future<Map<String, bool>> getSelectedCategories(int id) async {
+    final List<String> allCategoriesResponse = await getCategories();
+
+    final PostgrestList selectedResponse = await _supabase
+        .from('photo_name')
+        .select('''
+              photo_url_category_relation!inner(
+              photo_category(
+              category
+            ))''')
+        .eq('id', id);
+
+    final List<String> selectedCategories = [];
+
+    if (selectedResponse.isNotEmpty) {
+      final relations =
+          selectedResponse.first['photo_url_category_relation'] ?? [];
+
+      selectedCategories.addAll(
+        relations.map((rel) {
+          final categoryData = rel['photo_category'];
+          return categoryData['category'] as String;
+        }).whereType<String>(),
+      );
+    }
+
+    return {
+      for (var category in allCategoriesResponse)
+        category: selectedCategories.contains(category),
+    };
+  }
 }
