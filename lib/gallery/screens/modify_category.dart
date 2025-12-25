@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wo_read/common/action_indicator.dart';
 import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/gallery/models/gallery_item.dart';
 import 'package:wo_read/gallery/service/gallery_service.dart';
+
+import '../../common/action_indicator.dart';
 
 class ModifyCategoryPage extends StatefulWidget {
   final GalleryItem gallery;
@@ -53,39 +54,52 @@ class _ModifyCategoryPageState extends State<ModifyCategoryPage> {
       body: selectedCategories == null
           ? const Center(child: CircularProgressIndicator())
           : Column(
-              children:
-                  [
-                    Image.network(widget.gallery.url, width: 100, height: 100),
-                    Text('Name: ${widget.gallery.url.split('/')[8]}'),
-                  ] +
-                  (selectedCategories?.entries
-                          .map(
-                            (entry) => Row(
-                              children: [
-                                Checkbox(
-                                  value: entry.value, // Get the boolean value
-                                  onChanged: (bool? check) {
-                                    setState(() {
-                                      selectedCategories![entry.key] =
-                                          check ?? false;
-                                    });
-                                  },
-                                ),
-                                Text(entry.key), // Get the category name
-                              ],
-                            ),
-                          )
-                          .toList() ??
-                      []) +
-                  [
-                    ElevatedButton(
-                      onPressed: () {
-                        showActionIndicator(context, _updateCategories());
-                      },
-                      child: const Text('変更'),
-                    ),
-                  ],
+              children: [
+                _imageSample(widget.gallery.url),
+                _categoryCheckBoxes(selectedCategories!),
+                _updateCategoryButton(),
+              ],
             ),
+    );
+  }
+
+  Widget _imageSample(String galleryUrl) {
+    return Column(
+      children: [
+        Image.network(galleryUrl, width: 100, height: 100),
+        Text('Name: ${galleryUrl.split('/')[8]}'),
+      ],
+    );
+  }
+
+  Widget _categoryCheckBoxes(Map<String, bool> selectedCategories) {
+    return Column(
+      children: selectedCategories.entries
+          .map(
+            (entry) => Row(
+              children: [
+                Checkbox(
+                  value: entry.value, // Get the boolean value
+                  onChanged: (bool? check) {
+                    setState(() {
+                      selectedCategories[entry.key] = check ?? false;
+                    });
+                  },
+                ),
+                Text(entry.key), // Get the category name
+              ],
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Widget _updateCategoryButton() {
+    return ElevatedButton(
+      onPressed: () {
+        showActionIndicator(context, _updateCategories());
+      },
+      child: const Text('変更'),
     );
   }
 }
