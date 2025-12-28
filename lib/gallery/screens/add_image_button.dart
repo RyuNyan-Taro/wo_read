@@ -15,6 +15,7 @@ Widget addImageButton({required BuildContext context, Function? returnAction}) {
     onPressed: () {
       print('pushAddImageButton');
     },
+    heroTag: 'addImage',
     child: Icon(Icons.add_photo_alternate),
   );
 }

@@ -17,6 +17,7 @@ Widget addCategoryButton({
       );
       if (returnAction != null) returnAction();
     },
+    heroTag: 'addCategory',
     child: Icon(Icons.playlist_add),
   );
 }
