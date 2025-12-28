@@ -18,6 +18,6 @@ Widget addCategoryButton({
     onPressed: () {
       print('pushCategoryButton');
     },
-    child: Icon(Icons.dehaze),
+    child: Icon(Icons.playlist_add),
   );
 }

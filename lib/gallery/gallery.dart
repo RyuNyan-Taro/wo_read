@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wo_read/gallery/models/gallery_item.dart';
+import 'package:wo_read/gallery/screens/add_category_button.dart';
+import 'package:wo_read/gallery/screens/add_image_button.dart';
 import 'package:wo_read/gallery/screens/modify_category.dart';
 import 'package:wo_read/gallery/service/gallery_service.dart';
 
@@ -43,6 +45,15 @@ class _GalleryPageState extends State<GalleryPage> {
           : SingleChildScrollView(
               child: Column(children: _galleriesList(galleries!)),
             ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          addImageButton(context: context),
+          SizedBox(height: 12),
+          addCategoryButton(context: context),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 
