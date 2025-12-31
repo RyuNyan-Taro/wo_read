@@ -53,6 +53,13 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
   }
 
   @override
+  void dispose() {
+    descriptionController.removeListener(_validateForm);
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -64,8 +71,8 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
           SizedBox(height: 12),
           Form(
             autovalidateMode: AutovalidateMode.always,
+            key: formKey,
             child: TextFormField(
-              key: formKey,
               autofocus: true,
               controller: descriptionController,
               decoration: const InputDecoration(
@@ -79,7 +86,6 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                 if (_categories!.contains(value)) {
                   return '既に存在するカテゴリーです';
                 }
-                print(_categories);
                 return null;
               },
             ),
@@ -87,7 +93,10 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
           ElevatedButton(
             onPressed: _isFormValid
                 ? () {
-                    showActionIndicator(context, _saveCategory());
+                    showActionIndicator(
+                      context,
+                      _saveCategory(descriptionController.text),
+                    );
                   }
                 : null,
             child: const Text('追加'),
