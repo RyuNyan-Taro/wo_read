@@ -14,6 +14,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
   final descriptionController = TextEditingController();
   final GalleryService _galleryService = GalleryService();
   List<String>? _categories;
+  bool _isFormValid = false;
 
   @override
   void initState() {
@@ -22,6 +23,14 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
     if (_categories == null) {
       _getCategories();
     }
+
+    descriptionController.addListener(_validateForm);
+  }
+
+  void _validateForm() {
+    setState(() {
+      _isFormValid = formKey.currentState?.validate() ?? false;
+    });
   }
 
   Future<void> _getCategories() async {
@@ -71,9 +80,11 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
-              showActionIndicator(context, _saveCategory());
-            },
+            onPressed: _isFormValid
+                ? () {
+                    showActionIndicator(context, _saveCategory());
+                  }
+                : null,
             child: const Text('追加'),
           ),
         ],
