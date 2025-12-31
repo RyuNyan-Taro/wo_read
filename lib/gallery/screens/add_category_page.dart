@@ -69,7 +69,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
               ),
               validator: (value) {
                 if (value!.isEmpty) {
-                  return '追加するカテゴリーを入力して下さい';
+                  return '';
                 }
                 if (_categories!.contains(value)) {
                   return '既に存在するカテゴリーです';
