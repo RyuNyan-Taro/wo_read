@@ -48,14 +48,26 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
       body: Column(
         children: [
           SizedBox(height: 12),
-          TextFormField(
-            // TODO: add check process whether already existed category or not
-            key: formKey,
-            autofocus: true,
-            controller: descriptionController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(), // 外枠付きデザイン
-              labelText: "category",
+          Form(
+            autovalidateMode: AutovalidateMode.always,
+            child: TextFormField(
+              key: formKey,
+              autofocus: true,
+              controller: descriptionController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(), // 外枠付きデザイン
+                labelText: "category",
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return '追加するカテゴリーを入力して下さい';
+                }
+                if (_categories!.contains(value)) {
+                  return '既に存在するカテゴリーです';
+                }
+                print(_categories);
+                return null;
+              },
             ),
           ),
           ElevatedButton(
