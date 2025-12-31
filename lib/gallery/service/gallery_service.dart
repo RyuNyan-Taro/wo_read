@@ -98,4 +98,8 @@ class GalleryService {
       await _supabase.from('photo_url_category_relation').insert(newRelations);
     }
   }
+
+  Future<void> addCategory(String newCategory) async {
+    await _supabase.from('photo_category').insert({'category': newCategory});
+  }
 }

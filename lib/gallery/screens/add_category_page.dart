@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wo_read/common/action_indicator.dart';
+import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/gallery/service/gallery_service.dart';
 
 class AddCategoryPage extends StatefulWidget {
@@ -41,10 +42,14 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
     });
   }
 
-  Future<void> _saveCategory() async {
-    // TODO: add category service process
-    print('pushSave');
-    print('text${descriptionController.text}');
+  Future<void> _saveCategory(String newCategory) async {
+    await _galleryService.addCategory(newCategory);
+
+    if (!mounted) {
+      return;
+    }
+
+    await showSuccessDialog(context: context, content: 'カテゴリーが追加されたよ');
   }
 
   @override
