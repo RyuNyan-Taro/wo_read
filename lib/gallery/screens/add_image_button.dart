@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'add_image_page.dart';
+
 Widget addImageButton({required BuildContext context, Function? returnAction}) {
   return FloatingActionButton(
     onPressed: () async {
