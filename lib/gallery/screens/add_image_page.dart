@@ -1,5 +1,7 @@
 // ref: https://qiita.com/free-coder/items/b3338b5eff1d3f869360
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -31,6 +33,11 @@ class _AddImagePageState extends State<AddImagePage> {
       ),
       body: Column(
         children: [
+          Center(
+            child: image == null
+                ? const Text('画像が選択されていません')
+                : Image.file(File(image!.path)),
+          ),
           ElevatedButton(
             onPressed: () {
               _pickImage();
