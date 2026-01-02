@@ -28,7 +28,7 @@ class _AddImagePageState extends State<AddImagePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add record'),
+        title: const Text('Add image'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Column(
