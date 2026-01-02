@@ -42,7 +42,7 @@ class _AddImagePageState extends State<AddImagePage> {
             onPressed: () {
               _pickImage();
             },
-            child: Text("画像を開く"),
+            child: Text("画像を選択"),
           ),
         ],
       ),
