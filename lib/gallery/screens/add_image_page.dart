@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wo_read/common/action_indicator.dart';
+import 'package:wo_read/gallery/service/gallery_service.dart';
 
 class AddImagePage extends StatefulWidget {
   const AddImagePage({super.key});
@@ -15,6 +17,7 @@ class AddImagePage extends StatefulWidget {
 class _AddImagePageState extends State<AddImagePage> {
   XFile? image;
   final imagePicker = ImagePicker();
+  final GalleryService _galleryService = GalleryService();
 
   Future<void> _pickImage() async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -22,6 +25,20 @@ class _AddImagePageState extends State<AddImagePage> {
     final imageTemp = XFile(image.path);
 
     setState(() => this.image = imageTemp);
+  }
+
+  Future<void> _saveImage(String imagePath) async {
+    final File savedImage = File(image!.path);
+
+    // await _galleryService.addImage(savedImage);
+    //
+    // if (!mounted) {
+    //   return;
+    // }
+    //
+    // await showSuccessDialog(context: context, content: '画像が追加されたよ');
+
+    print('push save image');
   }
 
   @override
@@ -43,6 +60,12 @@ class _AddImagePageState extends State<AddImagePage> {
               _pickImage();
             },
             child: Text("画像を選択"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              showActionIndicator(context, _saveImage(image!.path));
+            },
+            child: const Text('画像を追加'),
           ),
         ],
       ),
