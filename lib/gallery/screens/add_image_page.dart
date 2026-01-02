@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wo_read/common/action_indicator.dart';
+import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/gallery/service/gallery_service.dart';
 
 class AddImagePage extends StatefulWidget {
@@ -28,15 +29,13 @@ class _AddImagePageState extends State<AddImagePage> {
   }
 
   Future<void> _saveImage(String imagePath) async {
-    final File savedImage = File(image!.path);
+    await _galleryService.addImage(imagePath);
 
-    // await _galleryService.addImage(savedImage);
-    //
-    // if (!mounted) {
-    //   return;
-    // }
-    //
-    // await showSuccessDialog(context: context, content: '画像が追加されたよ');
+    if (!mounted) {
+      return;
+    }
+
+    await showSuccessDialog(context: context, content: '画像が追加されたよ');
 
     print('push save image');
   }
@@ -62,9 +61,11 @@ class _AddImagePageState extends State<AddImagePage> {
             child: Text("画像を選択"),
           ),
           ElevatedButton(
-            onPressed: () {
-              showActionIndicator(context, _saveImage(image!.path));
-            },
+            onPressed: image != null
+                ? () {
+                    showActionIndicator(context, _saveImage(image!.path));
+                  }
+                : null,
             child: const Text('画像を追加'),
           ),
         ],

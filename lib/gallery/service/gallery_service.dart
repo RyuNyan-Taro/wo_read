@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:wo_read/gallery/models/gallery_item.dart';
@@ -101,5 +103,13 @@ class GalleryService {
 
   Future<void> addCategory(String newCategory) async {
     await _supabase.from('photo_category').insert({'category': newCategory});
+  }
+
+  Future<void> addImage(String filePath) async {
+    final File pickedImage = File(filePath);
+    final String savePath = filePath.split('/').last;
+
+    await _supabase.storage.from('photos').upload(savePath, pickedImage);
+    await _supabase.from('photo_name').insert({'name': savePath});
   }
 }
