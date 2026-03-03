@@ -3,10 +3,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:wo_read/common/action_indicator.dart';
 import 'package:wo_read/common/success_dialog.dart';
-import 'package:wo_read/gallery/service/gallery_service.dart';
+import 'package:wo_read/gallery/controllers/add_image_controller.dart';
 
 class AddImagePage extends StatefulWidget {
   const AddImagePage({super.key});
@@ -16,28 +14,19 @@ class AddImagePage extends StatefulWidget {
 }
 
 class _AddImagePageState extends State<AddImagePage> {
-  XFile? image;
-  final imagePicker = ImagePicker();
-  final GalleryService _galleryService = GalleryService();
+  final AddImageController _controller = AddImageController();
 
-  Future<void> _pickImage() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (image == null) return;
-    final imageTemp = XFile(image.path);
-
-    setState(() => this.image = imageTemp);
+  @override
+  void initState() {
+    super.initState();
+    _controller.pickImage();
   }
 
-  Future<void> _saveImage(String imagePath) async {
-    await _galleryService.addImage(imagePath);
-
-    if (!mounted) {
-      return;
+  Future<void> _handleSave() async {
+    final success = await _controller.saveImage();
+    if (success && mounted) {
+      await showSuccessDialog(context: context, content: '画像が追加されたよ');
     }
-
-    await showSuccessDialog(context: context, content: '画像が追加されたよ');
-
-    print('push save image');
   }
 
   @override
@@ -50,23 +39,24 @@ class _AddImagePageState extends State<AddImagePage> {
       body: Column(
         children: [
           Center(
-            child: image == null
-                ? const Text('画像が選択されていません')
-                : Image.file(File(image!.path)),
+            child: SizedBox(
+              height: 300,
+              child: Image.file(
+                File(_controller.image!.path),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           ElevatedButton(
-            onPressed: () {
-              _pickImage();
+            onPressed: () async {
+              await _controller.pickImage();
+              setState(() {});
             },
-            child: Text("画像を選択"),
+            child: const Text('画像を選択'),
           ),
           ElevatedButton(
-            onPressed: image != null
-                ? () {
-                    showActionIndicator(context, _saveImage(image!.path));
-                  }
-                : null,
-            child: const Text('画像を追加'),
+            onPressed: _handleSave,
+            child: const Text('画像を保存'),
           ),
         ],
       ),
