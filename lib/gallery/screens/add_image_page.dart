@@ -3,11 +3,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:wo_read/common/action_indicator.dart';
 import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/gallery/controllers/add_image_controller.dart';
-import 'package:wo_read/gallery/service/gallery_service.dart';
 
 class AddImagePage extends StatefulWidget {
   const AddImagePage({super.key});
