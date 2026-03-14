@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/cook_item.dart';
 
-
 class CookItemCard extends StatelessWidget {
   final CookItem cook;
 
@@ -9,91 +8,105 @@ class CookItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Card(
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
-      margin: const EdgeInsets.all(12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 0,
+      color: Colors.grey[50],
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(
             children: [
-              Image.network(
-                cook.url,
-                height: 180,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                // 画像読み込みエラー時のフォールバック
-                errorBuilder: (context, error, stackTrace) => Container(
-                  height: 180,
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.broken_image, size: 50),
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Image.network(
+                  cook.url,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.grey[200],
+                    child: const Icon(Icons.restaurant, color: Colors.white, size: 40),
+                  ),
                 ),
               ),
               Positioned(
                 top: 12,
                 left: 12,
-                child: _buildCategoryBadge(cook.category),
-              ),
-            ],
-          ),
-
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Recipe ID: ${cook.id}',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                    ),
+                    _buildCategoryBadge(cook.category),
+                    const SizedBox(height: 8),
+                    _buildDateBadge(cook.createdAt),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildCategoryBadge(CookCategory category) {
-    Color color;
-    String label;
+Widget _buildCategoryBadge(CookCategory category) {
+  final (Color color, String label) = switch (category) {
+    CookCategory.breakfast => (Colors.orange, '朝食'),
+    CookCategory.lunch => (Colors.blue, 'ランチ'),
+    CookCategory.box => (Colors.green, 'お弁当'),
+    CookCategory.dinner => (Colors.indigo, '夕食'),
+  };
 
-    switch (category) {
-      case CookCategory.breakfast:
-        color = Colors.orange;
-        label = '朝食';
-        break;
-      case CookCategory.lunch:
-        color = Colors.blue;
-        label = 'ランチ';
-        break;
-      case CookCategory.box:
-        color = Colors.green;
-        label = 'お弁当';
-        break;
-      case CookCategory.dinner:
-        color = Colors.indigo;
-        label = '夕食';
-        break;
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.9),
-        borderRadius: BorderRadius.circular(20),
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.85),
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.1),
+          blurRadius: 4,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Text(
+      label,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 12,
+        fontWeight: FontWeight.bold,
       ),
-      child: Text(
-        label,
-        style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
+    ),
+  );
+}
+
+Widget _buildDateBadge(DateTime date) {
+  final String dateString =
+      "${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}";
+
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+    decoration: BoxDecoration(
+      color: Colors.black.withValues(alpha: 0.6),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Icon(Icons.calendar_today, size: 10, color: Colors.white),
+        const SizedBox(width: 4),
+        Text(
+          dateString,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    ),
+  );
 }
