@@ -12,8 +12,12 @@ class CookPage extends StatefulWidget {
 
 class _CookPageState extends State<CookPage> {
   List<CookItem>? cooks = [
-    CookItem(id: 1, category: CookCategory.box, url: dotenv.env['TEST_IMAGE_URL'] ?? ''),
-    CookItem(id: 2, category: CookCategory.box, url: dotenv.env['TEST_IMAGE_URL'] ?? '')
+    CookItem(id: 1, category: CookCategory.box, url: dotenv.env['TEST_IMAGE_URL'] ?? '', createdAt: DateTime.now()),
+    CookItem(id: 2, category: CookCategory.box, url: dotenv.env['TEST_IMAGE_URL'] ?? '', createdAt: DateTime.now()),
+    CookItem(id: 3, category: CookCategory.box, url: dotenv.env['TEST_IMAGE_URL'] ?? '', createdAt: DateTime.now()),
+    CookItem(id: 4, category: CookCategory.breakfast, url: dotenv.env['TEST_IMAGE_URL'] ?? '', createdAt: DateTime.now()),
+    CookItem(id: 5, category: CookCategory.lunch, url: dotenv.env['TEST_IMAGE_URL'] ?? '', createdAt: DateTime.now()),
+    CookItem(id: 6, category: CookCategory.dinner, url: dotenv.env['TEST_IMAGE_URL'] ?? '', createdAt: DateTime.now()),
   ];
 
   @override
