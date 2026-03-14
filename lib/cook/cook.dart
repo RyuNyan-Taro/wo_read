@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:wo_read/cook/models/cook_item.dart';
+import 'package:wo_read/cook/screens/cook_item_card.dart';
 
 class CookPage extends StatefulWidget {
   const CookPage({super.key});
@@ -10,8 +12,8 @@ class CookPage extends StatefulWidget {
 
 class _CookPageState extends State<CookPage> {
   List<CookItem>? cooks = [
-    CookItem(id: 1, category: CookCategory.box, url: 'test'),
-    CookItem(id: 2, category: CookCategory.box, url: 'test')
+    CookItem(id: 1, category: CookCategory.box, url: dotenv.env['TEST_IMAGE_URL'] ?? ''),
+    CookItem(id: 2, category: CookCategory.box, url: dotenv.env['TEST_IMAGE_URL'] ?? '')
   ];
 
   @override
@@ -72,7 +74,7 @@ class _CookPageState extends State<CookPage> {
             //   );
             // },
             // child: Image.network(cook.url),
-            child: Text(cook.id.toString()),
+            child: CookItemCard(cook: cook,),
           ),
         )
         .toList();
