@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
@@ -42,65 +43,139 @@ class _AddCookPageState extends State<AddCookPage> {
         title: const Text('Add cook'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: Column(
-        children: [
-          DropdownButton(
-            value: _controller.category.name,
-            items: CookCategory.values
-                .map(
-                  (category) => DropdownMenuItem(
-                    value: category.name,
-                    child: Text(categoryToJp[category]!),
-                  ),
-                )
-                .toList(),
-            onChanged: (String? newValue) {
-              // Handle the change
-              if (newValue != null) {
-                setState(() {
-                  _controller.category = convertToCookCategory(label: newValue);
-                });
-              }
-            },
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final selectedDate = await showDatePicker(
-                context: context,
-                initialDate: _controller.date,
-                firstDate: DateTime(2000),
-                lastDate: DateTime.now(),
-              );
-              if (selectedDate != null) {
-                setState(() {
-                  _controller.date = selectedDate;
-                });
-              }
-            },
-            child: Text(formatter.format(_controller.date)),
-          ),
-          Center(
-            child: SizedBox(
-              height: 300,
-              child: _controller.image != null
-                  ? Image.file(File(_controller.image!.path), fit: BoxFit.cover)
-                  : const Center(child: Text('画像が選択されていません')),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            CategorySelector(
+              currentCategory: _controller.category,
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    _controller.category = convertToCookCategory(
+                      label: newValue,
+                    );
+                  });
+                }
+              },
             ),
+            DatePickButton(
+              selectedDate: _controller.date,
+              onDateSelected: (date) => setState(() => _controller.date = date),
+            ),
+            const SizedBox(height: 16),
+            CookImagePreview(
+              imageFile: _controller.image,
+              onTap: () async {
+                await _controller.pickImage();
+                setState(() {});
+              },
+            ),
+            const SizedBox(height: 32),
+            SaveButton(
+              onPressed: () => showActionIndicator(context, _handleSave()),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class DatePickButton extends StatelessWidget {
+  final DateTime selectedDate;
+  final Function(DateTime) onDateSelected;
+
+  const DatePickButton({
+    super.key,
+    required this.selectedDate,
+    required this.onDateSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final formatter = DateFormat('MM/dd');
+    return ElevatedButton(
+      onPressed: () async {
+        final date = await showDatePicker(
+          context: context,
+          initialDate: selectedDate,
+          firstDate: DateTime(2000),
+          lastDate: DateTime.now(),
+        );
+        if (date != null) onDateSelected(date);
+      },
+      child: Text(formatter.format(selectedDate)),
+    );
+  }
+}
+
+class SaveButton extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const SaveButton({super.key, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(onPressed: onPressed, child: const Text('保存'));
+  }
+}
+
+class CategorySelector extends StatelessWidget {
+  final CookCategory currentCategory;
+  final ValueChanged<String?> onChanged;
+
+  const CategorySelector({
+    super.key,
+    required this.currentCategory,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      value: currentCategory.name,
+      items: CookCategory.values.map((category) {
+        return DropdownMenuItem(
+          value: category.name,
+          child: Text(categoryToJp[category]!),
+        );
+      }).toList(),
+      onChanged: onChanged,
+    );
+  }
+}
+
+class CookImagePreview extends StatelessWidget {
+  final XFile? imageFile;
+  final VoidCallback onTap;
+
+  const CookImagePreview({super.key, this.imageFile, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Center(
+        child: Container(
+          height: 300,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(12),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              await _controller.pickImage();
-              setState(() {});
-            },
-            child: const Text('画像を選択'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              showActionIndicator(context, _handleSave());
-            },
-            child: const Text('保存'),
-          ),
-        ],
+          clipBehavior: Clip.antiAlias,
+          child: imageFile != null
+              ? Image.file(File(imageFile!.path), fit: BoxFit.cover)
+              : const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add_a_photo, size: 50, color: Colors.grey),
+                    SizedBox(height: 8),
+                    Text('タップして料理の写真を追加', style: TextStyle(color: Colors.grey)),
+                  ],
+                ),
+        ),
       ),
     );
   }
