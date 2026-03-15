@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:wo_read/cook/models/cook_item.dart';
 import 'package:wo_read/cook/screens/add_cook_button.dart';
 import 'package:wo_read/cook/screens/cook_item_card.dart';
+import 'package:wo_read/cook/service/cook_service.dart';
 
 class CookPage extends StatefulWidget {
   const CookPage({super.key});
@@ -12,29 +12,20 @@ class CookPage extends StatefulWidget {
 }
 
 class _CookPageState extends State<CookPage> {
-  List<CookItem>? cooks = [
-    CookItem(id: 1, category: CookCategory.box, url: dotenv.env['TEST_IMAGE_URL'] ?? '', createdAt: DateTime.now()),
-    CookItem(id: 2, category: CookCategory.box, url: dotenv.env['TEST_IMAGE_URL'] ?? '', createdAt: DateTime.now()),
-    CookItem(id: 3, category: CookCategory.box, url: dotenv.env['TEST_IMAGE_URL'] ?? '', createdAt: DateTime.now()),
-    CookItem(id: 4, category: CookCategory.breakfast, url: dotenv.env['TEST_IMAGE_URL'] ?? '', createdAt: DateTime.now()),
-    CookItem(id: 5, category: CookCategory.lunch, url: dotenv.env['TEST_IMAGE_URL'] ?? '', createdAt: DateTime.now()),
-    CookItem(id: 6, category: CookCategory.dinner, url: dotenv.env['TEST_IMAGE_URL'] ?? '', createdAt: DateTime.now()),
-  ];
+  List<CookItem>? cooks;
 
   @override
   void initState() {
     super.initState();
 
     if (cooks == null) {
-      _getGalleries();
+      _getCooks();
     }
   }
 
-  Future<void> _getGalleries() async {
-    // final CookService cookService = CookService();
-    // final List<CookItem> items = await cookService.getCookUrls();
-
-    final List<CookItem> items = [];
+  Future<void> _getCooks() async {
+    final CookService cookService = CookService();
+    final List<CookItem> items = await cookService.getCookUrls();
 
     setState(() {
       cooks = items;
@@ -50,14 +41,10 @@ class _CookPageState extends State<CookPage> {
       ),
       body: cooks == null
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Column(children: _cooksList(cooks!)),
-            ),
+          : SingleChildScrollView(child: Column(children: _cooksList(cooks!))),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          addCookButton(context: context),
-        ],
+        children: [addCookButton(context: context)],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
@@ -77,7 +64,7 @@ class _CookPageState extends State<CookPage> {
             //   );
             // },
             // child: Image.network(cook.url),
-            child: CookItemCard(cook: cook,),
+            child: CookItemCard(cook: cook),
           ),
         )
         .toList();
