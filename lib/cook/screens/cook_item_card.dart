@@ -8,9 +8,7 @@ class CookItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Card(
-
       // card design parameters
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -22,12 +20,7 @@ class CookItemCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(
-            children: [
-              _cookImage(cook.url),
-              _cookLabels(cook)
-            ],
-          ),
+          Stack(children: [_cookImage(cook.url), _cookLabels(cook)]),
         ],
       ),
     );
@@ -35,7 +28,6 @@ class CookItemCard extends StatelessWidget {
 }
 
 Widget _cookImage(String url) {
-
   return AspectRatio(
     aspectRatio: 16 / 9,
     child: Image.network(
@@ -50,9 +42,9 @@ Widget _cookImage(String url) {
 }
 
 Widget _cookLabels(CookItem cook) {
-
   Widget buildCategoryBadge(CookCategory category) {
     final (Color color, String label) = switch (category) {
+      CookCategory.none => (Colors.black, '無'),
       CookCategory.breakfast => (Colors.orange, '朝食'),
       CookCategory.lunch => (Colors.blue, 'ランチ'),
       CookCategory.box => (Colors.green, 'お弁当'),

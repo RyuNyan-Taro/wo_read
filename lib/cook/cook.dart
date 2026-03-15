@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:wo_read/cook/models/cook_item.dart';
+import 'package:wo_read/cook/screens/add_cook_button.dart';
 import 'package:wo_read/cook/screens/cook_item_card.dart';
 
 class CookPage extends StatefulWidget {
@@ -52,14 +53,12 @@ class _CookPageState extends State<CookPage> {
           : SingleChildScrollView(
               child: Column(children: _cooksList(cooks!)),
             ),
-      // floatingActionButton: Column(
-      //   mainAxisAlignment: MainAxisAlignment.end,
-      //   children: [
-      //     addImageButton(context: context),
-      //     SizedBox(height: 12),
-      //     addCategoryButton(context: context),
-      //   ],
-      // ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          addCookButton(context: context),
+        ],
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
