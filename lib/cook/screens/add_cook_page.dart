@@ -6,6 +6,7 @@ import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/cook/controllers/add_cook_controller.dart';
 import 'package:wo_read/cook/models/cook_item.dart';
 
+import '../../common/action_indicator.dart';
 import '../use_cases/convert_enum_use_case.dart';
 
 class AddCookPage extends StatefulWidget {
@@ -32,7 +33,7 @@ class _AddCookPageState extends State<AddCookPage> {
   Future<void> _handleSave() async {
     final success = await _controller.saveCook();
     if (success && mounted) {
-      await showSuccessDialog(context: context, content: '画像が追加されたよ');
+      await showSuccessDialog(context: context, content: '記録が追加されたよ');
     }
   }
 
@@ -95,7 +96,12 @@ class _AddCookPageState extends State<AddCookPage> {
             },
             child: const Text('画像を選択'),
           ),
-          ElevatedButton(onPressed: _handleSave, child: const Text('保存')),
+          ElevatedButton(
+            onPressed: () {
+              showActionIndicator(context, _handleSave());
+            },
+            child: const Text('保存'),
+          ),
         ],
       ),
     );
