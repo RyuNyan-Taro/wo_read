@@ -23,11 +23,9 @@ class _AddCookPageState extends State<AddCookPage> {
   @override
   void initState() {
     super.initState();
-    print('start');
     _controller.pickImage().then((_) {
       if (mounted) setState(() {});
     });
-    print('picked');
   }
 
   Future<void> _handleSave() async {
