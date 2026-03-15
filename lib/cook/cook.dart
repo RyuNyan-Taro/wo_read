@@ -44,7 +44,7 @@ class _CookPageState extends State<CookPage> {
           : SingleChildScrollView(child: Column(children: _cooksList(cooks!))),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [addCookButton(context: context)],
+        children: [addCookButton(context: context, returnAction: _getCooks)],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
