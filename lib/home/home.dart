@@ -5,6 +5,7 @@ import 'package:wo_read/hair/hair.dart';
 import 'package:wo_read/hiragana/hiragana.dart';
 import 'package:wo_read/record/record.dart';
 import 'package:wo_read/shape_move/shape_move.dart';
+import 'package:wo_read/cook/cook.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -17,6 +18,7 @@ class HomePage extends StatelessWidget {
       ('ヘアカタログ', HairPage()),
       ('ジェスチャー', ShapeMovePage()),
       ('ギャラリー', GalleryPage()),
+      ('料理', CookPage())
     ];
 
     return Scaffold(
