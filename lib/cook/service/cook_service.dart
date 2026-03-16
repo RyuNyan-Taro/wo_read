@@ -23,9 +23,9 @@ class CookService {
         .map(
           (data) => CookItem(
             id: data['id'],
-            url: '$url/$directory/${data['name']}',
+            imageUrl: '$url/$directory/${data['name']}',
             category: convertToCookCategory(label: data['category']),
-            createdAt: DateTime.parse(data['createdAt']),
+            date: DateTime.parse(data['createdAt']),
           ),
         )
         .toList();
@@ -46,5 +46,27 @@ class CookService {
       'category': categoryValue,
       'createdAt': createdAt.toIso8601String(),
     });
+  }
+
+  Future<void> updateCook(
+    int id,
+    String? filePath,
+    CookCategory category,
+    DateTime createdAt,
+  ) async {
+    final Map<String, dynamic> updateData = {
+      'category': category.name,
+      'createdAt': createdAt.toIso8601String(),
+    };
+
+    if (filePath != null) {
+      final File pickedImage = File(filePath);
+      final String savePath = filePath.split('/').last;
+
+      await _supabase.storage.from('cooks').upload(savePath, pickedImage);
+      updateData['name'] = savePath;
+    }
+
+    await _supabase.from('cook_record').update(updateData).eq('id', id);
   }
 }

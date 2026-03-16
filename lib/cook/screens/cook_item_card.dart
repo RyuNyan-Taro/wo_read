@@ -20,7 +20,7 @@ class CookItemCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(children: [_cookImage(cook.url), _cookLabels(cook)]),
+          Stack(children: [_cookImage(cook.imageUrl), _cookLabels(cook)]),
         ],
       ),
     );
@@ -111,7 +111,7 @@ Widget _cookLabels(CookItem cook) {
       children: [
         buildCategoryBadge(cook.category),
         const SizedBox(height: 8),
-        buildDateBadge(cook.createdAt),
+        buildDateBadge(cook.date),
       ],
     ),
   );

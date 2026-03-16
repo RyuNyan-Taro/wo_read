@@ -1,14 +1,14 @@
 class CookItem {
   final int id;
   final CookCategory category;
-  final String url;
-  final DateTime createdAt;
+  final String imageUrl;
+  final DateTime date;
 
   const CookItem({
     required this.id,
     required this.category,
-    required this.url,
-    required this.createdAt,
+    required this.imageUrl,
+    required this.date,
   });
 }
 
