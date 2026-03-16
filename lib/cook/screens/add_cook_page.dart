@@ -211,7 +211,6 @@ class CookImagePreview extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: Container(
-            height: 300,
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -229,24 +228,27 @@ class CookImagePreview extends StatelessWidget {
             ),
             clipBehavior: Clip.antiAlias,
             child: imageFile != null
-                ? Image.file(File(imageFile!.path), fit: BoxFit.cover)
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.restaurant_menu,
-                        size: 64,
-                        color: Colors.orange.withOpacity(0.4),
-                      ),
-                      const SizedBox(height: 12),
-                      const Text(
-                        '料理の写真をのせる',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
+                ? Image.file(File(imageFile!.path), fit: BoxFit.fitWidth)
+                : Container(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.restaurant_menu,
+                          size: 64,
+                          color: Colors.orange.withOpacity(0.4),
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 12),
+                        const Text(
+                          '料理の写真をのせる',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
           ),
         ),
