@@ -113,7 +113,7 @@ class DatePickButton extends StatelessWidget {
     return OutlinedButton.icon(
       style: OutlinedButton.styleFrom(
         foregroundColor: colorScheme.primary,
-        side: BorderSide(color: colorScheme.primary.withOpacity(0.5)),
+        side: BorderSide(color: colorScheme.primary.withValues(alpha: 0.5)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       ),
@@ -179,7 +179,7 @@ class CategorySelector extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.1),
+        color: Colors.orange.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: DropdownButtonHideUnderline(
@@ -230,13 +230,16 @@ class CookImagePreview extends StatelessWidget {
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
               ],
               border: imageFile == null
-                  ? Border.all(color: Colors.grey.withOpacity(0.3), width: 2)
+                  ? Border.all(
+                      color: Colors.grey.withValues(alpha: 0.3),
+                      width: 2,
+                    )
                   : null,
             ),
             clipBehavior: Clip.antiAlias,
@@ -250,7 +253,7 @@ class CookImagePreview extends StatelessWidget {
                         Icon(
                           Icons.restaurant_menu,
                           size: 64,
-                          color: Colors.orange.withOpacity(0.4),
+                          color: Colors.orange.withValues(alpha: 0.4),
                         ),
                         const SizedBox(height: 12),
                         const Text(
@@ -284,7 +287,7 @@ class CookImagePreview extends StatelessWidget {
               onPressed: onRotate,
               icon: const Icon(Icons.rotate_right),
               style: IconButton.styleFrom(
-                backgroundColor: Colors.black.withOpacity(0.5),
+                backgroundColor: Colors.black.withValues(alpha: 0.5),
                 foregroundColor: Colors.white,
               ),
             ),
