@@ -24,9 +24,13 @@ class _AddCookPageState extends State<AddCookPage> {
   @override
   void initState() {
     super.initState();
-    _controller.pickImage().then((_) {
-      if (mounted) setState(() {});
-    });
+    _handlePickImage();
+  }
+
+  Future<void> _handlePickImage() async {
+    setState(() {});
+    await _controller.pickImage();
+    if (mounted) setState(() {});
   }
 
   Future<void> _handleSave() async {
@@ -43,39 +47,48 @@ class _AddCookPageState extends State<AddCookPage> {
         title: const Text('Add cook'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            CategorySelector(
-              currentCategory: _controller.category,
-              onChanged: (newValue) {
-                if (newValue != null) {
-                  setState(() {
-                    _controller.category = convertToCookCategory(
-                      label: newValue,
-                    );
-                  });
-                }
-              },
-            ),
-            DatePickButton(
-              selectedDate: _controller.date,
-              onDateSelected: (date) => setState(() => _controller.date = date),
-            ),
-            const SizedBox(height: 16),
-            CookImagePreview(
-              imageFile: _controller.image,
-              onTap: () async {
-                await _controller.pickImage();
-                setState(() {});
-              },
-            ),
-            const SizedBox(height: 32),
-            SaveButton(
-              onPressed: () => showActionIndicator(context, _handleSave()),
-            ),
-          ],
+      body: AbsorbPointer(
+        absorbing: _controller.isProcessing,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              CategorySelector(
+                currentCategory: _controller.category,
+                onChanged: (newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      _controller.category = convertToCookCategory(
+                        label: newValue,
+                      );
+                    });
+                  }
+                },
+              ),
+              DatePickButton(
+                selectedDate: _controller.date,
+                onDateSelected: (date) =>
+                    setState(() => _controller.date = date),
+              ),
+              const SizedBox(height: 16),
+              CookImagePreview(
+                imageFile: _controller.image,
+                isProcessing: _controller.isProcessing,
+                onRotate: () async {
+                  setState(() {});
+                  await _controller.rotateImage();
+                  if (mounted) setState(() {});
+                },
+                onTap: _handlePickImage,
+              ),
+              const SizedBox(height: 32),
+              SaveButton(
+                onPressed: _controller.canSave
+                    ? () => showActionIndicator(context, _handleSave())
+                    : null,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -100,7 +113,7 @@ class DatePickButton extends StatelessWidget {
     return OutlinedButton.icon(
       style: OutlinedButton.styleFrom(
         foregroundColor: colorScheme.primary,
-        side: BorderSide(color: colorScheme.primary.withOpacity(0.5)),
+        side: BorderSide(color: colorScheme.primary.withValues(alpha: 0.5)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       ),
@@ -123,7 +136,7 @@ class DatePickButton extends StatelessWidget {
 }
 
 class SaveButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   const SaveButton({super.key, required this.onPressed});
 
@@ -138,6 +151,8 @@ class SaveButton extends StatelessWidget {
           foregroundColor: Colors.white,
           elevation: 0,
           shape: const StadiumBorder(),
+          disabledBackgroundColor: Colors.grey.shade300,
+          disabledForegroundColor: Colors.grey.shade500,
         ),
         onPressed: onPressed,
         child: const Text(
@@ -164,7 +179,7 @@ class CategorySelector extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.1),
+        color: Colors.orange.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: DropdownButtonHideUnderline(
@@ -189,53 +204,95 @@ class CategorySelector extends StatelessWidget {
 
 class CookImagePreview extends StatelessWidget {
   final XFile? imageFile;
+  final bool isProcessing;
   final VoidCallback onTap;
+  final VoidCallback onRotate;
 
-  const CookImagePreview({super.key, this.imageFile, required this.onTap});
+  const CookImagePreview({
+    super.key,
+    this.imageFile,
+    required this.isProcessing,
+    required this.onTap,
+    required this.onRotate,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 300,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        GestureDetector(
+          onTap: isProcessing ? null : onTap,
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+              border: imageFile == null
+                  ? Border.all(
+                      color: Colors.grey.withValues(alpha: 0.3),
+                      width: 2,
+                    )
+                  : null,
             ),
-          ],
-          border: imageFile == null
-              ? Border.all(color: Colors.grey.withOpacity(0.3), width: 2)
-              : null,
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: imageFile != null
-            ? Image.file(File(imageFile!.path), fit: BoxFit.cover)
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.restaurant_menu,
-                    size: 64,
-                    color: Colors.orange.withOpacity(0.4),
-                  ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    '料理の写真をのせる',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
+            clipBehavior: Clip.antiAlias,
+            child: imageFile != null
+                ? Image.file(File(imageFile!.path), fit: BoxFit.fitWidth)
+                : Container(
+                    padding: const EdgeInsets.all(48.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.restaurant_menu,
+                          size: 64,
+                          color: Colors.orange.withValues(alpha: 0.4),
+                        ),
+                        const SizedBox(height: 12),
+                        const Text(
+                          '料理の写真をのせる',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
+          ),
+        ),
+
+        if (isProcessing && imageFile != null)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black26,
+                borderRadius: BorderRadius.circular(24),
               ),
-      ),
+            ),
+          ),
+
+        if (imageFile != null && !isProcessing)
+          Positioned(
+            top: 8,
+            right: 8,
+            child: IconButton.filled(
+              onPressed: onRotate,
+              icon: const Icon(Icons.rotate_right),
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.black.withValues(alpha: 0.5),
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
