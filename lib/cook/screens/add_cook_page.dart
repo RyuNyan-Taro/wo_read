@@ -24,9 +24,13 @@ class _AddCookPageState extends State<AddCookPage> {
   @override
   void initState() {
     super.initState();
-    _controller.pickImage().then((_) {
-      if (mounted) setState(() {});
-    });
+    _handlePickImage();
+  }
+
+  Future<void> _handlePickImage() async {
+    setState(() {});
+    await _controller.pickImage();
+    if (mounted) setState(() {});
   }
 
   Future<void> _handleSave() async {
@@ -43,43 +47,48 @@ class _AddCookPageState extends State<AddCookPage> {
         title: const Text('Add cook'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            CategorySelector(
-              currentCategory: _controller.category,
-              onChanged: (newValue) {
-                if (newValue != null) {
-                  setState(() {
-                    _controller.category = convertToCookCategory(
-                      label: newValue,
-                    );
-                  });
-                }
-              },
-            ),
-            DatePickButton(
-              selectedDate: _controller.date,
-              onDateSelected: (date) => setState(() => _controller.date = date),
-            ),
-            const SizedBox(height: 16),
-            CookImagePreview(
-              imageFile: _controller.image,
-              onTap: () async {
-                await _controller.pickImage();
-                setState(() {});
-              },
-              onRotate: () async {
-                await _controller.rotateImage();
-                setState(() {});
-              },
-            ),
-            const SizedBox(height: 32),
-            SaveButton(
-              onPressed: () => showActionIndicator(context, _handleSave()),
-            ),
-          ],
+      body: AbsorbPointer(
+        absorbing: _controller.isProcessing,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              CategorySelector(
+                currentCategory: _controller.category,
+                onChanged: (newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      _controller.category = convertToCookCategory(
+                        label: newValue,
+                      );
+                    });
+                  }
+                },
+              ),
+              DatePickButton(
+                selectedDate: _controller.date,
+                onDateSelected: (date) =>
+                    setState(() => _controller.date = date),
+              ),
+              const SizedBox(height: 16),
+              CookImagePreview(
+                imageFile: _controller.image,
+                isProcessing: _controller.isProcessing,
+                onRotate: () async {
+                  setState(() {});
+                  await _controller.rotateImage();
+                  if (mounted) setState(() {});
+                },
+                onTap: _handlePickImage,
+              ),
+              const SizedBox(height: 32),
+              SaveButton(
+                onPressed: _controller.canSave
+                    ? () => showActionIndicator(context, _handleSave())
+                    : null,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -127,7 +136,7 @@ class DatePickButton extends StatelessWidget {
 }
 
 class SaveButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   const SaveButton({super.key, required this.onPressed});
 
@@ -142,6 +151,8 @@ class SaveButton extends StatelessWidget {
           foregroundColor: Colors.white,
           elevation: 0,
           shape: const StadiumBorder(),
+          disabledBackgroundColor: Colors.grey.shade300,
+          disabledForegroundColor: Colors.grey.shade500,
         ),
         onPressed: onPressed,
         child: const Text(
@@ -193,12 +204,14 @@ class CategorySelector extends StatelessWidget {
 
 class CookImagePreview extends StatelessWidget {
   final XFile? imageFile;
+  final bool isProcessing;
   final VoidCallback onTap;
   final VoidCallback onRotate;
 
   const CookImagePreview({
     super.key,
     this.imageFile,
+    required this.isProcessing,
     required this.onTap,
     required this.onRotate,
   });
@@ -206,10 +219,10 @@ class CookImagePreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      alignment: Alignment.topRight,
+      alignment: Alignment.center,
       children: [
         GestureDetector(
-          onTap: onTap,
+          onTap: isProcessing ? null : onTap,
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
@@ -230,7 +243,7 @@ class CookImagePreview extends StatelessWidget {
             child: imageFile != null
                 ? Image.file(File(imageFile!.path), fit: BoxFit.fitWidth)
                 : Container(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: const EdgeInsets.all(48.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -252,9 +265,21 @@ class CookImagePreview extends StatelessWidget {
                   ),
           ),
         ),
-        if (imageFile != null)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+
+        if (isProcessing && imageFile != null)
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black26,
+                borderRadius: BorderRadius.circular(24),
+              ),
+            ),
+          ),
+
+        if (imageFile != null && !isProcessing)
+          Positioned(
+            top: 8,
+            right: 8,
             child: IconButton.filled(
               onPressed: onRotate,
               icon: const Icon(Icons.rotate_right),

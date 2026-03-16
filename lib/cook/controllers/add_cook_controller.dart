@@ -8,11 +8,14 @@ import '../service/cook_service.dart';
 
 class AddCookController {
   XFile? image;
+  bool isProcessing = false;
   final ImagePicker _imagePicker = ImagePicker();
   final CookService _cookService = CookService();
 
   late DateTime date;
   late CookCategory category;
+
+  bool get canSave => image != null && !isProcessing;
 
   AddCookController() {
     date = DateTime.now();
@@ -20,11 +23,17 @@ class AddCookController {
   }
 
   Future<void> pickImage() async {
-    final pickedFile = await _imagePicker.pickImage(
-      source: ImageSource.gallery,
-    );
-    if (pickedFile == null) return;
-    image = XFile(pickedFile.path);
+    isProcessing = true;
+    try {
+      final pickedFile = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+      );
+      if (pickedFile != null) {
+        image = XFile(pickedFile.path);
+      }
+    } finally {
+      isProcessing = false;
+    }
   }
 
   Future<bool> saveCook() async {
@@ -39,22 +48,26 @@ class AddCookController {
   }
 
   Future<void> rotateImage() async {
-    if (image == null) return;
+    if (image == null || isProcessing) return;
 
-    final bytes = await File(image!.path).readAsBytes();
+    isProcessing = true;
+    try {
+      final bytes = await File(image!.path).readAsBytes();
+      img.Image? originalImage = img.decodeImage(bytes);
+      if (originalImage == null) return;
 
-    img.Image? originalImage = img.decodeImage(bytes);
-    if (originalImage == null) return;
+      img.Image rotatedImage = img.copyRotate(originalImage, angle: 90);
 
-    img.Image rotatedImage = img.copyRotate(originalImage, angle: 90);
+      final tempDir = await getTemporaryDirectory();
+      final path =
+          '${tempDir.path}/rotated_${DateTime.now().millisecondsSinceEpoch}.jpg';
 
-    final tempDir = await getTemporaryDirectory();
-    final path =
-        '${tempDir.path}/rotated_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final rotatedBytes = img.encodeJpg(rotatedImage);
+      final rotatedFile = await File(path).writeAsBytes(rotatedBytes);
 
-    final rotatedBytes = img.encodeJpg(rotatedImage);
-    final rotatedFile = await File(path).writeAsBytes(rotatedBytes);
-
-    image = XFile(rotatedFile.path);
+      image = XFile(rotatedFile.path);
+    } finally {
+      isProcessing = false;
+    }
   }
 }
