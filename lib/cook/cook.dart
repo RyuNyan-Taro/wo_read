@@ -27,6 +27,8 @@ class _CookPageState extends State<CookPage> {
     final CookService cookService = CookService();
     final List<CookItem> items = await cookService.getCookUrls();
 
+    if (!mounted) return;
+
     setState(() {
       cooks = items;
     });

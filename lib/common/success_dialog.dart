@@ -6,6 +6,7 @@ Future<void> showSuccessDialog({
 }) {
   return showDialog(
     context: context,
+    barrierDismissible: false,
     builder: (BuildContext context) {
       return AlertDialog(
         title: const Text('Success'),
@@ -13,7 +14,6 @@ Future<void> showSuccessDialog({
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
               Navigator.of(context).pop();
             },
             child: const Text('OK'),

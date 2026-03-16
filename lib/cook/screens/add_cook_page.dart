@@ -37,6 +37,10 @@ class _AddCookPageState extends State<AddCookPage> {
     final success = await _controller.saveCook();
     if (success && mounted) {
       await showSuccessDialog(context: context, content: '記録が追加されたよ');
+
+      if (!mounted) return;
+
+      Navigator.of(context).pop();
     }
   }
 
