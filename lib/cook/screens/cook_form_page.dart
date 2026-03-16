@@ -102,7 +102,12 @@ class _CookFormPageState extends State<CookFormPage> {
                 isProcessing: _controller.isProcessing,
                 onRotate: () async {
                   setState(() {});
-                  await _controller.rotateImage();
+                  await _controller.rotateImage(isRight: true);
+                  if (mounted) setState(() {});
+                },
+                onInverseRotate: () async {
+                  setState(() {});
+                  await _controller.rotateImage(isRight: false);
                   if (mounted) setState(() {});
                 },
                 onTap: _handlePickImage,
@@ -234,6 +239,7 @@ class CookImagePreview extends StatelessWidget {
   final bool isProcessing;
   final VoidCallback onTap;
   final VoidCallback onRotate;
+  final VoidCallback onInverseRotate;
 
   const CookImagePreview({
     super.key,
@@ -242,6 +248,7 @@ class CookImagePreview extends StatelessWidget {
     required this.isProcessing,
     required this.onTap,
     required this.onRotate,
+    required this.onInverseRotate,
   });
 
   @override
@@ -292,7 +299,7 @@ class CookImagePreview extends StatelessWidget {
             ),
           ),
 
-        if ((imageFile != null || imageUrl != null) && !isProcessing)
+        if ((imageFile != null || imageUrl != null) && !isProcessing) ...[
           Positioned(
             top: 8,
             right: 8,
@@ -305,6 +312,19 @@ class CookImagePreview extends StatelessWidget {
               ),
             ),
           ),
+          Positioned(
+            top: 8,
+            left: 8,
+            child: IconButton.filled(
+              onPressed: onInverseRotate,
+              icon: const Icon(Icons.rotate_left),
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.black.withAlpha(128),
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ),
+        ],
       ],
     );
   }

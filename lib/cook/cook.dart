@@ -32,6 +32,11 @@ class _CookPageState extends State<CookPage> {
 
     setState(() {
       cooks = items;
+      for (var cook in cooks!) {
+        print(
+          'Image: ${cook.imageUrl}, Category: ${cook.category}, Date: ${cook.date}',
+        );
+      }
     });
   }
 

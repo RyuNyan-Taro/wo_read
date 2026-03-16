@@ -44,7 +44,7 @@ class CookFormController {
     }
   }
 
-  Future<void> rotateImage() async {
+  Future<void> rotateImage({bool isRight = true}) async {
     if (image == null && initialImageUrl != null) {
       isProcessing = true; // 処理開始
       try {
@@ -66,7 +66,8 @@ class CookFormController {
       img.Image? originalImage = img.decodeImage(bytes);
       if (originalImage == null) return;
 
-      img.Image rotatedImage = img.copyRotate(originalImage, angle: 90);
+      final int angle = isRight ? 90 : -90;
+      img.Image rotatedImage = img.copyRotate(originalImage, angle: angle);
 
       final tempDir = await getTemporaryDirectory();
       final path =
