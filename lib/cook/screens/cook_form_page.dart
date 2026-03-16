@@ -25,8 +25,7 @@ class _CookFormPageState extends State<CookFormPage> {
   void initState() {
     super.initState();
     _controller = CookFormController(initialItem: widget.item);
-    
-    // 追加モードの時だけ自動でカメラ/ギャラリーを開くなら
+
     if (widget.item == null) {
       _handlePickImage();
     }
@@ -43,7 +42,7 @@ class _CookFormPageState extends State<CookFormPage> {
     if (success && mounted) {
       final message = _controller.isEditMode ? '更新したよ' : '記録が追加されたよ';
       await showSuccessDialog(context: context, content: message);
-      Navigator.pop(context); // 完了後に戻る
+      Navigator.pop(context);
     }
   }
 
@@ -80,7 +79,7 @@ class _CookFormPageState extends State<CookFormPage> {
               const SizedBox(height: 16),
               CookImagePreview(
                 imageFile: _controller.image,
-                imageUrl: _controller.initialImageUrl, // 追加
+                imageUrl: _controller.initialImageUrl,
                 isProcessing: _controller.isProcessing,
                 onRotate: () async {
                   setState(() {});
@@ -229,16 +228,13 @@ class CookImagePreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget imageWidget;
-    
+
     if (imageFile != null) {
-      // 新しく選んだ画像（ローカルファイル）
       imageWidget = Image.file(File(imageFile!.path), fit: BoxFit.fitWidth);
     } else if (imageUrl != null) {
-      // 編集モードで、まだ画像を変更していない場合（ネットワーク画像）
       imageWidget = Image.network(imageUrl!, fit: BoxFit.fitWidth);
     } else {
-      // 画像が何もない時（追加モードの初期状態）
-      imageWidget = _buildPlaceholder(); 
+      imageWidget = _buildPlaceholder();
     }
 
     return Stack(
@@ -260,10 +256,7 @@ class CookImagePreview extends StatelessWidget {
                 ),
               ],
               border: imageFile == null && imageUrl == null
-                  ? Border.all(
-                      color: Colors.grey.withAlpha(77),
-                      width: 2,
-                    )
+                  ? Border.all(color: Colors.grey.withAlpha(77), width: 2)
                   : null,
             ),
             child: imageWidget,
@@ -280,7 +273,7 @@ class CookImagePreview extends StatelessWidget {
             ),
           ),
 
-        if (imageFile != null && !isProcessing)
+        if ((imageFile != null || imageUrl != null) && !isProcessing)
           Positioned(
             top: 8,
             right: 8,
@@ -311,10 +304,7 @@ class CookImagePreview extends StatelessWidget {
           const SizedBox(height: 12),
           const Text(
             '料理の写真をのせる',
-            style: TextStyle(
-              color: Colors.grey,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
@@ -10,7 +11,7 @@ class CookFormController {
   final CookItem? initialItem; // 編集時はこれが入る
   XFile? image;
   bool isProcessing = false;
-  
+
   late DateTime date;
   late CookCategory category;
   String? initialImageUrl; // 既存の画像URL用
@@ -26,9 +27,9 @@ class CookFormController {
   }
 
   bool get isEditMode => initialItem != null;
-  
-  // 編集で画像を変えていない、かつURLがあるなら保存可能
-  bool get canSave => (image != null || initialImageUrl != null) && !isProcessing;
+
+  bool get canSave =>
+      (image != null || initialImageUrl != null) && !isProcessing;
 
   Future<void> pickImage() async {
     isProcessing = true;
@@ -45,7 +46,20 @@ class CookFormController {
   }
 
   Future<void> rotateImage() async {
-    if (image == null || isProcessing) return;
+    if (image == null && initialImageUrl != null) {
+      isProcessing = true; // 処理開始
+      try {
+        final response = await http.get(Uri.parse(initialImageUrl!));
+        final tempDir = await getTemporaryDirectory();
+        final file = File('${tempDir.path}/temp_image.jpg');
+        await file.writeAsBytes(response.bodyBytes);
+        image = XFile(file.path);
+      } catch (e) {
+        return;
+      }
+    }
+
+    if (image == null) return;
 
     isProcessing = true;
     try {
@@ -76,7 +90,12 @@ class CookFormController {
       if (isEditMode) {
         // 更新処理 (サービス側に updateCook を作る)
         // imageがnullなら画像は更新せず、それ以外を更新するロジックにする
-        await _cookService.updateCook(initialItem!.id, image?.path, category, date);
+        await _cookService.updateCook(
+          initialItem!.id,
+          image?.path,
+          category,
+          date,
+        );
       } else {
         // 新規登録処理
         await _cookService.addCook(image!.path, category, date);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wo_read/cook/models/cook_item.dart';
 import 'package:wo_read/cook/screens/add_cook_button.dart';
+import 'package:wo_read/cook/screens/cook_form_page.dart';
 import 'package:wo_read/cook/screens/cook_item_card.dart';
 import 'package:wo_read/cook/service/cook_service.dart';
 
@@ -56,16 +57,16 @@ class _CookPageState extends State<CookPage> {
     return cooks
         .map(
           (cook) => InkWell(
-            // onTap: () async {
-            //   await Navigator.of(context).push(
-            //     MaterialPageRoute(
-            //       builder: (context) {
-            //         return ModifyCategoryPage(cook: cook);
-            //       },
-            //     ),
-            //   );
-            // },
-            // child: Image.network(cook.url),
+            onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return CookFormPage(item: cook);
+                  },
+                ),
+              );
+              _getCooks();
+            },
             child: CookItemCard(cook: cook),
           ),
         )
