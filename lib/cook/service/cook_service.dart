@@ -15,8 +15,8 @@ class CookService {
     final PostgrestList response = await _supabase
         .from('cook_record')
         .select()
-        .order('createdAt', ascending: false)
-        .limit(100);
+        .limit(100)
+        .order('createdAt', ascending: false);
     final String url = dotenv.env['SUPABASE_PROJECT_URL'] ?? '';
     final String directory = dotenv.env['SUPABASE_COOK_DIRECTORY'] ?? '';
 
