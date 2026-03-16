@@ -4,27 +4,31 @@ import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:wo_read/common/success_dialog.dart';
-import 'package:wo_read/cook/controllers/add_cook_controller.dart';
+import 'package:wo_read/cook/controllers/cook_form_controller.dart';
 import 'package:wo_read/cook/models/cook_item.dart';
 
 import '../../common/action_indicator.dart';
 import '../use_cases/convert_enum_use_case.dart';
 
-class AddCookPage extends StatefulWidget {
-  const AddCookPage({super.key});
+class CookFormPage extends StatefulWidget {
+  final CookItem? item; // これがあれば編集モード
+  const CookFormPage({super.key, this.item});
 
   @override
-  State<AddCookPage> createState() => _AddCookPageState();
+  State<CookFormPage> createState() => _CookFormPageState();
 }
 
-class _AddCookPageState extends State<AddCookPage> {
-  final formatter = DateFormat('MM/dd');
-  final AddCookController _controller = AddCookController();
+class _CookFormPageState extends State<CookFormPage> {
+  late final CookFormController _controller;
 
   @override
   void initState() {
     super.initState();
-    _handlePickImage();
+    _controller = CookFormController(initialItem: widget.item);
+
+    if (widget.item == null) {
+      _handlePickImage();
+    }
   }
 
   Future<void> _handlePickImage() async {
@@ -34,13 +38,21 @@ class _AddCookPageState extends State<AddCookPage> {
   }
 
   Future<void> _handleSave() async {
-    final success = await _controller.saveCook();
+    final success = await _controller.submit();
     if (success && mounted) {
-      await showSuccessDialog(context: context, content: '記録が追加されたよ');
+      final message = _controller.isEditMode ? '更新したよ' : '記録が追加されたよ';
+      await showSuccessDialog(context: context, content: message);
+      Navigator.pop(context);
+    }
+  }
 
-      if (!mounted) return;
+  Future<void> _handleDelete() async {
+    final success = await _controller.delete();
 
-      Navigator.of(context).pop();
+    if (success && mounted) {
+      final message = '記録が削除されたよ';
+      await showSuccessDialog(context: context, content: message);
+      Navigator.pop(context);
     }
   }
 
@@ -48,8 +60,17 @@ class _AddCookPageState extends State<AddCookPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add cook'),
+        title: Text(_controller.isEditMode ? 'Edit Cook' : 'Add Cook'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          if (_controller.isEditMode)
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              onPressed: _controller.isProcessing
+                  ? null
+                  : () => showActionIndicator(context, _handleDelete()),
+            ),
+        ],
       ),
       body: AbsorbPointer(
         absorbing: _controller.isProcessing,
@@ -77,6 +98,7 @@ class _AddCookPageState extends State<AddCookPage> {
               const SizedBox(height: 16),
               CookImagePreview(
                 imageFile: _controller.image,
+                imageUrl: _controller.initialImageUrl,
                 isProcessing: _controller.isProcessing,
                 onRotate: () async {
                   setState(() {});
@@ -117,7 +139,7 @@ class DatePickButton extends StatelessWidget {
     return OutlinedButton.icon(
       style: OutlinedButton.styleFrom(
         foregroundColor: colorScheme.primary,
-        side: BorderSide(color: colorScheme.primary.withValues(alpha: 0.5)),
+        side: BorderSide(color: colorScheme.primary.withAlpha(128)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       ),
@@ -183,7 +205,7 @@ class CategorySelector extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.orange.withValues(alpha: 0.1),
+        color: Colors.orange.withAlpha(25),
         borderRadius: BorderRadius.circular(12),
       ),
       child: DropdownButtonHideUnderline(
@@ -208,6 +230,7 @@ class CategorySelector extends StatelessWidget {
 
 class CookImagePreview extends StatelessWidget {
   final XFile? imageFile;
+  final String? imageUrl; // 追加：編集時の既存画像URL
   final bool isProcessing;
   final VoidCallback onTap;
   final VoidCallback onRotate;
@@ -215,6 +238,7 @@ class CookImagePreview extends StatelessWidget {
   const CookImagePreview({
     super.key,
     this.imageFile,
+    this.imageUrl,
     required this.isProcessing,
     required this.onTap,
     required this.onRotate,
@@ -222,6 +246,16 @@ class CookImagePreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget imageWidget;
+
+    if (imageFile != null) {
+      imageWidget = Image.file(File(imageFile!.path), fit: BoxFit.fitWidth);
+    } else if (imageUrl != null) {
+      imageWidget = Image.network(imageUrl!, fit: BoxFit.fitWidth);
+    } else {
+      imageWidget = _buildPlaceholder();
+    }
+
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -229,51 +263,26 @@ class CookImagePreview extends StatelessWidget {
           onTap: isProcessing ? null : onTap,
           child: Container(
             width: double.infinity,
+            clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
+                  color: Colors.black.withAlpha(13),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
               ],
-              border: imageFile == null
-                  ? Border.all(
-                      color: Colors.grey.withValues(alpha: 0.3),
-                      width: 2,
-                    )
+              border: imageFile == null && imageUrl == null
+                  ? Border.all(color: Colors.grey.withAlpha(77), width: 2)
                   : null,
             ),
-            clipBehavior: Clip.antiAlias,
-            child: imageFile != null
-                ? Image.file(File(imageFile!.path), fit: BoxFit.fitWidth)
-                : Container(
-                    padding: const EdgeInsets.all(48.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.restaurant_menu,
-                          size: 64,
-                          color: Colors.orange.withValues(alpha: 0.4),
-                        ),
-                        const SizedBox(height: 12),
-                        const Text(
-                          '料理の写真をのせる',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+            child: imageWidget,
           ),
         ),
 
-        if (isProcessing && imageFile != null)
+        if (isProcessing && (imageFile != null || imageUrl != null))
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
@@ -283,7 +292,7 @@ class CookImagePreview extends StatelessWidget {
             ),
           ),
 
-        if (imageFile != null && !isProcessing)
+        if ((imageFile != null || imageUrl != null) && !isProcessing)
           Positioned(
             top: 8,
             right: 8,
@@ -291,12 +300,33 @@ class CookImagePreview extends StatelessWidget {
               onPressed: onRotate,
               icon: const Icon(Icons.rotate_right),
               style: IconButton.styleFrom(
-                backgroundColor: Colors.black.withValues(alpha: 0.5),
+                backgroundColor: Colors.black.withAlpha(128),
                 foregroundColor: Colors.white,
               ),
             ),
           ),
       ],
+    );
+  }
+
+  Widget _buildPlaceholder() {
+    return Container(
+      padding: const EdgeInsets.all(48.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.restaurant_menu,
+            size: 64,
+            color: Colors.orange.withAlpha(102),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            '料理の写真をのせる',
+            style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
     );
   }
 }

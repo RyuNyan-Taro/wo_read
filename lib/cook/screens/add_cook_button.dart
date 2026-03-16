@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'add_cook_page.dart';
+import 'cook_form_page.dart';
 
 Widget addCookButton({required BuildContext context, Function? returnAction}) {
   return FloatingActionButton.extended(
@@ -15,7 +15,7 @@ Widget addCookButton({required BuildContext context, Function? returnAction}) {
     onPressed: () async {
       await Navigator.of(
         context,
-      ).push(MaterialPageRoute(builder: (context) => const AddCookPage()));
+      ).push(MaterialPageRoute(builder: (context) => const CookFormPage()));
       if (returnAction != null) returnAction();
     },
     heroTag: 'addCook',

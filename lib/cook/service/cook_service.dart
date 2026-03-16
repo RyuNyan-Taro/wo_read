@@ -15,6 +15,7 @@ class CookService {
     final PostgrestList response = await _supabase
         .from('cook_record')
         .select()
+        .order('createdAt', ascending: false)
         .limit(100);
     final String url = dotenv.env['SUPABASE_PROJECT_URL'] ?? '';
     final String directory = dotenv.env['SUPABASE_COOK_DIRECTORY'] ?? '';
@@ -23,9 +24,9 @@ class CookService {
         .map(
           (data) => CookItem(
             id: data['id'],
-            url: '$url/$directory/${data['name']}',
+            imageUrl: '$url/$directory/${data['name']}',
             category: convertToCookCategory(label: data['category']),
-            createdAt: DateTime.parse(data['createdAt']),
+            date: DateTime.parse(data['createdAt']),
           ),
         )
         .toList();
@@ -46,5 +47,44 @@ class CookService {
       'category': categoryValue,
       'createdAt': createdAt.toIso8601String(),
     });
+  }
+
+  Future<void> updateCook(
+    int id,
+    String? filePath,
+    CookCategory category,
+    DateTime createdAt,
+  ) async {
+    final Map<String, dynamic> updateData = {
+      'category': category.name,
+      'createdAt': createdAt.toIso8601String(),
+    };
+
+    if (filePath != null) {
+      final File pickedImage = File(filePath);
+      final String savePath = filePath.split('/').last;
+
+      await _supabase.storage.from('cooks').upload(savePath, pickedImage);
+      updateData['name'] = savePath;
+    }
+
+    await _supabase.from('cook_record').update(updateData).eq('id', id);
+  }
+
+  Future<void> deleteCook(int id) async {
+    try {
+      final response = await _supabase
+          .from('cook_record')
+          .select('name')
+          .eq('id', id)
+          .single();
+
+      final String fileName = response['name'];
+      await _supabase.storage.from('cooks').remove([fileName]);
+
+      await _supabase.from('cook_record').delete().eq('id', id);
+    } catch (e) {
+      throw Exception('削除に失敗しました: $e');
+    }
   }
 }
