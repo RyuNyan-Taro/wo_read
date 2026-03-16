@@ -8,22 +8,21 @@ import 'package:wo_read/cook/models/cook_item.dart';
 import '../service/cook_service.dart';
 
 class CookFormController {
-  final CookItem? initialItem; // 編集時はこれが入る
+  final CookItem? initialItem;
   XFile? image;
   bool isProcessing = false;
 
   late DateTime date;
   late CookCategory category;
-  String? initialImageUrl; // 既存の画像URL用
+  String? initialImageUrl;
 
   final ImagePicker _imagePicker = ImagePicker();
   final CookService _cookService = CookService();
 
   CookFormController({this.initialItem}) {
-    // 編集時は初期値をセット、追加時はデフォルト値をセット
     date = initialItem?.date ?? DateTime.now();
     category = initialItem?.category ?? CookCategory.box;
-    initialImageUrl = initialItem?.imageUrl; // CookItemにimageUrlがある想定
+    initialImageUrl = initialItem?.imageUrl;
   }
 
   bool get isEditMode => initialItem != null;
@@ -88,8 +87,6 @@ class CookFormController {
 
     try {
       if (isEditMode) {
-        // 更新処理 (サービス側に updateCook を作る)
-        // imageがnullなら画像は更新せず、それ以外を更新するロジックにする
         await _cookService.updateCook(
           initialItem!.id,
           image?.path,
@@ -97,7 +94,6 @@ class CookFormController {
           date,
         );
       } else {
-        // 新規登録処理
         await _cookService.addCook(image!.path, category, date);
       }
       return true;
