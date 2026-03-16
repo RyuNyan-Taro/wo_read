@@ -69,4 +69,21 @@ class CookService {
 
     await _supabase.from('cook_record').update(updateData).eq('id', id);
   }
+
+  Future<void> deleteCook(int id) async {
+    try {
+      final response = await _supabase
+          .from('cook_record')
+          .select('name')
+          .eq('id', id)
+          .single();
+
+      final String fileName = response['name'];
+      await _supabase.storage.from('cooks').remove([fileName]);
+
+      await _supabase.from('cook_record').delete().eq('id', id);
+    } catch (e) {
+      throw Exception('削除に失敗しました: $e');
+    }
+  }
 }

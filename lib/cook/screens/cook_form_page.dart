@@ -46,12 +46,31 @@ class _CookFormPageState extends State<CookFormPage> {
     }
   }
 
+  Future<void> _handleDelete() async {
+    final success = await _controller.delete();
+
+    if (success && mounted) {
+      final message = '記録が削除されたよ';
+      await showSuccessDialog(context: context, content: message);
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(_controller.isEditMode ? 'Edit Cook' : 'Add Cook'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          if (_controller.isEditMode)
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              onPressed: _controller.isProcessing
+                  ? null
+                  : () => showActionIndicator(context, _handleDelete()),
+            ),
+        ],
       ),
       body: AbsorbPointer(
         absorbing: _controller.isProcessing,

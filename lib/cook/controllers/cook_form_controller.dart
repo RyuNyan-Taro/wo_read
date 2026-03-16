@@ -103,4 +103,18 @@ class CookFormController {
       isProcessing = false;
     }
   }
+
+  Future<bool> delete() async {
+    if (!isEditMode) return false;
+    isProcessing = true;
+
+    try {
+      await _cookService.deleteCook(initialItem!.id);
+      return true;
+    } catch (e) {
+      return false;
+    } finally {
+      isProcessing = false;
+    }
+  }
 }
