@@ -70,6 +70,10 @@ class _AddCookPageState extends State<AddCookPage> {
                 await _controller.pickImage();
                 setState(() {});
               },
+              onRotate: () async {
+                await _controller.rotateImage();
+                setState(() {});
+              },
             ),
             const SizedBox(height: 32),
             SaveButton(
@@ -190,52 +194,75 @@ class CategorySelector extends StatelessWidget {
 class CookImagePreview extends StatelessWidget {
   final XFile? imageFile;
   final VoidCallback onTap;
+  final VoidCallback onRotate;
 
-  const CookImagePreview({super.key, this.imageFile, required this.onTap});
+  const CookImagePreview({
+    super.key,
+    this.imageFile,
+    required this.onTap,
+    required this.onRotate,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 300,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+    return Stack(
+      alignment: Alignment.topRight,
+      children: [
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            height: 300,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+              border: imageFile == null
+                  ? Border.all(color: Colors.grey.withOpacity(0.3), width: 2)
+                  : null,
             ),
-          ],
-          border: imageFile == null
-              ? Border.all(color: Colors.grey.withOpacity(0.3), width: 2)
-              : null,
+            clipBehavior: Clip.antiAlias,
+            child: imageFile != null
+                ? Image.file(File(imageFile!.path), fit: BoxFit.cover)
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.restaurant_menu,
+                        size: 64,
+                        color: Colors.orange.withOpacity(0.4),
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        '料理の写真をのせる',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
         ),
-        clipBehavior: Clip.antiAlias,
-        child: imageFile != null
-            ? Image.file(File(imageFile!.path), fit: BoxFit.cover)
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.restaurant_menu,
-                    size: 64,
-                    color: Colors.orange.withOpacity(0.4),
-                  ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    '料理の写真をのせる',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+        if (imageFile != null)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton.filled(
+              onPressed: onRotate,
+              icon: const Icon(Icons.rotate_right),
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.black.withOpacity(0.5),
+                foregroundColor: Colors.white,
               ),
-      ),
+            ),
+          ),
+      ],
     );
   }
 }

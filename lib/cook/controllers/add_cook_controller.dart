@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:wo_read/cook/models/cook_item.dart';
+import 'package:image/image.dart' as img;
+import 'package:path_provider/path_provider.dart';
 
+import 'package:wo_read/cook/models/cook_item.dart';
 import '../service/cook_service.dart';
 
 class AddCookController {
@@ -33,5 +36,25 @@ class AddCookController {
     } catch (e) {
       return false;
     }
+  }
+
+  Future<void> rotateImage() async {
+    if (image == null) return;
+
+    final bytes = await File(image!.path).readAsBytes();
+
+    img.Image? originalImage = img.decodeImage(bytes);
+    if (originalImage == null) return;
+
+    img.Image rotatedImage = img.copyRotate(originalImage, angle: 90);
+
+    final tempDir = await getTemporaryDirectory();
+    final path =
+        '${tempDir.path}/rotated_${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+    final rotatedBytes = img.encodeJpg(rotatedImage);
+    final rotatedFile = await File(path).writeAsBytes(rotatedBytes);
+
+    image = XFile(rotatedFile.path);
   }
 }
