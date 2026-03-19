@@ -11,6 +11,7 @@ class CookFormController {
   final CookItem? initialItem;
   XFile? image;
   bool isProcessing = false;
+  String? aiComment;
 
   late DateTime date;
   late CookCategory category;
@@ -23,6 +24,7 @@ class CookFormController {
     date = initialItem?.date ?? DateTime.now();
     category = initialItem?.category ?? CookCategory.box;
     initialImageUrl = initialItem?.imageUrl;
+    aiComment = initialItem?.aiComment;
   }
 
   bool get isEditMode => initialItem != null;

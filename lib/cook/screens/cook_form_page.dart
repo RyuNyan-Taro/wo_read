@@ -37,6 +37,12 @@ class _CookFormPageState extends State<CookFormPage> {
     if (mounted) setState(() {});
   }
 
+  Future<void> _handleAiComment() async {
+    setState(() {});
+    await _controller.generateAiComment();
+    if (mounted) setState(() {});
+  }
+
   Future<void> _handleSave() async {
     final success = await _controller.submit();
     if (success && mounted) {
@@ -112,6 +118,14 @@ class _CookFormPageState extends State<CookFormPage> {
                 },
                 onTap: _handlePickImage,
               ),
+              if (_controller.isEditMode) ...[
+                const SizedBox(height: 24),
+                _aiCommentSection(
+                  comment: _controller.aiComment,
+                  isProcessing: _controller.isProcessing,
+                  onGenerate:
+                ),
+              ],
               const SizedBox(height: 32),
               SaveButton(
                 onPressed: _controller.canSave
@@ -348,5 +362,86 @@ class CookImagePreview extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _aiCommentSection extends StatelessWidget {
+  final String? comment;
+  final bool isProcessing;
+  final VoidCallback? onGenerate;
+
+  const _aiCommentSection({
+    super.key,
+    this.comment,
+    this.isProcessing = false,
+    this.onGenerate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final bool hasComment = comment != null && comment!.isNotEmpty;
+
+    if (hasComment) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.purple.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.purple.withValues(alpha: 0.2)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.auto_awesome, size: 18, color: Colors.purple),
+                const SizedBox(width: 8),
+                Text(
+                  'AIからのコメント',
+                  style: TextStyle(
+                    color: Colors.purple.shade700,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              comment!,
+              style: TextStyle(
+                color: Colors.grey.shade800,
+                fontSize: 14,
+                height: 1.5,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return OutlinedButton.icon(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(double.infinity, 52),
+          foregroundColor: Colors.purple,
+          side: const BorderSide(color: Colors.purple, width: 1.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        // 処理中はボタンを無効化
+        onPressed: isProcessing ? null : onGenerate,
+        icon: isProcessing
+            ? const SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.purple,
+                ),
+              )
+            : const Icon(Icons.auto_awesome),
+        label: Text(isProcessing ? '生成中...' : 'AIコメントを生成する'),
+      );
+    }
   }
 }
