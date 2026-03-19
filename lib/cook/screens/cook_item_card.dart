@@ -135,14 +135,12 @@ Widget _cookLabels(CookItem cook) {
     left: 12,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8,
       children: [
         buildCategoryBadge(cook.category),
-        const SizedBox(height: 8),
         buildDateBadge(cook.date),
-        if (cook.aiComment == null) ...[
-          const SizedBox(height: 8),
+        if (cook.aiComment != null && cook.aiComment!.isNotEmpty)
           buildAiBadge(),
-        ],
       ],
     ),
   );
