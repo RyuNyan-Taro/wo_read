@@ -262,17 +262,11 @@ class DatePickButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat('MM/dd');
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final formatter = DateFormat('yyyy/MM/dd');
 
-    return OutlinedButton.icon(
-      style: OutlinedButton.styleFrom(
-        foregroundColor: colorScheme.primary,
-        side: BorderSide(color: colorScheme.primary.withAlpha(128)),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      ),
-      onPressed: () async {
+    return InkWell(
+      onTap: () async {
         final date = await showDatePicker(
           context: context,
           initialDate: selectedDate,
@@ -281,10 +275,34 @@ class DatePickButton extends StatelessWidget {
         );
         if (date != null) onDateSelected(date);
       },
-      icon: const Icon(Icons.calendar_today, size: 18),
-      label: Text(
-        formatter.format(selectedDate),
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        height: 48,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          // CategorySelectorと色味を合わせる
+          border: Border.all(color: theme.colorScheme.primary.withAlpha(80)),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.calendar_month,
+              size: 18,
+              color: theme.colorScheme.primary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              formatter.format(selectedDate),
+              style: TextStyle(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -297,22 +315,30 @@ class SaveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SizedBox(
       width: double.infinity,
       height: 56,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.orangeAccent,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: const StadiumBorder(),
-          disabledBackgroundColor: Colors.grey.shade300,
-          disabledForegroundColor: Colors.grey.shade500,
-        ),
+      child: FilledButton.icon(
+        // Material 3のFilledButtonを使用
         onPressed: onPressed,
-        child: const Text(
+        style: FilledButton.styleFrom(
+          backgroundColor: Colors.orangeAccent, // ここはアクセントカラーで固定
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 0,
+        ),
+        icon: const Icon(Icons.check_circle_outline),
+        label: const Text(
           '記録を保存する',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+          ),
         ),
       ),
     );
@@ -331,22 +357,34 @@ class CategorySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
+      height: 48,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.orange.withAlpha(25),
+        color: theme.colorScheme.surfaceContainerHighest.withAlpha(100),
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.colorScheme.outlineVariant),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: currentCategory.name,
-          icon: const Icon(Icons.arrow_drop_down, color: Colors.orange),
+          isExpanded: true,
+          icon: Icon(
+            Icons.keyboard_arrow_down,
+            color: theme.colorScheme.primary,
+          ),
+          borderRadius: BorderRadius.circular(12),
           items: CookCategory.values.map((category) {
             return DropdownMenuItem(
               value: category.name,
               child: Text(
                 categoryToJp[category]!,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             );
           }).toList(),
