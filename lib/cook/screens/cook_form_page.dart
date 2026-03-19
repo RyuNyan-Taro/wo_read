@@ -123,7 +123,7 @@ class _CookFormPageState extends State<CookFormPage> {
                 _aiCommentSection(
                   comment: _controller.aiComment,
                   isProcessing: _controller.isProcessing,
-                  onGenerate:
+                  onGenerate: _handleAiComment,
                 ),
               ],
               const SizedBox(height: 32),

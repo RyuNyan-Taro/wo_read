@@ -27,6 +27,7 @@ class CookService {
             imageUrl: '$url/$directory/${data['name']}',
             category: convertToCookCategory(label: data['category']),
             date: DateTime.parse(data['createdAt']),
+            aiComment: data['aiComment'],
           ),
         )
         .toList();
@@ -54,10 +55,12 @@ class CookService {
     String? filePath,
     CookCategory category,
     DateTime createdAt,
+    String? aiComment,
   ) async {
     final Map<String, dynamic> updateData = {
       'category': category.name,
       'createdAt': createdAt.toIso8601String(),
+      'aiComment': aiComment,
     };
 
     if (filePath != null) {
