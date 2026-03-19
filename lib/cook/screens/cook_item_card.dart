@@ -105,15 +105,42 @@ Widget _cookLabels(CookItem cook) {
     );
   }
 
+  Widget buildAiBadge() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.purple.withValues(alpha: 0.8),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.auto_awesome, size: 10, color: Colors.white),
+          SizedBox(width: 4),
+          Text(
+            'AI',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   return Positioned(
     top: 12,
     left: 12,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 8,
       children: [
         buildCategoryBadge(cook.category),
-        const SizedBox(height: 8),
         buildDateBadge(cook.date),
+        if (cook.aiComment != null && cook.aiComment!.isNotEmpty)
+          buildAiBadge(),
       ],
     ),
   );

@@ -1,17 +1,17 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-import 'package:flutter/material.dart';
 import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/cook/controllers/cook_form_controller.dart';
 import 'package:wo_read/cook/models/cook_item.dart';
-
 import '../../common/action_indicator.dart';
 import '../use_cases/convert_enum_use_case.dart';
 
 class CookFormPage extends StatefulWidget {
-  final CookItem? item; // これがあれば編集モード
+  final CookItem? item;
+
   const CookFormPage({super.key, this.item});
 
   @override
@@ -25,39 +25,48 @@ class _CookFormPageState extends State<CookFormPage> {
   void initState() {
     super.initState();
     _controller = CookFormController(initialItem: widget.item);
-
     if (widget.item == null) {
-      _handlePickImage();
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _handleAction(_controller.pickImage),
+      );
     }
   }
 
-  Future<void> _handlePickImage() async {
+  Future<void> _handleAction(Future<void> Function() action) async {
     setState(() {});
-    await _controller.pickImage();
+    await action();
     if (mounted) setState(() {});
   }
 
   Future<void> _handleSave() async {
     final success = await _controller.submit();
     if (success && mounted) {
-      final message = _controller.isEditMode ? '更新したよ' : '記録が追加されたよ';
+      final message = _controller.isEditMode
+          ? '記録を更新したよ！'
+          : '記録を追加したよ！${_controller.aiComment != null ? '\n\n✨ AIからのコメント ✨\n──────────────────\n「${_controller.aiComment}」' : ''}';
+
       await showSuccessDialog(context: context, content: message);
-      Navigator.pop(context);
+      if (mounted) Navigator.pop(context);
     }
   }
 
   Future<void> _handleDelete() async {
-    final success = await _controller.delete();
-
-    if (success && mounted) {
-      final message = '記録が削除されたよ';
-      await showSuccessDialog(context: context, content: message);
-      Navigator.pop(context);
-    }
+    showActionIndicator(
+      context,
+      () async {
+            if (await _controller.delete() && mounted) {
+              await showSuccessDialog(context: context, content: '記録が削除されたよ');
+              if (mounted) Navigator.pop(context);
+            }
+          }
+          as Future<dynamic>,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final isProcessing = _controller.isProcessing;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(_controller.isEditMode ? 'Edit Cook' : 'Add Cook'),
@@ -66,53 +75,32 @@ class _CookFormPageState extends State<CookFormPage> {
           if (_controller.isEditMode)
             IconButton(
               icon: const Icon(Icons.delete_outline),
-              onPressed: _controller.isProcessing
-                  ? null
-                  : () => showActionIndicator(context, _handleDelete()),
+              onPressed: isProcessing ? null : () => _handleDelete(),
             ),
         ],
       ),
       body: AbsorbPointer(
-        absorbing: _controller.isProcessing,
+        absorbing: isProcessing,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Column(
             children: [
-              CategorySelector(
-                currentCategory: _controller.category,
-                onChanged: (newValue) {
-                  if (newValue != null) {
-                    setState(() {
-                      _controller.category = convertToCookCategory(
-                        label: newValue,
-                      );
-                    });
-                  }
-                },
-              ),
-              DatePickButton(
-                selectedDate: _controller.date,
-                onDateSelected: (date) =>
-                    setState(() => _controller.date = date),
-              ),
-              const SizedBox(height: 16),
-              CookImagePreview(
-                imageFile: _controller.image,
-                imageUrl: _controller.initialImageUrl,
-                isProcessing: _controller.isProcessing,
-                onRotate: () async {
-                  setState(() {});
-                  await _controller.rotateImage(isRight: true);
-                  if (mounted) setState(() {});
-                },
-                onInverseRotate: () async {
-                  setState(() {});
-                  await _controller.rotateImage(isRight: false);
-                  if (mounted) setState(() {});
-                },
-                onTap: _handlePickImage,
-              ),
-              const SizedBox(height: 32),
+              _buildHeaderSection(),
+
+              const SizedBox(height: 20),
+              _buildImageSection(),
+
+              if (_controller.isEditMode) ...[
+                const SizedBox(height: 20),
+                _AiCommentSection(
+                  comment: _controller.aiComment,
+                  isProcessing: isProcessing,
+                  onGenerate: () =>
+                      _handleAction(_controller.generateAiComment),
+                ),
+              ],
+
+              const SizedBox(height: 40),
               SaveButton(
                 onPressed: _controller.canSave
                     ? () => showActionIndicator(context, _handleSave())
@@ -121,6 +109,142 @@ class _CookFormPageState extends State<CookFormPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildHeaderSection() {
+    return Row(
+      children: [
+        Expanded(
+          child: CategorySelector(
+            currentCategory: _controller.category,
+            onChanged: (val) => setState(
+              () => _controller.category = convertToCookCategory(label: val!),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        DatePickButton(
+          selectedDate: _controller.date,
+          onDateSelected: (date) => setState(() => _controller.date = date),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImageSection() {
+    return CookImagePreview(
+      imageFile: _controller.image,
+      imageUrl: _controller.initialImageUrl,
+      isProcessing: _controller.isProcessing,
+      onRotate: (right) =>
+          _handleAction(() => _controller.rotateImage(isRight: right)),
+      onTap: () => _handleAction(_controller.pickImage),
+    );
+  }
+}
+
+class CookImagePreview extends StatelessWidget {
+  final XFile? imageFile;
+  final String? imageUrl;
+  final bool isProcessing;
+  final VoidCallback onTap;
+  final Function(bool isRight) onRotate;
+
+  const CookImagePreview({
+    super.key,
+    this.imageFile,
+    this.imageUrl,
+    required this.isProcessing,
+    required this.onTap,
+    required this.onRotate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final hasImage = imageFile != null || imageUrl != null;
+
+    return AspectRatio(
+      // アスペクト比を固定するとレイアウトが安定します
+      aspectRatio: 4 / 3,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey.shade50,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: Colors.grey.shade200),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            _buildImage(),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(onTap: isProcessing ? null : onTap),
+            ),
+            if (hasImage && !isProcessing) _buildRotateButtons(),
+            if (isProcessing) Container(color: Colors.black12),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImage() {
+    if (imageFile != null) {
+      return Image.file(File(imageFile!.path), fit: BoxFit.cover);
+    }
+    if (imageUrl != null) return Image.network(imageUrl!, fit: BoxFit.cover);
+    return const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.restaurant_menu, size: 48, color: Colors.orangeAccent),
+        SizedBox(height: 8),
+        Text(
+          '写真をのせる',
+          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRotateButtons() {
+    return Positioned(
+      top: 8,
+      left: 8,
+      right: 8,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _CircleIconButton(
+            icon: Icons.rotate_left,
+            onTap: () => onRotate(false),
+          ),
+          _CircleIconButton(
+            icon: Icons.rotate_right,
+            onTap: () => onRotate(true),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CircleIconButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _CircleIconButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton.filled(
+      onPressed: onTap,
+      icon: Icon(icon, size: 20),
+      style: IconButton.styleFrom(
+        backgroundColor: Colors.black.withAlpha(100),
+        foregroundColor: Colors.white,
       ),
     );
   }
@@ -138,17 +262,11 @@ class DatePickButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat('MM/dd');
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final formatter = DateFormat('yyyy/MM/dd');
 
-    return OutlinedButton.icon(
-      style: OutlinedButton.styleFrom(
-        foregroundColor: colorScheme.primary,
-        side: BorderSide(color: colorScheme.primary.withAlpha(128)),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      ),
-      onPressed: () async {
+    return InkWell(
+      onTap: () async {
         final date = await showDatePicker(
           context: context,
           initialDate: selectedDate,
@@ -157,10 +275,34 @@ class DatePickButton extends StatelessWidget {
         );
         if (date != null) onDateSelected(date);
       },
-      icon: const Icon(Icons.calendar_today, size: 18),
-      label: Text(
-        formatter.format(selectedDate),
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        height: 48,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          // CategorySelectorと色味を合わせる
+          border: Border.all(color: theme.colorScheme.primary.withAlpha(80)),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.calendar_month,
+              size: 18,
+              color: theme.colorScheme.primary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              formatter.format(selectedDate),
+              style: TextStyle(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -173,22 +315,30 @@ class SaveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SizedBox(
       width: double.infinity,
       height: 56,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.orangeAccent,
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: const StadiumBorder(),
-          disabledBackgroundColor: Colors.grey.shade300,
-          disabledForegroundColor: Colors.grey.shade500,
-        ),
+      child: FilledButton.icon(
+        // Material 3のFilledButtonを使用
         onPressed: onPressed,
-        child: const Text(
+        style: FilledButton.styleFrom(
+          backgroundColor: Colors.orangeAccent, // ここはアクセントカラーで固定
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 0,
+        ),
+        icon: const Icon(Icons.check_circle_outline),
+        label: const Text(
           '記録を保存する',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+          ),
         ),
       ),
     );
@@ -207,22 +357,34 @@ class CategorySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
+      height: 48,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.orange.withAlpha(25),
+        color: theme.colorScheme.surfaceContainerHighest.withAlpha(100),
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.colorScheme.outlineVariant),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: currentCategory.name,
-          icon: const Icon(Icons.arrow_drop_down, color: Colors.orange),
+          isExpanded: true,
+          icon: Icon(
+            Icons.keyboard_arrow_down,
+            color: theme.colorScheme.primary,
+          ),
+          borderRadius: BorderRadius.circular(12),
           items: CookCategory.values.map((category) {
             return DropdownMenuItem(
               value: category.name,
               child: Text(
                 categoryToJp[category]!,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             );
           }).toList(),
@@ -233,120 +395,82 @@ class CategorySelector extends StatelessWidget {
   }
 }
 
-class CookImagePreview extends StatelessWidget {
-  final XFile? imageFile;
-  final String? imageUrl; // 追加：編集時の既存画像URL
+class _AiCommentSection extends StatelessWidget {
+  final String? comment;
   final bool isProcessing;
-  final VoidCallback onTap;
-  final VoidCallback onRotate;
-  final VoidCallback onInverseRotate;
+  final VoidCallback? onGenerate;
 
-  const CookImagePreview({
-    super.key,
-    this.imageFile,
-    this.imageUrl,
-    required this.isProcessing,
-    required this.onTap,
-    required this.onRotate,
-    required this.onInverseRotate,
+  const _AiCommentSection({
+    this.comment,
+    this.isProcessing = false,
+    this.onGenerate,
   });
 
   @override
   Widget build(BuildContext context) {
-    Widget imageWidget;
+    final bool hasComment = comment != null && comment!.isNotEmpty;
 
-    if (imageFile != null) {
-      imageWidget = Image.file(File(imageFile!.path), fit: BoxFit.fitWidth);
-    } else if (imageUrl != null) {
-      imageWidget = Image.network(imageUrl!, fit: BoxFit.fitWidth);
-    } else {
-      imageWidget = _buildPlaceholder();
-    }
-
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        GestureDetector(
-          onTap: isProcessing ? null : onTap,
-          child: Container(
-            width: double.infinity,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(13),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+    if (hasComment) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.purple.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.purple.withValues(alpha: 0.2)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 8,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.auto_awesome, size: 18, color: Colors.purple),
+                const SizedBox(width: 8),
+                Text(
+                  'AIからのコメント',
+                  style: TextStyle(
+                    color: Colors.purple.shade700,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
-              border: imageFile == null && imageUrl == null
-                  ? Border.all(color: Colors.grey.withAlpha(77), width: 2)
-                  : null,
             ),
-            child: imageWidget,
+            Text(
+              comment!,
+              style: TextStyle(
+                color: Colors.grey.shade800,
+                fontSize: 14,
+                height: 1.5,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return OutlinedButton.icon(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(double.infinity, 52),
+          foregroundColor: Colors.purple,
+          side: const BorderSide(color: Colors.purple, width: 1.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
-
-        if (isProcessing && (imageFile != null || imageUrl != null))
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black26,
-                borderRadius: BorderRadius.circular(24),
-              ),
-            ),
-          ),
-
-        if ((imageFile != null || imageUrl != null) && !isProcessing) ...[
-          Positioned(
-            top: 8,
-            right: 8,
-            child: IconButton.filled(
-              onPressed: onRotate,
-              icon: const Icon(Icons.rotate_right),
-              style: IconButton.styleFrom(
-                backgroundColor: Colors.black.withAlpha(128),
-                foregroundColor: Colors.white,
-              ),
-            ),
-          ),
-          Positioned(
-            top: 8,
-            left: 8,
-            child: IconButton.filled(
-              onPressed: onInverseRotate,
-              icon: const Icon(Icons.rotate_left),
-              style: IconButton.styleFrom(
-                backgroundColor: Colors.black.withAlpha(128),
-                foregroundColor: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildPlaceholder() {
-    return Container(
-      padding: const EdgeInsets.all(48.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.restaurant_menu,
-            size: 64,
-            color: Colors.orange.withAlpha(102),
-          ),
-          const SizedBox(height: 12),
-          const Text(
-            '料理の写真をのせる',
-            style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
+        // 処理中はボタンを無効化
+        onPressed: isProcessing ? null : onGenerate,
+        icon: isProcessing
+            ? const SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.purple,
+                ),
+              )
+            : const Icon(Icons.auto_awesome),
+        label: Text(isProcessing ? '生成中...' : 'AIコメントを生成する'),
+      );
+    }
   }
 }

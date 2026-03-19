@@ -27,6 +27,7 @@ class CookService {
             imageUrl: '$url/$directory/${data['name']}',
             category: convertToCookCategory(label: data['category']),
             date: DateTime.parse(data['createdAt']),
+            aiComment: data['aiComment'],
           ),
         )
         .toList();
@@ -36,6 +37,7 @@ class CookService {
     String filePath,
     CookCategory category,
     DateTime createdAt,
+    String? aiComment,
   ) async {
     final File pickedImage = File(filePath);
     final String savePath = filePath.split('/').last;
@@ -45,6 +47,7 @@ class CookService {
     await _supabase.from('cook_record').insert({
       'name': savePath,
       'category': categoryValue,
+      'aiComment': aiComment,
       'createdAt': createdAt.toIso8601String(),
     });
   }
@@ -54,10 +57,12 @@ class CookService {
     String? filePath,
     CookCategory category,
     DateTime createdAt,
+    String? aiComment,
   ) async {
     final Map<String, dynamic> updateData = {
       'category': category.name,
       'createdAt': createdAt.toIso8601String(),
+      'aiComment': aiComment,
     };
 
     if (filePath != null) {

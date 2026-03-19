@@ -3,12 +3,14 @@ class CookItem {
   final CookCategory category;
   final String imageUrl;
   final DateTime date;
+  final String? aiComment;
 
   const CookItem({
     required this.id,
     required this.category,
     required this.imageUrl,
     required this.date,
+    this.aiComment,
   });
 }
 
