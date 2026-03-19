@@ -45,13 +45,7 @@ Widget _cookImage(String url) {
 
 Widget _cookLabels(CookItem cook) {
   Widget buildCategoryBadge(CookCategory category) {
-    final (Color color, String label) = switch (category) {
-      CookCategory.none => (Colors.black, '無'),
-      CookCategory.breakfast => (Colors.orange, '朝食'),
-      CookCategory.lunch => (Colors.blue, 'ランチ'),
-      CookCategory.box => (Colors.green, 'お弁当'),
-      CookCategory.dinner => (Colors.indigo, '夕食'),
-    };
+    final (String label, Color color) = category.uiData;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
