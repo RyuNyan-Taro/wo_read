@@ -26,6 +26,7 @@ class _AddRecordPageState extends State<AddRecordPage> {
 
     if (success && mounted) {
       await showSuccessDialog(context: context, content: '記録が追加されたよ');
+      if (mounted) Navigator.pop(context);
     }
   }
 

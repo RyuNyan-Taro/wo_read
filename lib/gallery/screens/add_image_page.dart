@@ -26,6 +26,7 @@ class _AddImagePageState extends State<AddImagePage> {
     final success = await _controller.saveImage();
     if (success && mounted) {
       await showSuccessDialog(context: context, content: '画像が追加されたよ');
+      if (mounted) Navigator.pop(context);
     }
   }
 
@@ -54,10 +55,7 @@ class _AddImagePageState extends State<AddImagePage> {
             },
             child: const Text('画像を選択'),
           ),
-          ElevatedButton(
-            onPressed: _handleSave,
-            child: const Text('画像を保存'),
-          ),
+          ElevatedButton(onPressed: _handleSave, child: const Text('画像を保存')),
         ],
       ),
     );

@@ -32,6 +32,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
 
     if (success && mounted) {
       await showSuccessDialog(context: context, content: '記録が変更されたよ');
+      if (mounted) Navigator.pop(context);
     }
   }
 
@@ -40,6 +41,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
 
     if (success && mounted) {
       await showSuccessDialog(context: context, content: '記録が削除されたよ');
+      if (mounted) Navigator.pop(context);
     }
   }
 
