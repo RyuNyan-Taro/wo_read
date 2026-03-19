@@ -50,17 +50,15 @@ class _CookFormPageState extends State<CookFormPage> {
     }
   }
 
+  Future<void> _executeDeleteProcess() async {
+    if (await _controller.delete() && mounted) {
+      await showSuccessDialog(context: context, content: '記録が削除されたよ');
+      if (mounted) Navigator.pop(context);
+    }
+  }
+
   Future<void> _handleDelete() async {
-    showActionIndicator(
-      context,
-      () async {
-            if (await _controller.delete() && mounted) {
-              await showSuccessDialog(context: context, content: '記録が削除されたよ');
-              if (mounted) Navigator.pop(context);
-            }
-          }
-          as Future<dynamic>,
-    );
+    showActionIndicator(context, _executeDeleteProcess());
   }
 
   @override
