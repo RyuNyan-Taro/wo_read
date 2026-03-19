@@ -7,6 +7,7 @@ import '../../common/action_indicator.dart';
 
 class ModifyCategoryPage extends StatefulWidget {
   final GalleryItem gallery;
+
   const ModifyCategoryPage({super.key, required this.gallery});
 
   @override
@@ -41,6 +42,7 @@ class _ModifyCategoryPageState extends State<ModifyCategoryPage> {
     );
     if (mounted) {
       await showSuccessDialog(context: context, content: '更新されたよ');
+      if (mounted) Navigator.pop(context);
     }
   }
 

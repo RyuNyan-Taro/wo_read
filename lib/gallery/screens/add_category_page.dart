@@ -50,6 +50,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
     }
 
     await showSuccessDialog(context: context, content: 'カテゴリーが追加されたよ');
+    if (mounted) Navigator.pop(context);
   }
 
   @override
