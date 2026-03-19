@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:wo_read/gallery/models/gallery_item.dart';
 import 'package:wo_read/gallery/screens/add_category_button.dart';
@@ -70,7 +71,12 @@ class _GalleryPageState extends State<GalleryPage> {
                 ),
               );
             },
-            child: Image.network(gallery.url),
+            child: CachedNetworkImage(
+              imageUrl: gallery.url,
+              fit: BoxFit.cover,
+              placeholder: (context, url) =>
+                  const Center(child: CircularProgressIndicator()),
+            ),
           ),
         )
         .toList();
