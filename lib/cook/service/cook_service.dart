@@ -37,6 +37,7 @@ class CookService {
     String filePath,
     CookCategory category,
     DateTime createdAt,
+    String? aiComment,
   ) async {
     final File pickedImage = File(filePath);
     final String savePath = filePath.split('/').last;
@@ -46,6 +47,7 @@ class CookService {
     await _supabase.from('cook_record').insert({
       'name': savePath,
       'category': categoryValue,
+      'aiComment': aiComment,
       'createdAt': createdAt.toIso8601String(),
     });
   }

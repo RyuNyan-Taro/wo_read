@@ -102,7 +102,10 @@ class CookFormController {
           aiComment,
         );
       } else {
-        await _cookService.addCook(image!.path, category, date);
+        aiComment = await _aiService.getAiCommentFromImage(
+          imageBytes: await File(image!.path).readAsBytes(),
+        );
+        await _cookService.addCook(image!.path, category, date, aiComment);
       }
       return true;
     } catch (e) {
@@ -127,11 +130,6 @@ class CookFormController {
   }
 
   Future<void> generateAiComment() async {
-    print('generateComment');
-    print(isEditMode);
-    print(image == null);
-    if (!isEditMode) return;
-
     if (image == null && initialImageUrl == null) {
       debugPrint('画像ソースがありません');
       return;

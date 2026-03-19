@@ -46,7 +46,15 @@ class _CookFormPageState extends State<CookFormPage> {
   Future<void> _handleSave() async {
     final success = await _controller.submit();
     if (success && mounted) {
-      final message = _controller.isEditMode ? '更新したよ' : '記録が追加されたよ';
+      String message;
+      if (_controller.isEditMode) {
+        message = '記録を更新したよ！';
+      } else {
+        final aiSection = _controller.aiComment != null
+            ? '\n\n✨ AIからのコメント ✨\n──────────────────\n「${_controller.aiComment}」'
+            : '';
+        message = '記録を追加したよ！$aiSection';
+      }
       await showSuccessDialog(context: context, content: message);
       Navigator.pop(context);
     }
