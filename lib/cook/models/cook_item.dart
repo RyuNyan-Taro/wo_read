@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class CookItem {
   final int id;
   final CookCategory category;
@@ -22,4 +24,12 @@ const Map<CookCategory, String> categoryToJp = {
   CookCategory.lunch: '昼食',
   CookCategory.box: '弁当',
   CookCategory.dinner: '夕食',
+};
+
+const Map<CookCategory, Color> categoryToColor = {
+  CookCategory.none: Colors.black,
+  CookCategory.breakfast: Colors.orange,
+  CookCategory.lunch: Colors.blue,
+  CookCategory.box: Colors.green,
+  CookCategory.dinner: Colors.indigo,
 };
