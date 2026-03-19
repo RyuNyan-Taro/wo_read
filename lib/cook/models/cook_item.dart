@@ -33,3 +33,11 @@ const Map<CookCategory, Color> categoryToColor = {
   CookCategory.box: Colors.green,
   CookCategory.dinner: Colors.indigo,
 };
+
+extension CookCategoryX on CookCategory {
+  String get label => categoryToJp[this] ?? '不明';
+
+  Color get color => categoryToColor[this] ?? Colors.grey;
+
+  (String, Color) get uiData => (label, color);
+}
