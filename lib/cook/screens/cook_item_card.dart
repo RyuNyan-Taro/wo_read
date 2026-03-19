@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/cook_item.dart';
 
 class CookItemCard extends StatelessWidget {
@@ -30,13 +31,14 @@ class CookItemCard extends StatelessWidget {
 Widget _cookImage(String url) {
   return AspectRatio(
     aspectRatio: 16 / 9,
-    child: Image.network(
-      url,
+    child: CachedNetworkImage(
+      imageUrl: url,
       fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) => Container(
-        color: Colors.grey[200],
-        child: const Icon(Icons.restaurant, color: Colors.white, size: 40),
-      ),
+      placeholder: (context, url) =>
+          const Center(child: CircularProgressIndicator()),
+      errorWidget: (context, url, error) {
+        return const Icon(Icons.restaurant, color: Colors.grey, size: 40);
+      },
     ),
   );
 }
