@@ -128,7 +128,7 @@ class _CookFormPageState extends State<CookFormPage> {
               ),
               if (_controller.isEditMode) ...[
                 const SizedBox(height: 24),
-                _aiCommentSection(
+                _AiCommentSection(
                   comment: _controller.aiComment,
                   isProcessing: _controller.isProcessing,
                   onGenerate: _handleAiComment,
@@ -373,12 +373,12 @@ class CookImagePreview extends StatelessWidget {
   }
 }
 
-class _aiCommentSection extends StatelessWidget {
+class _AiCommentSection extends StatelessWidget {
   final String? comment;
   final bool isProcessing;
   final VoidCallback? onGenerate;
 
-  const _aiCommentSection({
+  const _AiCommentSection({
     super.key,
     this.comment,
     this.isProcessing = false,
