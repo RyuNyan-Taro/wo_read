@@ -138,7 +138,6 @@ class CookFormController {
     isProcessing = true;
 
     try {
-      print('start');
       Uint8List imageBytes;
       if (image != null) {
         imageBytes = await File(image!.path).readAsBytes();
@@ -154,9 +153,6 @@ class CookFormController {
       final result = await _aiService.getAiCommentFromImage(
         imageBytes: imageBytes,
       );
-
-      print('get result');
-      print(result);
 
       if (result != null) {
         aiComment = result;

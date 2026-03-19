@@ -23,8 +23,6 @@ class AiService {
     try {
       final imagePart = DataPart(mimeType, imageBytes);
 
-      print(imagePart);
-
       final content = [
         Content.multi([TextPart(prompt), imagePart]),
       ];
