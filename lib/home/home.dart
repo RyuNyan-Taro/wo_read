@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wo_read/common/add_record_button.dart';
+import 'package:wo_read/cook/screens/add_cook_button.dart';
 import 'package:wo_read/gallery/gallery.dart';
 import 'package:wo_read/hair/hair.dart';
 import 'package:wo_read/hiragana/hiragana.dart';
@@ -44,7 +45,14 @@ class HomePage extends StatelessWidget {
               .toList(),
         ),
       ),
-      floatingActionButton: addRecordButton(context: context),
+      floatingActionButton: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          addCookButton(context: context),
+          const SizedBox(width: 8),
+          addRecordButton(context: context),
+        ],
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
