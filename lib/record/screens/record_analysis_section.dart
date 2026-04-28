@@ -46,7 +46,7 @@ class _FeelingPieChart extends StatelessWidget {
     final counts = countByFeelingType(records);
 
     final sections = FeelingType.values
-        .where((t) => (counts[t] ?? 0) > 0)
+        .where((t) => t != FeelingType.none && (counts[t] ?? 0) > 0)
         .map((t) {
           final count = counts[t]!;
           return PieChartSectionData(
@@ -98,7 +98,7 @@ class _DenverBarChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final counts = countByDenverType(records);
-    final types = DenverType.values;
+    final types = DenverType.values.where((t) => t != DenverType.none).toList();
     final maxCount =
         types.map((t) => counts[t] ?? 0).reduce((a, b) => a > b ? a : b);
     const _niceSteps = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];
