@@ -45,11 +45,11 @@ class HomePage extends StatelessWidget {
               .toList(),
         ),
       ),
-      floatingActionButton: Column(
+      floatingActionButton: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           addCookButton(context: context),
-          const SizedBox(height: 8),
+          const SizedBox(width: 8),
           addRecordButton(context: context),
         ],
       ),
