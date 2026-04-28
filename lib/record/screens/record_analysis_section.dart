@@ -101,6 +101,10 @@ class _DenverBarChart extends StatelessWidget {
     final types = DenverType.values;
     final maxCount =
         types.map((t) => counts[t] ?? 0).reduce((a, b) => a > b ? a : b);
+    const _niceSteps = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];
+    final leftInterval = _niceSteps
+        .firstWhere((s) => s >= maxCount / 5, orElse: () => _niceSteps.last)
+        .toDouble();
 
     final barGroups = types.asMap().entries
         .map((entry) => BarChartGroupData(
@@ -152,7 +156,7 @@ class _DenverBarChart extends StatelessWidget {
                       sideTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 28,
-                        interval: 1,
+                        interval: leftInterval,
                       ),
                     ),
                     topTitles: AxisTitles(
