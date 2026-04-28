@@ -6,6 +6,7 @@ import 'package:wo_read/record/models/lunar_age.dart';
 import 'package:wo_read/record/models/record_item.dart';
 import 'package:wo_read/record/screens/modify_record.dart';
 import 'package:wo_read/record/service/record_service.dart';
+import 'package:wo_read/record/screens/record_analysis_section.dart';
 import 'package:wo_read/record/use_cases/lunar_age_use_case.dart';
 
 class RecordPage extends StatefulWidget {
@@ -63,15 +64,16 @@ Widget _recordsSet(List<RecordItem> records, Function() backAction) {
 
   return SingleChildScrollView(
     child: Column(
-      children: lunarAgeGroup.entries
-          .map(
-            (entry) => _lunarAgeRecords(
-              lunarAge: entry.key,
-              records: entry.value,
-              backAction: backAction,
-            ),
-          )
-          .toList(),
+      children: [
+        RecordAnalysisSection(records: records),
+        ...lunarAgeGroup.entries.map(
+          (entry) => _lunarAgeRecords(
+            lunarAge: entry.key,
+            records: entry.value,
+            backAction: backAction,
+          ),
+        ),
+      ],
     ),
   );
 }
