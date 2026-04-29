@@ -1,0 +1,135 @@
+<!DOCTYPE html><html lang="ja"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>育児のミカタ - ホーム</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#FF9E7A",
+          "background-light": "#f8f6f5",
+          "background-dark": "#23140f",
+        },
+        fontFamily: {
+          "display": ["Plus Jakarta Sans"]
+        },
+        borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-[#f8f6f5] dark:bg-[#23140f] text-stone-900 dark:text-stone-100 min-h-screen pb-24 md:pb-0 relative">
+<!-- TopAppBar -->
+<header class="bg-[#FDFCFB] dark:bg-stone-950 fixed top-0 left-0 w-full z-50 flex items-center px-5 h-16 rounded-b-2xl border-b border-stone-100 dark:border-stone-900 shadow-sm justify-center">
+<h1 class="text-xl font-bold text-[#FF9E7A] dark:text-[#FFAF91] tracking-tight font-['Plus_Jakarta_Sans']" style="">のびのびノート</h1>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-margin-page py-stack-md max-w-4xl mx-auto flex flex-col gap-stack-md mt-16">
+<!-- Welcome Section -->
+<section>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2" style=""><br></h2>
+<p class="font-body-md text-body-md text-on-surface-variant" style=""><br></p>
+</section>
+<!-- Focus Row: Large Hero Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter-card">
+<!-- Growth Record Card -->
+<button class="flex flex-col bg-primary-container/10 border border-primary-container/20 rounded-2xl p-6 text-left relative overflow-hidden group hover:shadow-sm transition-shadow" style="">
+<div class="absolute -right-6 -top-6 w-32 h-32 bg-primary-container/20 rounded-full blur-2xl group-hover:bg-primary-container/30 transition-colors"></div>
+<div class="flex justify-between items-start mb-4 relative z-10">
+<div class="w-14 h-14 rounded-xl bg-primary-container/30 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: &quot;FILL&quot; 1;">child_care</span>
+</div>
+<span class="font-label-lg text-label-lg px-3 py-1 bg-surface-container-highest/50 text-on-surface-variant rounded-full text-xs" style="">最終更新: 2時間前</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2 relative z-10" style="">成長記録</h3>
+<p class="font-body-md text-body-md text-on-surface-variant relative z-10" style="">今日のお子様の様子や活動を記録しましょう</p>
+</button>
+<!-- Cooking/Menu Card -->
+<button class="flex flex-col bg-secondary-container/10 border border-secondary-container/20 rounded-2xl p-6 text-left relative overflow-hidden group hover:shadow-sm transition-shadow" style="">
+<div class="absolute -right-6 -top-6 w-32 h-32 bg-secondary-container/20 rounded-full blur-2xl group-hover:bg-secondary-container/30 transition-colors"></div>
+<div class="flex justify-between items-start mb-4 relative z-10">
+<div class="w-14 h-14 rounded-xl bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: &quot;FILL&quot; 1;">restaurant</span>
+</div>
+<span class="font-label-lg text-label-lg px-3 py-1 bg-surface-container-highest/50 text-on-surface-variant rounded-full text-xs" style="">最終更新: 2時間前<br></span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2 relative z-10" style="">料理・献立</h3>
+<p class="font-body-md text-body-md text-on-surface-variant relative z-10" style="">作った料理を記録しましょう</p>
+</button>
+</div>
+<!-- 2x2 Feature Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter-card mt-stack-sm">
+<!-- Gallery -->
+<button class="bg-surface-container-lowest rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 border border-outline-variant/30 hover:border-outline-variant/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all" style="">
+<div class="w-12 h-12 rounded-full bg-tertiary-container/30 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" style="">photo_library</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface" style="">ギャラリー</span>
+</button>
+<!-- Hair Catalog -->
+<button class="bg-surface-container-lowest rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 border border-outline-variant/30 hover:border-outline-variant/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all" style="">
+<div class="w-12 h-12 rounded-full bg-primary-fixed/50 flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" style="">content_cut</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface" style="">ヘアカタログ</span>
+</button>
+<!-- Karuta -->
+<button class="bg-surface-container-lowest rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 border border-outline-variant/30 hover:border-outline-variant/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all" style="">
+<div class="w-12 h-12 rounded-full bg-secondary-fixed/50 flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined" style="">style</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface" style="">かるた</span>
+</button>
+<!-- Gestures -->
+<button class="bg-surface-container-lowest rounded-2xl p-5 flex flex-col items-center justify-center text-center gap-3 border border-outline-variant/30 hover:border-outline-variant/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all" style="">
+<div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" style="">waving_hand</span>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface" style="">ジェスチャー</span>
+</button>
+</div>
+</main>
+<!-- Floating Action Button -->
+<div class="fixed bottom-28 right-6 z-40 flex items-center gap-3">
+<!-- Simple '+' FAB -->
+<button class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center shadow-[0_4px_16px_rgba(255,158,122,0.4)] hover:opacity-90 active:scale-95 transition-all" style="">
+<span class="material-symbols-outlined text-2xl font-bold" style="">add</span>
+</button>
+<!-- Record Meal FAB -->
+<button class="bg-primary text-white rounded-full px-5 py-4 flex items-center gap-2 shadow-[0_4px_16px_rgba(255,158,122,0.4)] hover:opacity-90 active:scale-95 transition-all" style="">
+<span class="material-symbols-outlined" style="">photo_camera</span>
+<span class="font-label-md text-label-md font-bold whitespace-nowrap pr-1" style="">食事を記録</span>
+</button>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe h-20 bg-white/80 dark:bg-stone-900/80 backdrop-blur-md rounded-t-[32px] border-t border-stone-100 dark:border-stone-800 shadow-[0_-4px_12px_rgba(255,158,122,0.15)] md:hidden">
+<button class="flex flex-col items-center justify-center text-[#FF9E7A] dark:text-[#FFAF91] bg-[#FF9E7A]/10 rounded-2xl px-3 py-1 active:scale-90 transition-transform duration-150" style="">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-medium" style="">ホーム</span>
+</button>
+<button class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-2xl active:scale-90 transition-transform duration-150" style="">
+<span class="material-symbols-outlined" style="">monitoring</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-medium" style="">成長記録</span>
+</button>
+<button class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-2xl active:scale-90 transition-transform duration-150" style="">
+<span class="material-symbols-outlined" style="">cooking</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-medium" style="">料理</span>
+</button>
+<button class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-2xl active:scale-90 transition-transform duration-150" style="">
+<span class="material-symbols-outlined" style="">photo_library</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-medium" style="">ギャラリー</span>
+</button>
+</nav>
+</body></html>

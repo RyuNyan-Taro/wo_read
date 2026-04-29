@@ -1,0 +1,291 @@
+<!DOCTYPE html><html lang="ja"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Nobi-Nobi Note - Growth Record</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Custom scrollbar to maintain clean look */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #dac1b9;
+            border-radius: 4px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#e5d7d1",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#87736c",
+                        "on-primary-fixed-variant": "#763216",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#b8eed3",
+                        "secondary-fixed-dim": "#9dd2b8",
+                        "surface-tint": "#94492b",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#ede0d9",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#54433d",
+                        "on-secondary-fixed": "#002115",
+                        "tertiary-container": "#d6b35b",
+                        "primary": "#94492b",
+                        "inverse-surface": "#362f2b",
+                        "surface-container-low": "#fff1ea",
+                        "primary-container": "#ff9e7a",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "surface-container-high": "#f3e5df",
+                        "surface-container": "#f9ebe4",
+                        "primary-fixed-dim": "#ffb59b",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#783317",
+                        "surface-container-highest": "#ede0d9",
+                        "on-tertiary-container": "#5b4500",
+                        "primary-fixed": "#ffdbcf",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#dac1b9",
+                        "surface": "#fff8f5",
+                        "on-secondary-fixed-variant": "#1c4f3c",
+                        "tertiary-fixed": "#ffdf96",
+                        "on-secondary-container": "#3c6e58",
+                        "on-primary-fixed": "#380d00",
+                        "background": "#fff8f5",
+                        "inverse-on-surface": "#fceee7",
+                        "tertiary": "#765b06",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#fff8f5",
+                        "on-background": "#211a16",
+                        "secondary-fixed": "#b8eed3",
+                        "on-tertiary-fixed": "#251a00",
+                        "on-surface": "#211a16",
+                        "tertiary-fixed-dim": "#e7c269",
+                        "inverse-primary": "#ffb59b",
+                        "secondary": "#366853"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "48px",
+                        "sm": "12px",
+                        "gutter": "16px",
+                        "margin-mobile": "20px",
+                        "base": "8px",
+                        "xs": "4px",
+                        "lg": "32px",
+                        "md": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Plus Jakarta Sans", "sans-serif"],
+                        "body-md": ["Plus Jakarta Sans", "sans-serif"],
+                        "headline-md": ["Plus Jakarta Sans", "sans-serif"],
+                        "body-lg": ["Plus Jakarta Sans", "sans-serif"],
+                        "label-md": ["Plus Jakarta Sans", "sans-serif"],
+                        "display-lg": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "display-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<div class="max-w-md mx-auto min-h-screen relative shadow-2xl bg-background pb-[100px] pt-16">
+<!-- TopAppBar -->
+<header class="bg-[#FDFCFB] dark:bg-stone-950 fixed top-0 left-0 w-full z-50 flex items-center px-5 h-16 rounded-b-2xl border-b border-stone-100 dark:border-stone-900 shadow-sm max-w-md mx-auto justify-center">
+<h1 class="text-xl font-bold text-[#FF9E7A] dark:text-[#FFAF91] tracking-tight font-['Plus_Jakarta_Sans']" style="">のびのびノート</h1>
+</header>
+<main class="px-margin-mobile py-lg flex flex-col gap-xl">
+<!-- Monthly Emotion Stats -->
+<section class="flex flex-col gap-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-xs" style="">
+<span class="material-symbols-outlined text-primary-container fill" style="">mood</span>感情バランス
+                </h2>
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_24px_rgba(255,158,122,0.06)] border border-surface-variant/50 flex items-center justify-between gap-md">
+<div class="relative w-32 h-32 flex-shrink-0 rounded-full" style="background: conic-gradient(#ff9e7a 0% 45%, #b8eed3 45% 75%, #d6b35b 75% 100%);">
+<div class="absolute inset-[15%] bg-surface-container-lowest rounded-full flex flex-col items-center justify-center shadow-inner">
+<span class="font-label-md text-label-md text-outline" style="">記録数</span>
+<span class="font-headline-sm text-headline-sm text-on-surface" style="">42</span>
+</div>
+</div>
+<div class="flex flex-col gap-xs flex-grow">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full bg-primary-container"></div>
+<span class="font-label-md text-label-md text-on-surface-variant" style="">楽しい</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-bold" style="">45%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full bg-secondary-container"></div>
+<span class="font-label-md text-label-md text-on-surface-variant" style="">悲しい</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-bold" style="">30%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full bg-tertiary-container"></div>
+<span class="font-label-md text-label-md text-on-surface-variant" style="">嬉しい</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-bold" style="">25%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Development Balance -->
+<section class="flex flex-col gap-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-xs" style="">
+<span class="material-symbols-outlined text-secondary-fixed-dim fill" style="">psychology</span>
+                    発達バランス
+                </h2>
+<div class="bg-surface-container-lowest rounded-xl p-md shadow-[0_4px_24px_rgba(255,158,122,0.06)] border border-surface-variant/50 flex flex-col gap-md">
+<div class="flex flex-col gap-xs">
+<div class="flex justify-between items-end mb-1">
+<span class="font-label-md text-label-md text-on-surface" style="">社会性</span>
+<span class="font-label-md text-label-md text-outline text-[12px]" style="">30</span>
+</div>
+<div class="h-3 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full w-[80%] relative">
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-sm mr-1"></div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<div class="flex justify-between items-end mb-1">
+<span class="font-label-md text-label-md text-on-surface" style="">心の発達</span>
+<span class="font-label-md text-label-md text-outline text-[12px]" style="">20</span>
+</div>
+<div class="h-3 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container rounded-full w-[65%] relative">
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-sm mr-1"></div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<div class="flex justify-between items-end mb-1">
+<span class="font-label-md text-label-md text-on-surface" style="">言語</span>
+<span class="font-label-md text-label-md text-outline text-[12px]" style="">40</span>
+</div>
+<div class="h-3 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-container rounded-full w-[90%] relative">
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-sm mr-1"></div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<div class="flex justify-between items-end mb-1">
+<span class="font-label-md text-label-md text-on-surface" style="">運動能力</span>
+<span class="font-label-md text-label-md text-outline text-[12px]" style="">25</span>
+</div>
+<div class="h-3 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary-fixed-dim rounded-full w-[75%] relative">
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-sm mr-1"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Daily Activities Timeline -->
+<section class="flex flex-col gap-sm">
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-xs" style="">
+<span class="material-symbols-outlined text-outline-variant fill" style="">history_edu</span>
+                    日々の活動
+                </h2>
+<div class="relative ml-4 mt-2">
+<!-- Vertical Line -->
+<div class="absolute left-0 top-2 bottom-0 w-px bg-outline-variant/40"></div>
+<!-- Log Item 1 -->
+<div class="relative pl-6 pb-lg">
+<div class="absolute left-[-5px] top-1 w-3 h-3 rounded-full bg-primary-container shadow-[0_0_0_4px_#fff8f5]"></div>
+<div class="flex flex-col gap-xs">
+<span class="font-label-md text-label-md text-outline" style="">3歳 0ヶ月 • 今日 14:30</span>
+<div class="bg-surface-container-lowest rounded-xl p-sm shadow-sm border border-surface-variant/30 flex flex-col gap-xs">
+<p class="font-body-md text-body-md text-on-surface" style="">初めて公園の大きい滑り台を一人で滑れました！少し怖がっていたけど、降りた後は満面の笑みでした。</p>
+<div class="flex flex-wrap gap-xs mt-1">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-primary-container/10 text-primary font-label-md text-[11px]" style="">#運動</span>
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-tertiary-container/20 text-tertiary font-label-md text-[11px]" style="">#成長</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Log Item 2 -->
+<div class="relative pl-6 pb-lg">
+<div class="absolute left-[-5px] top-1 w-3 h-3 rounded-full bg-secondary-container shadow-[0_0_0_4px_#fff8f5]"></div>
+<div class="flex flex-col gap-xs">
+<span class="font-label-md text-label-md text-outline" style="">2歳 11ヶ月 • 昨日 10:15</span>
+<div class="bg-surface-container-lowest rounded-xl p-sm shadow-sm border border-surface-variant/30 flex flex-col gap-xs">
+<p class="font-body-md text-body-md text-on-surface" style="">絵本を読みながら「わんわん、いた！」と指差しして教えてくれました。言葉がどんどん増えています。</p>
+<div class="flex flex-wrap gap-xs mt-1">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-secondary-container/20 text-secondary font-label-md text-[11px]" style="">#言葉</span>
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-label-md text-[11px]" style="">#遊び</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-6 w-16 h-16 bg-[#FF9E7A] text-white rounded-2xl shadow-[0_8px_16px_rgba(255,158,122,0.3)] flex items-center justify-center hover:opacity-90 active:scale-95 transition-all z-40" style="">
+<span class="material-symbols-outlined text-3xl" style="">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 right-0 w-full z-50 flex justify-around items-center px-4 pb-safe h-20 bg-white/80 dark:bg-stone-900/80 backdrop-blur-md rounded-t-[32px] border-t border-stone-100 dark:border-stone-800 shadow-[0_-4px_12px_rgba(255,158,122,0.15)] max-w-md mx-auto">
+<button class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-2xl active:scale-90 transition-transform duration-150" style="">
+<span class="material-symbols-outlined" style="">home</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-medium" style="">ホーム</span>
+</button>
+<button class="flex flex-col items-center justify-center text-[#FF9E7A] dark:text-[#FFAF91] bg-[#FF9E7A]/10 rounded-2xl px-3 py-1 active:scale-90 transition-transform duration-150" style="">
+<span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">monitoring</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-medium" style="">成長記録</span>
+</button>
+<button class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-2xl active:scale-90 transition-transform duration-150" style="">
+<span class="material-symbols-outlined" style="">cooking</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-medium" style="">料理</span>
+</button>
+<button class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 hover:bg-stone-50 dark:hover:bg-stone-800 rounded-2xl active:scale-90 transition-transform duration-150" style="">
+<span class="material-symbols-outlined" style="">photo_library</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-medium" style="">ギャラリー</span>
+</button>
+</nav>
+</div>
+</body></html>
