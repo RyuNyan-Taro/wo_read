@@ -142,11 +142,14 @@ class _DenverBarChart extends StatelessWidget {
                           if (index < 0 || index >= types.length) {
                             return const SizedBox();
                           }
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 4),
+                          return SideTitleWidget(
+                            axisSide: meta.axisSide,
+                            space: 4,
                             child: Text(
                               denverToJp[types[index]] ?? '',
                               style: const TextStyle(fontSize: 9),
+                              maxLines: 1,
+                              softWrap: false,
                             ),
                           );
                         },
@@ -155,8 +158,26 @@ class _DenverBarChart extends StatelessWidget {
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        reservedSize: 28,
+                        reservedSize: 40,
                         interval: leftInterval,
+                        getTitlesWidget: (value, meta) {
+                          return SideTitleWidget(
+                            axisSide: meta.axisSide,
+                            space: 8,
+                            fitInside: SideTitleFitInsideData(
+                              enabled: true,
+                              axisPosition: meta.axisPosition,
+                              parentAxisSize: meta.parentAxisSize,
+                              distanceFromEdge: 0,
+                            ),
+                            child: Text(
+                              meta.formattedValue,
+                              style: const TextStyle(fontSize: 10),
+                              maxLines: 1,
+                              softWrap: false,
+                            ),
+                          );
+                        },
                       ),
                     ),
                     topTitles: AxisTitles(
