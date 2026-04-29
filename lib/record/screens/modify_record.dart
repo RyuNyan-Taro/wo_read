@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/record/controllers/modify_record_controller.dart';
 import 'package:wo_read/record/models/record_item.dart';
-import 'package:wo_read/record/screens/action_indicator.dart';
+import 'package:wo_read/common/action_indicator.dart';
 import 'package:wo_read/record/screens/error_response_dialog.dart';
 import 'package:wo_read/record/use_cases/convert_enum_use_case.dart';
 
