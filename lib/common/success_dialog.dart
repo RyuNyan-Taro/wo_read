@@ -9,13 +9,19 @@ Future<void> showSuccessDialog({
     barrierDismissible: false,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Success'),
+        title: Text(
+          '完了',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         content: Text(content),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.primary,
+            ),
             child: const Text('OK'),
           ),
         ],
