@@ -39,7 +39,7 @@ class _AppShellState extends State<AppShell> {
               return TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: isSelected ? AppColors.primary : _iconColor,
+                color: isSelected ? _selectedColor : _iconColor,
               );
             }),
             indicatorShape: RoundedRectangleBorder(
@@ -60,11 +60,12 @@ class _AppShellState extends State<AppShell> {
 }
 
 const Color _iconColor = Color(0xFFA8A29E);
+const Color _selectedColor = AppColors.primaryContainer;
 
 List<NavigationDestination> _footerIcons = [
   const NavigationDestination(
     icon: Icon(Icons.home_outlined, color: _iconColor),
-    selectedIcon: Icon(Icons.home, color: _iconColor),
+    selectedIcon: Icon(Icons.home, color: _selectedColor),
     label: 'ホーム',
   ),
   NavigationDestination(
@@ -72,6 +73,13 @@ List<NavigationDestination> _footerIcons = [
       'assets/images/icon/glow_icon.svg',
       width: 20,
       height: 18,
+      colorFilter: const ColorFilter.mode(Color(0xFFA8A29E), BlendMode.srcIn),
+    ),
+    selectedIcon: SvgPicture.asset(
+      'assets/images/icon/glow_icon.svg',
+      width: 20,
+      height: 18,
+      colorFilter: const ColorFilter.mode(Color(0xFFFF9E7A), BlendMode.srcIn),
     ),
     label: '成長記録',
   ),
@@ -80,12 +88,19 @@ List<NavigationDestination> _footerIcons = [
       'assets/images/icon/cook_icon.svg',
       width: 20,
       height: 18,
+      colorFilter: const ColorFilter.mode(Color(0xFFA8A29E), BlendMode.srcIn),
+    ),
+    selectedIcon: SvgPicture.asset(
+      'assets/images/icon/cook_icon.svg',
+      width: 20,
+      height: 18,
+      colorFilter: const ColorFilter.mode(Color(0xFFFF9E7A), BlendMode.srcIn),
     ),
     label: '料理',
   ),
   const NavigationDestination(
     icon: Icon(Icons.photo_library_outlined, color: _iconColor),
-    selectedIcon: Icon(Icons.photo_library, color: _iconColor),
+    selectedIcon: Icon(Icons.photo_library, color: _selectedColor),
     label: 'ギャラリー',
   ),
 ];
