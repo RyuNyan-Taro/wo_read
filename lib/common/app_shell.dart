@@ -39,7 +39,7 @@ class _AppShellState extends State<AppShell> {
               return TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: isSelected ? AppColors.primary : const Color(0xFFA8A29E),
+                color: isSelected ? AppColors.primary : _iconColor,
               );
             }),
           ),
@@ -56,10 +56,12 @@ class _AppShellState extends State<AppShell> {
   }
 }
 
+const Color _iconColor = Color(0xFFA8A29E);
+
 List<NavigationDestination> _footerIcons = [
   const NavigationDestination(
-    icon: Icon(Icons.home_outlined, color: Color(0xFFA8A29E)),
-    selectedIcon: Icon(Icons.home, color: Color(0xFFA8A29E)),
+    icon: Icon(Icons.home_outlined, color: _iconColor),
+    selectedIcon: Icon(Icons.home, color: _iconColor),
     label: 'ホーム',
   ),
   NavigationDestination(
@@ -79,8 +81,8 @@ List<NavigationDestination> _footerIcons = [
     label: '料理',
   ),
   const NavigationDestination(
-    icon: Icon(Icons.photo_library_outlined, color: Color(0xFFA8A29E)),
-    selectedIcon: Icon(Icons.photo_library, color: Color(0xFFA8A29E)),
+    icon: Icon(Icons.photo_library_outlined, color: _iconColor),
+    selectedIcon: Icon(Icons.photo_library, color: _iconColor),
     label: 'ギャラリー',
   ),
 ];
