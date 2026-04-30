@@ -50,7 +50,7 @@ class _AppShellState extends State<AppShell> {
             selectedIndex: _selectedIndex,
             onDestinationSelected: (i) => setState(() => _selectedIndex = i),
             backgroundColor: Colors.white.withValues(alpha: 0.9),
-            indicatorColor: AppColors.primaryContainer.withValues(alpha: 0.2),
+            indicatorColor: _selectedColor.withValues(alpha: 0.2),
             destinations: _footerIcons,
           ),
         ),
