@@ -42,6 +42,9 @@ class _AppShellState extends State<AppShell> {
                 color: isSelected ? AppColors.primary : _iconColor,
               );
             }),
+            indicatorShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
           child: NavigationBar(
             selectedIndex: _selectedIndex,
