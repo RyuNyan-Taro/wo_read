@@ -9,14 +9,14 @@ import 'package:wo_read/record/service/record_service.dart';
 import 'package:wo_read/record/screens/record_analysis_section.dart';
 import 'package:wo_read/record/use_cases/lunar_age_use_case.dart';
 
-class RecordPage extends StatefulWidget {
-  const RecordPage({super.key});
+class RecordBody extends StatefulWidget {
+  const RecordBody({super.key});
 
   @override
-  State<RecordPage> createState() => _RecordPageState();
+  State<RecordBody> createState() => _RecordBodyState();
 }
 
-class _RecordPageState extends State<RecordPage> {
+class _RecordBodyState extends State<RecordBody> {
   List<RecordItem>? records;
 
   @override
@@ -39,18 +39,17 @@ class _RecordPageState extends State<RecordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Glow record'),
-      ),
-      body: records == null
-          ? const Center(child: CircularProgressIndicator())
-          : _recordsSet(records!, _getRecords),
-      floatingActionButton: addRecordButton(
-        context: context,
-        returnAction: _getRecords,
-      ),
+    return Stack(
+      children: [
+        records == null
+            ? const Center(child: CircularProgressIndicator())
+            : _recordsSet(records!, _getRecords),
+        Positioned(
+          right: 16,
+          bottom: 16,
+          child: addRecordButton(context: context, returnAction: _getRecords),
+        ),
+      ],
     );
   }
 }

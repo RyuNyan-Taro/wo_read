@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:wo_read/common/app_shell.dart';
 import 'package:wo_read/common/app_theme.dart';
-import 'package:wo_read/home/home.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: '.env');
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Nobi-Nobi Note',
       theme: AppTheme.themeData,
-      home: HomePage(),
+      home: const AppShell(),
     );
   }
 }

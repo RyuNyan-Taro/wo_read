@@ -19,7 +19,7 @@ class _ShapeMovePageState extends ConsumerState<ShapeMovePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Shape move'),
+        title: Text('ジェスチャー'),
       ),
       body: Stack(children: [_addBox(ref), ...shapes]),
     );

@@ -5,14 +5,14 @@ import 'package:wo_read/cook/screens/cook_form_page.dart';
 import 'package:wo_read/cook/screens/cook_item_card.dart';
 import 'package:wo_read/cook/service/cook_service.dart';
 
-class CookPage extends StatefulWidget {
-  const CookPage({super.key});
+class CookBody extends StatefulWidget {
+  const CookBody({super.key});
 
   @override
-  State<CookPage> createState() => _CookPageState();
+  State<CookBody> createState() => _CookBodyState();
 }
 
-class _CookPageState extends State<CookPage> {
+class _CookBodyState extends State<CookBody> {
   List<CookItem>? cooks;
 
   @override
@@ -37,19 +37,17 @@ class _CookPageState extends State<CookPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('cook'),
-      ),
-      body: cooks == null
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(child: Column(children: _cooksList(cooks!))),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [addCookButton(context: context, returnAction: _getCooks)],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+    return Stack(
+      children: [
+        cooks == null
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(child: Column(children: _cooksList(cooks!))),
+        Positioned(
+          left: 16,
+          bottom: 16,
+          child: addCookButton(context: context, returnAction: _getCooks),
+        ),
+      ],
     );
   }
 
