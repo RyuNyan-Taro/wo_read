@@ -48,43 +48,39 @@ class _AppShellState extends State<AppShell> {
             onDestinationSelected: (i) => setState(() => _selectedIndex = i),
             backgroundColor: Colors.white.withValues(alpha: 0.9),
             indicatorColor: AppColors.primaryContainer.withValues(alpha: 0.2),
-            destinations: [
-              const NavigationDestination(
-                icon: Icon(Icons.home_outlined, color: Color(0xFFA8A29E)),
-                selectedIcon: Icon(Icons.home, color: Color(0xFFA8A29E)),
-                label: 'ホーム',
-              ),
-              NavigationDestination(
-                icon: SvgPicture.asset(
-                  'assets/images/icon/glow_icon.svg',
-                  width: 20,
-                  height: 18,
-                ),
-                label: '成長記録',
-              ),
-              NavigationDestination(
-                icon: SvgPicture.asset(
-                  'assets/images/icon/cook_icon.svg',
-                  width: 20,
-                  height: 18,
-                ),
-                label: '料理',
-              ),
-              const NavigationDestination(
-                icon: Icon(
-                  Icons.photo_library_outlined,
-                  color: Color(0xFFA8A29E),
-                ),
-                selectedIcon: Icon(
-                  Icons.photo_library,
-                  color: Color(0xFFA8A29E),
-                ),
-                label: 'ギャラリー',
-              ),
-            ],
+            destinations: _footerIcons,
           ),
         ),
       ),
     );
   }
 }
+
+List<NavigationDestination> _footerIcons = [
+  const NavigationDestination(
+    icon: Icon(Icons.home_outlined, color: Color(0xFFA8A29E)),
+    selectedIcon: Icon(Icons.home, color: Color(0xFFA8A29E)),
+    label: 'ホーム',
+  ),
+  NavigationDestination(
+    icon: SvgPicture.asset(
+      'assets/images/icon/glow_icon.svg',
+      width: 20,
+      height: 18,
+    ),
+    label: '成長記録',
+  ),
+  NavigationDestination(
+    icon: SvgPicture.asset(
+      'assets/images/icon/cook_icon.svg',
+      width: 20,
+      height: 18,
+    ),
+    label: '料理',
+  ),
+  const NavigationDestination(
+    icon: Icon(Icons.photo_library_outlined, color: Color(0xFFA8A29E)),
+    selectedIcon: Icon(Icons.photo_library, color: Color(0xFFA8A29E)),
+    label: 'ギャラリー',
+  ),
+];
