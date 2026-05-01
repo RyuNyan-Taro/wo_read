@@ -22,7 +22,7 @@ class _AppShellState extends State<AppShell> {
       appBar: AppBar(title: const Text('のびのびノート')),
       body: IndexedStack(
         index: _selectedIndex,
-        children: const [HomeBody(), RecordBody(), CookBody(), GalleryBody()],
+        children: const [HomePage(), RecordBody(), CookBody(), GalleryBody()],
       ),
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.only(
