@@ -167,9 +167,7 @@ class _ContentArea extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _CategoryBadge(category: cook.category),
           if (hasComment) ...[
-            SizedBox(height: isFeatured ? 8 : 6),
             Text(
               cook.aiComment!,
               style: TextStyle(
@@ -186,32 +184,6 @@ class _ContentArea extends StatelessWidget {
     );
   }
 }
-
-class _CategoryBadge extends StatelessWidget {
-  final CookCategory category;
-
-  const _CategoryBadge({required this.category});
-
-  @override
-  Widget build(BuildContext context) {
-    final (Color bg, Color fg) = _badgeColors(category);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        category.label,
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: fg,
-        ),
-      ),
-    );
-  }
 
   (Color, Color) _badgeColors(CookCategory category) {
     return switch (category) {
