@@ -11,7 +11,7 @@ Widget addCookButton({required BuildContext context, Function? returnAction}) {
     ),
     label: const Text('食事を記録'),
     foregroundColor: AppTheme.themeData.colorScheme.onPrimary,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    shape: StadiumBorder(),
 
     onPressed: () async {
       await Navigator.of(
