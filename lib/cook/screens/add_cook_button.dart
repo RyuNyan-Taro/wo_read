@@ -6,10 +6,10 @@ import 'cook_form_page.dart';
 Widget addCookButton({required BuildContext context, Function? returnAction}) {
   return FloatingActionButton.extended(
     icon: Icon(
-      Icons.restaurant,
+      Icons.camera_alt,
       color: AppTheme.themeData.colorScheme.onPrimary,
     ),
-    label: const Text('記録する'),
+    label: const Text('食事を記録'),
     foregroundColor: AppTheme.themeData.colorScheme.onPrimary,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
 
