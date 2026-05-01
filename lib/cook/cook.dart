@@ -41,10 +41,12 @@ class _CookBodyState extends State<CookBody> {
       children: [
         cooks == null
             ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(child: Column(children: _cooksList(cooks!))),
+            : SingleChildScrollView(
+                child: Column(children: _cooksList(cooks!)),
+              ),
         Positioned(
-          left: 16,
-          bottom: 16,
+          right: 16,
+          bottom: 20,
           child: addCookButton(context: context, returnAction: _getCooks),
         ),
       ],
