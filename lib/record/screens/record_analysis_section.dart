@@ -67,22 +67,143 @@ class _FeelingDonutChart extends StatelessWidget {
     FeelingType.pleasure: AppColors.primaryContainer,
   };
 
+  List<FeelingType> _visibleFeelingTypes(Map<FeelingType, int> counts) {
+    return FeelingType.values
+        .where((t) => t != FeelingType.none && (counts[t] ?? 0) > 0)
+        .toList();
+  }
+
+  int _calculateTotal(Map<FeelingType, int> counts) {
+    return FeelingType.values
+        .where((t) => t != FeelingType.none)
+        .fold(0, (sum, t) => sum + (counts[t] ?? 0));
+  }
+
+  List<PieChartSectionData> _buildSections(Map<FeelingType, int> counts) {
+    final sections = _visibleFeelingTypes(counts)
+        .map(
+          (t) => PieChartSectionData(
+            color: _colors[t] ?? AppColors.outlineVariant,
+            value: (counts[t] ?? 0).toDouble(),
+            title: '',
+            radius: 32,
+          ),
+        )
+        .toList();
+
+    if (sections.isNotEmpty) {
+      return sections;
+    }
+
+    return [
+      PieChartSectionData(
+        color: AppColors.outlineVariant,
+        value: 1,
+        title: '',
+        radius: 32,
+      ),
+    ];
+  }
+
+  Widget _buildCenterLabel(BuildContext context, int total) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '記録数',
+          style: Theme.of(
+            context,
+          ).textTheme.labelMedium?.copyWith(color: AppColors.outline),
+        ),
+        Text('$total', style: Theme.of(context).textTheme.headlineSmall),
+      ],
+    );
+  }
+
+  Widget _buildChart(
+    BuildContext context,
+    List<PieChartSectionData> sections,
+    int total,
+  ) {
+    return SizedBox(
+      width: 128,
+      height: 128,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          PieChart(
+            PieChartData(
+              centerSpaceRadius: 32,
+              sections: sections,
+              sectionsSpace: 2,
+            ),
+          ),
+          _buildCenterLabel(context, total),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLegend(
+    BuildContext context,
+    Map<FeelingType, int> counts,
+    int total,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: _visibleFeelingTypes(counts)
+          .map((t) => _buildLegendItem(context, t, counts[t] ?? 0, total))
+          .toList(),
+    );
+  }
+
+  Widget _buildLegendItem(
+    BuildContext context,
+    FeelingType type,
+    int count,
+    int total,
+  ) {
+    final pct = total > 0 ? (count / total * 100).round() : 0;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  color: _colors[type] ?? AppColors.outlineVariant,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                feelingToJp[type] ?? '',
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
+            ],
+          ),
+          Text(
+            '$pct%',
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.onSurface,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final counts = countByFeelingType(records);
-    final total = FeelingType.values
-        .where((t) => t != FeelingType.none)
-        .fold(0, (sum, t) => sum + (counts[t] ?? 0));
-
-    final sections = FeelingType.values
-        .where((t) => t != FeelingType.none && (counts[t] ?? 0) > 0)
-        .map((t) => PieChartSectionData(
-              color: _colors[t] ?? AppColors.outlineVariant,
-              value: (counts[t] ?? 0).toDouble(),
-              title: '',
-              radius: 32,
-            ))
-        .toList();
+    final total = _calculateTotal(counts);
+    final sections = _buildSections(counts);
 
     return Container(
       decoration: BoxDecoration(
@@ -111,92 +232,9 @@ class _FeelingDonutChart extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              SizedBox(
-                width: 128,
-                height: 128,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    PieChart(
-                      PieChartData(
-                        centerSpaceRadius: 32,
-                        sections: sections.isEmpty
-                            ? [
-                                PieChartSectionData(
-                                  color: AppColors.outlineVariant,
-                                  value: 1,
-                                  title: '',
-                                  radius: 32,
-                                )
-                              ]
-                            : sections,
-                        sectionsSpace: 2,
-                      ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '記録数',
-                          style: Theme.of(context).textTheme.labelMedium
-                              ?.copyWith(color: AppColors.outline),
-                        ),
-                        Text(
-                          '$total',
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              _buildChart(context, sections, total),
               const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: FeelingType.values
-                      .where((t) => t != FeelingType.none && (counts[t] ?? 0) > 0)
-                      .map((t) {
-                    final count = counts[t] ?? 0;
-                    final pct = total > 0 ? (count / total * 100).round() : 0;
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 12,
-                                height: 12,
-                                decoration: BoxDecoration(
-                                  color: _colors[t] ?? AppColors.outlineVariant,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                feelingToJp[t] ?? '',
-                                style: Theme.of(context).textTheme.labelMedium,
-                              ),
-                            ],
-                          ),
-                          Text(
-                            '$pct%',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.onSurface,
-                                ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
+              Expanded(child: _buildLegend(context, counts, total)),
             ],
           ),
         ],
@@ -221,8 +259,9 @@ class _DenverProgressBars extends StatelessWidget {
   Widget build(BuildContext context) {
     final counts = countByDenverType(records);
     final types = DenverType.values.where((t) => t != DenverType.none).toList();
-    final maxCount =
-        types.map((t) => counts[t] ?? 0).reduce((a, b) => a > b ? a : b);
+    final maxCount = types
+        .map((t) => counts[t] ?? 0)
+        .reduce((a, b) => a > b ? a : b);
 
     return Container(
       decoration: BoxDecoration(
@@ -251,8 +290,9 @@ class _DenverProgressBars extends StatelessWidget {
           const SizedBox(height: 12),
           ...types.map((t) {
             final count = counts[t] ?? 0;
-            final widthFactor =
-                maxCount > 0 ? (count / maxCount).clamp(0.0, 1.0) : 0.0;
+            final widthFactor = maxCount > 0
+                ? (count / maxCount).clamp(0.0, 1.0)
+                : 0.0;
             final barColor = _barColors[t] ?? AppColors.outlineVariant;
 
             return Padding(
@@ -315,8 +355,9 @@ class _DenverProgressBars extends StatelessWidget {
                                           shape: BoxShape.circle,
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black
-                                                  .withValues(alpha: 0.15),
+                                              color: Colors.black.withValues(
+                                                alpha: 0.15,
+                                              ),
                                               blurRadius: 4,
                                               offset: const Offset(0, 1),
                                             ),
