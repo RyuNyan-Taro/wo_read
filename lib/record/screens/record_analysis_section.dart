@@ -80,7 +80,7 @@ class _FeelingDonutChart extends StatelessWidget {
               color: _colors[t] ?? AppColors.outlineVariant,
               value: (counts[t] ?? 0).toDouble(),
               title: '',
-              radius: 44,
+              radius: 32,
             ))
         .toList();
 
@@ -119,14 +119,14 @@ class _FeelingDonutChart extends StatelessWidget {
                   children: [
                     PieChart(
                       PieChartData(
-                        centerSpaceRadius: 38,
+                        centerSpaceRadius: 32,
                         sections: sections.isEmpty
                             ? [
                                 PieChartSectionData(
                                   color: AppColors.outlineVariant,
                                   value: 1,
                                   title: '',
-                                  radius: 44,
+                                  radius: 32,
                                 )
                               ]
                             : sections,
