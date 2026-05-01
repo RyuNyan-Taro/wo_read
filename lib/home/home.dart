@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:wo_read/common/add_record_button.dart';
 import 'package:wo_read/cook/screens/add_cook_button.dart';
-import 'package:wo_read/gallery/gallery.dart';
 import 'package:wo_read/hair/hair.dart';
 import 'package:wo_read/hiragana/hiragana.dart';
-import 'package:wo_read/record/record.dart';
 import 'package:wo_read/shape_move/shape_move.dart';
-import 'package:wo_read/cook/cook.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.onSelectTab});
+
+  final ValueChanged<int> onSelectTab;
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +27,14 @@ class HomePage extends StatelessWidget {
               title: '成長記録',
               subtitle: '今日のお子様の様子や活動を記録しましょう',
               icon: Icons.child_care,
-              page: const RecordBody(),
+              onTap: () => onSelectTab(1),
             ),
             const SizedBox(height: 12),
             _HeroCard(
               title: '料理・献立',
               subtitle: '作った料理を記録しましょう',
               icon: Icons.restaurant,
-              page: const CookBody(),
+              onTap: () => onSelectTab(2),
             ),
             const SizedBox(height: 20),
             _FeatureGrid(
@@ -43,7 +42,7 @@ class HomePage extends StatelessWidget {
                 _FeatureItem(
                   label: 'ギャラリー',
                   icon: Icons.photo_library,
-                  page: const GalleryBody(),
+                  onTap: () => onSelectTab(3),
                 ),
                 _FeatureItem(
                   label: 'ヘアカタログ',
@@ -84,20 +83,19 @@ class _HeroCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.icon,
-    required this.page,
+    required this.onTap,
   });
 
   final String title;
   final String subtitle;
   final IconData icon;
-  final Widget page;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return InkWell(
-      onTap: () =>
-          Navigator.push(context, MaterialPageRoute(builder: (_) => page)),
+      onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(20),
@@ -145,12 +143,14 @@ class _FeatureItem {
   const _FeatureItem({
     required this.label,
     required this.icon,
-    required this.page,
+    this.page,
+    this.onTap,
   });
 
   final String label;
   final IconData icon;
-  final Widget page;
+  final Widget? page;
+  final VoidCallback? onTap;
 }
 
 class _FeatureGrid extends StatelessWidget {
@@ -181,8 +181,16 @@ class _FeatureCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return InkWell(
-      onTap: () =>
-          Navigator.push(context, MaterialPageRoute(builder: (_) => item.page)),
+      onTap:
+          item.onTap ??
+          () {
+            final page = item.page;
+            if (page == null) {
+              return;
+            }
+
+            Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+          },
       borderRadius: BorderRadius.circular(16),
       child: Container(
         decoration: BoxDecoration(

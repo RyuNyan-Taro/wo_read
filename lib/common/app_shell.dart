@@ -16,13 +16,22 @@ class AppShell extends StatefulWidget {
 class _AppShellState extends State<AppShell> {
   int _selectedIndex = 0;
 
+  void _selectTab(int index) {
+    setState(() => _selectedIndex = index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('のびのびノート')),
       body: IndexedStack(
         index: _selectedIndex,
-        children: const [HomePage(), RecordBody(), CookBody(), GalleryBody()],
+        children: [
+          HomePage(onSelectTab: _selectTab),
+          const RecordBody(),
+          const CookBody(),
+          const GalleryBody(),
+        ],
       ),
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.only(
@@ -49,7 +58,7 @@ class _AppShellState extends State<AppShell> {
           ),
           child: NavigationBar(
             selectedIndex: _selectedIndex,
-            onDestinationSelected: (i) => setState(() => _selectedIndex = i),
+            onDestinationSelected: _selectTab,
             backgroundColor: Colors.white.withValues(alpha: 0.9),
             indicatorColor: _selectedColor.withValues(alpha: 0.2),
             destinations: _footerIcons,
