@@ -31,7 +31,9 @@ class CookItemCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(children: [_ImageArea(cook: cook, isFeatured: isFeatured)]),
+          Stack(
+            children: [_ImageArea(cook: cook, isFeatured: isFeatured)],
+          ),
           _ContentArea(cook: cook, isFeatured: isFeatured),
         ],
       ),
@@ -56,7 +58,11 @@ class _ImageArea extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           _buildImage(),
-          Positioned(top: isFeatured ? 16 : 8, left: isFeatured ? 16 : 8, child: _DateBadge(cook: cook, isFeatured: isFeatured)),
+          Positioned(
+            top: isFeatured ? 16 : 8,
+            left: isFeatured ? 16 : 8,
+            child: _DateBadge(cook: cook, isFeatured: isFeatured),
+          ),
         ],
       ),
     );
@@ -69,7 +75,11 @@ class _ImageArea extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.no_photography, size: 32, color: AppColors.outlineVariant),
+            Icon(
+              Icons.no_photography,
+              size: 32,
+              color: AppColors.outlineVariant,
+            ),
             const SizedBox(height: 4),
             Text(
               '写真なし',
@@ -92,7 +102,11 @@ class _ImageArea extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.no_photography, size: 32, color: AppColors.outlineVariant),
+            Icon(
+              Icons.no_photography,
+              size: 32,
+              color: AppColors.outlineVariant,
+            ),
             const SizedBox(height: 4),
             Text(
               '写真なし',
@@ -117,6 +131,7 @@ class _DateBadge extends StatelessWidget {
         '${cook.date.month}/${cook.date.day.toString().padLeft(2, '0')} ${cook.category.label}';
     final iconSize = isFeatured ? 16.0 : 14.0;
     final fontSize = isFeatured ? 13.0 : 12.0;
+    final (Color bg, Color fg) = _badgeColors(cook.category);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
@@ -128,20 +143,20 @@ class _DateBadge extends StatelessWidget {
             vertical: isFeatured ? 4 : 2,
           ),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.9),
+            color: bg,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(cook.category.icon, size: iconSize, color: AppColors.onSurfaceVariant),
+              Icon(cook.category.icon, size: iconSize, color: fg),
               const SizedBox(width: 4),
               Text(
                 dateString,
                 style: TextStyle(
                   fontSize: fontSize,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.onSurface,
+                  color: fg,
                 ),
               ),
             ],
@@ -176,7 +191,9 @@ class _ContentArea extends StatelessWidget {
                 color: AppColors.onSurfaceVariant,
               ),
               maxLines: isFeatured ? null : 2,
-              overflow: isFeatured ? TextOverflow.visible : TextOverflow.ellipsis,
+              overflow: isFeatured
+                  ? TextOverflow.visible
+                  : TextOverflow.ellipsis,
             ),
           ],
         ],
@@ -185,13 +202,27 @@ class _ContentArea extends StatelessWidget {
   }
 }
 
-  (Color, Color) _badgeColors(CookCategory category) {
-    return switch (category) {
-      CookCategory.breakfast => (AppColors.tertiaryContainer.withValues(alpha: 0.3), AppColors.onTertiaryContainer),
-      CookCategory.lunch => (AppColors.primaryContainer.withValues(alpha: 0.25), AppColors.onPrimaryContainer),
-      CookCategory.box => (AppColors.primaryContainer.withValues(alpha: 0.25), AppColors.onPrimaryContainer),
-      CookCategory.dinner => (AppColors.secondaryContainer.withValues(alpha: 0.35), AppColors.onSecondaryContainer),
-      CookCategory.none => (AppColors.surfaceContainerHighest, AppColors.onSurfaceVariant),
-    };
-  }
+(Color, Color) _badgeColors(CookCategory category) {
+  return switch (category) {
+    CookCategory.breakfast => (
+      AppColors.tertiaryContainer.withValues(),
+      AppColors.onTertiaryContainer,
+    ),
+    CookCategory.lunch => (
+      AppColors.primaryContainer.withValues(alpha: 0.5),
+      AppColors.onPrimaryContainer,
+    ),
+    CookCategory.box => (
+      AppColors.primaryContainer.withValues(),
+      AppColors.onPrimaryContainer,
+    ),
+    CookCategory.dinner => (
+      AppColors.secondaryContainer.withValues(),
+      AppColors.onSecondaryContainer,
+    ),
+    CookCategory.none => (
+      AppColors.surfaceContainerHighest,
+      AppColors.onSurfaceVariant,
+    ),
+  };
 }
