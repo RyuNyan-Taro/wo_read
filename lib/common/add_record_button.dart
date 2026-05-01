@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wo_read/record/screens/add_record.dart';
 
+import 'app_theme.dart';
+
 Widget addRecordButton({
   required BuildContext context,
   Function? returnAction,
@@ -16,6 +18,6 @@ Widget addRecordButton({
       );
       if (returnAction != null) returnAction();
     },
-    child: Icon(Icons.add),
+    child: Icon(Icons.add, color: AppTheme.themeData.colorScheme.onPrimary),
   );
 }
