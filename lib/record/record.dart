@@ -245,17 +245,17 @@ class _TimelineItem extends StatelessWidget {
                     spacing: 4,
                     runSpacing: 4,
                     children: [
-                      if (record.denver != DenverType.none)
-                        _TagChip(
-                          label: '#${denverToJp[record.denver] ?? ''}',
-                          bgColor: _denverChipBgColor(record.denver),
-                          fgColor: _denverChipFgColor(record.denver),
-                        ),
                       if (record.feeling != FeelingType.none)
                         _TagChip(
                           label: '#${feelingToJp[record.feeling] ?? ''}',
                           bgColor: _feelingChipBgColor(record.feeling),
                           fgColor: _feelingChipFgColor(record.feeling),
+                        ),
+                      if (record.denver != DenverType.none)
+                        _TagChip(
+                          label: '#${denverToJp[record.denver] ?? ''}',
+                          bgColor: _denverChipBgColor(record.denver),
+                          fgColor: _denverChipFgColor(record.denver),
                         ),
                     ],
                   ),
