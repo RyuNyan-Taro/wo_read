@@ -45,6 +45,7 @@ class _AppShellState extends State<AppShell> {
             indicatorShape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
+            overlayColor: WidgetStateProperty.all(Colors.transparent),
           ),
           child: NavigationBar(
             selectedIndex: _selectedIndex,
