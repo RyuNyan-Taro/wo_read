@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:wo_read/common/app_theme.dart';
 import 'package:wo_read/record/models/record_item.dart';
 import 'package:wo_read/record/use_cases/record_analysis_use_case.dart';
 
@@ -11,8 +12,9 @@ class RecordAnalysisSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (records.isEmpty) {
-      return const Card(
-        child: Padding(
+      return Card(
+        color: AppColors.surfaceContainerLowest,
+        child: const Padding(
           padding: EdgeInsets.all(16),
           child: Center(child: Text('データなし')),
         ),
@@ -21,78 +23,198 @@ class RecordAnalysisSection extends StatelessWidget {
 
     return Column(
       children: [
-        _FeelingPieChart(records: records),
-        _DenverBarChart(records: records),
+        _FeelingDonutChart(records: records),
+        const SizedBox(height: 32),
+        _DenverProgressBars(records: records),
       ],
     );
   }
 }
 
-class _FeelingPieChart extends StatelessWidget {
+class _SectionHeader extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final Color iconColor;
+
+  const _SectionHeader({
+    required this.icon,
+    required this.title,
+    required this.iconColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, color: iconColor, size: 22),
+        const SizedBox(width: 6),
+        Text(title, style: Theme.of(context).textTheme.headlineSmall),
+      ],
+    );
+  }
+}
+
+class _FeelingDonutChart extends StatelessWidget {
   final List<RecordItem> records;
 
-  const _FeelingPieChart({required this.records});
+  const _FeelingDonutChart({required this.records});
 
   static const Map<FeelingType, Color> _colors = {
-    FeelingType.none: Colors.grey,
-    FeelingType.happiness: Colors.amber,
-    FeelingType.anger: Colors.red,
-    FeelingType.sorrow: Colors.blue,
-    FeelingType.pleasure: Colors.green,
+    FeelingType.none: AppColors.outlineVariant,
+    FeelingType.happiness: AppColors.tertiaryContainer,
+    FeelingType.anger: AppColors.errorContainer,
+    FeelingType.sorrow: AppColors.secondaryContainer,
+    FeelingType.pleasure: AppColors.primaryContainer,
   };
 
   @override
   Widget build(BuildContext context) {
     final counts = countByFeelingType(records);
+    final total = FeelingType.values
+        .where((t) => t != FeelingType.none)
+        .fold(0, (sum, t) => sum + (counts[t] ?? 0));
 
     final sections = FeelingType.values
         .where((t) => t != FeelingType.none && (counts[t] ?? 0) > 0)
-        .map((t) {
-          final count = counts[t]!;
-          return PieChartSectionData(
-            color: _colors[t] ?? Colors.grey,
-            value: count.toDouble(),
-            title: '${feelingToJp[t]}\n$count',
-            radius: 80,
-            titleStyle: const TextStyle(
-              fontSize: 11,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          );
-        })
+        .map((t) => PieChartSectionData(
+              color: _colors[t] ?? AppColors.outlineVariant,
+              value: (counts[t] ?? 0).toDouble(),
+              title: '',
+              radius: 44,
+            ))
         .toList();
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('気持ち分布', style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 200,
-              child: PieChart(PieChartData(sections: sections)),
-            ),
-          ],
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.outlineVariant.withValues(alpha: 0.5),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFFF9E7A).withValues(alpha: 0.06),
+            blurRadius: 24,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const _SectionHeader(
+            icon: Icons.mood,
+            title: '感情バランス',
+            iconColor: AppColors.primaryContainer,
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              SizedBox(
+                width: 128,
+                height: 128,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    PieChart(
+                      PieChartData(
+                        centerSpaceRadius: 38,
+                        sections: sections.isEmpty
+                            ? [
+                                PieChartSectionData(
+                                  color: AppColors.outlineVariant,
+                                  value: 1,
+                                  title: '',
+                                  radius: 44,
+                                )
+                              ]
+                            : sections,
+                        sectionsSpace: 2,
+                      ),
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '記録数',
+                          style: Theme.of(context).textTheme.labelMedium
+                              ?.copyWith(color: AppColors.outline),
+                        ),
+                        Text(
+                          '$total',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: FeelingType.values
+                      .where((t) => t != FeelingType.none && (counts[t] ?? 0) > 0)
+                      .map((t) {
+                    final count = counts[t] ?? 0;
+                    final pct = total > 0 ? (count / total * 100).round() : 0;
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 12,
+                                height: 12,
+                                decoration: BoxDecoration(
+                                  color: _colors[t] ?? AppColors.outlineVariant,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                feelingToJp[t] ?? '',
+                                style: Theme.of(context).textTheme.labelMedium,
+                              ),
+                            ],
+                          ),
+                          Text(
+                            '$pct%',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.onSurface,
+                                ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 }
 
-class _DenverBarChart extends StatelessWidget {
+class _DenverProgressBars extends StatelessWidget {
   final List<RecordItem> records;
 
-  const _DenverBarChart({required this.records});
+  const _DenverProgressBars({required this.records});
 
-  static const Map<DenverType, Color> _colors = {
-    DenverType.none: Colors.grey,
-    DenverType.personalSocial: Colors.purple,
-    DenverType.fineMotorAdaptive: Colors.orange,
-    DenverType.language: Colors.teal,
-    DenverType.grossMotor: Colors.indigo,
+  static const Map<DenverType, Color> _barColors = {
+    DenverType.personalSocial: AppColors.primaryContainer,
+    DenverType.fineMotorAdaptive: AppColors.secondaryContainer,
+    DenverType.language: AppColors.tertiaryContainer,
+    DenverType.grossMotor: Color(0xFFFFB59B),
   };
 
   @override
@@ -101,97 +223,120 @@ class _DenverBarChart extends StatelessWidget {
     final types = DenverType.values.where((t) => t != DenverType.none).toList();
     final maxCount =
         types.map((t) => counts[t] ?? 0).reduce((a, b) => a > b ? a : b);
-    const _niceSteps = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];
-    final leftInterval = _niceSteps
-        .firstWhere((s) => s >= maxCount / 5, orElse: () => _niceSteps.last)
-        .toDouble();
 
-    final barGroups = types.asMap().entries
-        .map((entry) => BarChartGroupData(
-              x: entry.key,
-              barRods: [
-                BarChartRodData(
-                  toY: (counts[entry.value] ?? 0).toDouble(),
-                  color: _colors[entry.value] ?? Colors.grey,
-                ),
-              ],
-            ))
-        .toList();
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('発達分布', style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 200,
-              child: BarChart(
-                BarChartData(
-                  maxY: (maxCount > 0 ? maxCount + 1 : 5).toDouble(),
-                  barGroups: barGroups,
-                  titlesData: FlTitlesData(
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 32,
-                        getTitlesWidget: (value, meta) {
-                          final index = value.toInt();
-                          if (index < 0 || index >= types.length) {
-                            return const SizedBox();
-                          }
-                          return SideTitleWidget(
-                            axisSide: meta.axisSide,
-                            space: 4,
-                            child: Text(
-                              denverToJp[types[index]] ?? '',
-                              style: const TextStyle(fontSize: 9),
-                              maxLines: 1,
-                              softWrap: false,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 40,
-                        interval: leftInterval,
-                        getTitlesWidget: (value, meta) {
-                          return SideTitleWidget(
-                            axisSide: meta.axisSide,
-                            space: 8,
-                            fitInside: SideTitleFitInsideData(
-                              enabled: true,
-                              axisPosition: meta.axisPosition,
-                              parentAxisSize: meta.parentAxisSize,
-                              distanceFromEdge: 0,
-                            ),
-                            child: Text(
-                              meta.formattedValue,
-                              style: const TextStyle(fontSize: 10),
-                              maxLines: 1,
-                              softWrap: false,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    topTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    rightTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.outlineVariant.withValues(alpha: 0.5),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFFF9E7A).withValues(alpha: 0.06),
+            blurRadius: 24,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const _SectionHeader(
+            icon: Icons.psychology,
+            title: '発達バランス',
+            iconColor: AppColors.secondaryContainer,
+          ),
+          const SizedBox(height: 12),
+          ...types.map((t) {
+            final count = counts[t] ?? 0;
+            final widthFactor =
+                maxCount > 0 ? (count / maxCount).clamp(0.0, 1.0) : 0.0;
+            final barColor = _barColors[t] ?? AppColors.outlineVariant;
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        denverToJp[t] ?? '',
+                        style: Theme.of(context).textTheme.labelMedium
+                            ?.copyWith(color: AppColors.onSurface),
+                      ),
+                      Text(
+                        '$count',
+                        style: Theme.of(context).textTheme.labelMedium
+                            ?.copyWith(color: AppColors.outline, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Container(
+                            height: 12,
+                            width: constraints.maxWidth,
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceContainerHighest,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                          if (widthFactor > 0)
+                            FractionallySizedBox(
+                              widthFactor: widthFactor,
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Container(
+                                    height: 12,
+                                    decoration: BoxDecoration(
+                                      color: barColor,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 2,
+                                    top: 0,
+                                    bottom: 0,
+                                    child: Center(
+                                      child: Container(
+                                        width: 12,
+                                        height: 12,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black
+                                                  .withValues(alpha: 0.15),
+                                              blurRadius: 4,
+                                              offset: const Offset(0, 1),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          }),
+        ],
       ),
     );
   }
