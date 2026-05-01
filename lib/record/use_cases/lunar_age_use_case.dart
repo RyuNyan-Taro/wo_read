@@ -25,6 +25,10 @@ LunarAge convertToLunarAge({
     month -= 1;
   }
 
+  if (month < 0) {
+    month += 12;
+  }
+
   if (datetime.month != birthday.month &&
       _isComparisonBetweenMonthEnds(datetime, birthday)) {
     month += 1;

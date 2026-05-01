@@ -24,4 +24,22 @@ void main() {
       expect(result.month, expectAge.month, reason: 'The month is failed.');
     },
   );
+  parameterizedTest(
+    'birth month is shown collect',
+    [
+      [DateTime(2021, 5, 31), LunarAge(year: 0, month: 0)],
+      [DateTime(2022, 5, 31), LunarAge(year: 0, month: 11)],
+      [DateTime(2022, 6, 1), LunarAge(year: 0, month: 11)],
+    ],
+    (DateTime datetime, LunarAge expectAge) {
+      final DateTime birthDay = DateTime(2021, 6, 2);
+      final LunarAge result = convertToLunarAge(
+        datetime: datetime,
+        birthday: birthDay,
+      );
+
+      expect(result.year, expectAge.year, reason: 'The year is failed.');
+      expect(result.month, expectAge.month, reason: 'The month is failed.');
+    },
+  );
 }
