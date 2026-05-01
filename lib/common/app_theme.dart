@@ -130,11 +130,25 @@ class AppTheme {
           color: AppColors.onSurfaceVariant,
         ),
       ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.surfaceContainerHigh,
+      appBarTheme: AppBarTheme(
+        backgroundColor: AppColors.surfaceContainerLowest,
         foregroundColor: AppColors.onSurface,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
+        centerTitle: true,
+        shadowColor: Colors.black12,
+        scrolledUnderElevation: 2,
+        titleTextStyle: GoogleFonts.plusJakartaSans(
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+          color: AppColors.primaryContainer,
+        ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(16),
+            bottomRight: Radius.circular(16),
+          ),
+        ),
       ),
       cardTheme: CardThemeData(
         elevation: 0,
