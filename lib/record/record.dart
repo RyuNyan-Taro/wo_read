@@ -46,7 +46,7 @@ class _RecordBodyState extends State<RecordBody> {
             : _recordsSet(records!, _getRecords),
         Positioned(
           right: 16,
-          bottom: 16,
+          bottom: 20,
           child: addRecordButton(context: context, returnAction: _getRecords),
         ),
       ],
