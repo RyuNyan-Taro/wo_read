@@ -1,141 +1,228 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:wo_read/common/app_theme.dart';
+
 import '../models/cook_item.dart';
 
 class CookItemCard extends StatelessWidget {
   final CookItem cook;
+  final bool isFeatured;
 
-  const CookItemCard({super.key, required this.cook});
+  const CookItemCard({super.key, required this.cook, this.isFeatured = false});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      // card design parameters
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(isFeatured ? 24 : 16),
+        border: Border.all(color: AppColors.surfaceContainerHigh, width: 0.5),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.08),
+            blurRadius: 30,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      elevation: 0,
-      color: Colors.grey[50],
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-
-      // card contents
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(children: [_cookImage(cook.imageUrl), _cookLabels(cook)]),
+          Stack(
+            children: [_ImageArea(cook: cook, isFeatured: isFeatured)],
+          ),
+          _ContentArea(cook: cook, isFeatured: isFeatured),
         ],
       ),
     );
   }
 }
 
-Widget _cookImage(String url) {
-  return AspectRatio(
-    aspectRatio: 16 / 9,
-    child: CachedNetworkImage(
-      imageUrl: url,
-      fit: BoxFit.cover,
-      placeholder: (context, url) =>
-          const Center(child: CircularProgressIndicator()),
-      errorWidget: (context, url, error) {
-        return const Icon(Icons.restaurant, color: Colors.grey, size: 40);
-      },
-    ),
-  );
-}
+class _ImageArea extends StatelessWidget {
+  final CookItem cook;
+  final bool isFeatured;
 
-Widget _cookLabels(CookItem cook) {
-  Widget buildCategoryBadge(CookCategory category) {
-    final (String label, Color color) = category.uiData;
+  const _ImageArea({required this.cook, required this.isFeatured});
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.85),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+  @override
+  Widget build(BuildContext context) {
+    final height = isFeatured ? 192.0 : 132.0;
+
+    return SizedBox(
+      height: height,
+      width: double.infinity,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          _buildImage(),
+          Positioned(
+            top: isFeatured ? 16 : 8,
+            left: isFeatured ? 16 : 8,
+            child: _DateBadge(cook: cook, isFeatured: isFeatured),
           ),
         ],
       ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
+    );
+  }
+
+  Widget _buildImage() {
+    if (cook.imageUrl.isEmpty) {
+      return Container(
+        color: AppColors.surfaceContainerHigh,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.no_photography,
+              size: 32,
+              color: AppColors.outlineVariant,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '写真なし',
+              style: TextStyle(fontSize: 12, color: AppColors.onSurfaceVariant),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return CachedNetworkImage(
+      imageUrl: cook.imageUrl,
+      fit: BoxFit.cover,
+      placeholder: (context, url) => Container(
+        color: AppColors.surfaceContainerHigh,
+        child: const Center(child: CircularProgressIndicator()),
+      ),
+      errorWidget: (context, url, error) => Container(
+        color: AppColors.surfaceContainerHigh,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.no_photography,
+              size: 32,
+              color: AppColors.outlineVariant,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '写真なし',
+              style: TextStyle(fontSize: 12, color: AppColors.onSurfaceVariant),
+            ),
+          ],
         ),
       ),
     );
   }
+}
 
-  Widget buildDateBadge(DateTime date) {
-    final String dateString =
-        "${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}";
+class _DateBadge extends StatelessWidget {
+  final CookItem cook;
+  final bool isFeatured;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.6),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.calendar_today, size: 10, color: Colors.white),
-          const SizedBox(width: 4),
-          Text(
-            dateString,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-            ),
+  const _DateBadge({required this.cook, required this.isFeatured});
+
+  @override
+  Widget build(BuildContext context) {
+    final dateString =
+        '${cook.date.month}/${cook.date.day.toString().padLeft(2, '0')} ${cook.category.label}';
+    final iconSize = isFeatured ? 16.0 : 14.0;
+    final fontSize = isFeatured ? 13.0 : 12.0;
+    final (Color bg, Color fg) = _badgeColors(cook.category);
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: isFeatured ? 12 : 8,
+            vertical: isFeatured ? 4 : 2,
           ),
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(cook.category.icon, size: iconSize, color: fg),
+              const SizedBox(width: 4),
+              Text(
+                dateString,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                  color: fg,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ContentArea extends StatelessWidget {
+  final CookItem cook;
+  final bool isFeatured;
+
+  const _ContentArea({required this.cook, required this.isFeatured});
+
+  @override
+  Widget build(BuildContext context) {
+    final hasComment = cook.aiComment != null && cook.aiComment!.isNotEmpty;
+
+    return Padding(
+      padding: EdgeInsets.all(isFeatured ? 16 : 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (hasComment) ...[
+            Text(
+              cook.aiComment!,
+              style: TextStyle(
+                fontSize: isFeatured ? 14 : 12,
+                height: 1.5,
+                color: AppColors.onSurfaceVariant,
+              ),
+              maxLines: isFeatured ? null : 2,
+              overflow: isFeatured
+                  ? TextOverflow.visible
+                  : TextOverflow.ellipsis,
+            ),
+          ],
         ],
       ),
     );
   }
+}
 
-  Widget buildAiBadge() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.purple.withValues(alpha: 0.8),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: const Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.auto_awesome, size: 10, color: Colors.white),
-          SizedBox(width: 4),
-          Text(
-            'AI',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  return Positioned(
-    top: 12,
-    left: 12,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 8,
-      children: [
-        buildCategoryBadge(cook.category),
-        buildDateBadge(cook.date),
-        if (cook.aiComment != null && cook.aiComment!.isNotEmpty)
-          buildAiBadge(),
-      ],
+(Color, Color) _badgeColors(CookCategory category) {
+  return switch (category) {
+    CookCategory.breakfast => (
+      AppColors.tertiaryContainer.withValues(),
+      AppColors.onTertiaryContainer,
     ),
-  );
+    CookCategory.lunch => (
+      AppColors.primaryContainer.withValues(alpha: 0.5),
+      AppColors.onPrimaryContainer,
+    ),
+    CookCategory.box => (
+      AppColors.primaryContainer.withValues(),
+      AppColors.onPrimaryContainer,
+    ),
+    CookCategory.dinner => (
+      AppColors.secondaryContainer.withValues(),
+      AppColors.onSecondaryContainer,
+    ),
+    CookCategory.none => (
+      AppColors.surfaceContainerHighest,
+      AppColors.onSurfaceVariant,
+    ),
+  };
 }
