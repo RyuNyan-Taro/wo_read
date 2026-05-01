@@ -92,7 +92,7 @@ List<NavigationDestination> _footerIcons = [
       colorFilter: const ColorFilter.mode(Color(0xFFA8A29E), BlendMode.srcIn),
     ),
     selectedIcon: SvgPicture.asset(
-      'assets/images/icon/cook_icon.svg',
+      'assets/images/icon/cook_icon_outlined.svg',
       width: 20,
       height: 18,
       colorFilter: const ColorFilter.mode(Color(0xFFFF9E7A), BlendMode.srcIn),
