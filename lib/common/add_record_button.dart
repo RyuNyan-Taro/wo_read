@@ -11,6 +11,7 @@ Widget addRecordButton({
     width: 48,
     height: 48,
     child: FloatingActionButton(
+      heroTag: null,
       onPressed: () async {
         await Navigator.of(context).push(
           MaterialPageRoute(
