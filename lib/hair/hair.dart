@@ -10,7 +10,7 @@ class HairPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('Hair'),
+        title: Text('ヘアカタログ'),
       ),
       body: SingleChildScrollView(
         child: Column(

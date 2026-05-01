@@ -6,14 +6,14 @@ import 'package:wo_read/gallery/screens/add_image_button.dart';
 import 'package:wo_read/gallery/screens/modify_category.dart';
 import 'package:wo_read/gallery/service/gallery_service.dart';
 
-class GalleryPage extends StatefulWidget {
-  const GalleryPage({super.key});
+class GalleryBody extends StatefulWidget {
+  const GalleryBody({super.key});
 
   @override
-  State<GalleryPage> createState() => _GalleryPageState();
+  State<GalleryBody> createState() => _GalleryBodyState();
 }
 
-class _GalleryPageState extends State<GalleryPage> {
+class _GalleryBodyState extends State<GalleryBody> {
   List<GalleryItem>? galleries;
 
   @override
@@ -36,25 +36,26 @@ class _GalleryPageState extends State<GalleryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('gallery'),
-      ),
-      body: galleries == null
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Column(children: _galleriesList(galleries!)),
-            ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          addImageButton(context: context),
-          SizedBox(height: 12),
-          addCategoryButton(context: context),
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+    return Stack(
+      children: [
+        galleries == null
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                child: Column(children: _galleriesList(galleries!)),
+              ),
+        Positioned(
+          left: 16,
+          bottom: 16,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              addImageButton(context: context, returnAction: _getGalleries),
+              const SizedBox(height: 12),
+              addCategoryButton(context: context, returnAction: _getGalleries),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

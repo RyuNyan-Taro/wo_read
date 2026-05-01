@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wo_read/common/app_theme.dart';
 
 class CookItem {
   final int id;
@@ -26,18 +27,24 @@ const Map<CookCategory, String> categoryToJp = {
   CookCategory.dinner: '夕食',
 };
 
-const Map<CookCategory, Color> categoryToColor = {
-  CookCategory.none: Colors.black,
-  CookCategory.breakfast: Colors.orange,
-  CookCategory.lunch: Colors.blue,
-  CookCategory.box: Colors.green,
-  CookCategory.dinner: Colors.indigo,
+const Map<CookCategory, IconData> categoryToIcon = {
+  CookCategory.none: Icons.calendar_today,
+  CookCategory.breakfast: Icons.breakfast_dining,
+  CookCategory.lunch: Icons.wb_sunny,
+  CookCategory.box: Icons.lunch_dining,
+  CookCategory.dinner: Icons.nights_stay,
 };
 
 extension CookCategoryX on CookCategory {
   String get label => categoryToJp[this] ?? '不明';
 
-  Color get color => categoryToColor[this] ?? Colors.grey;
+  IconData get icon => categoryToIcon[this] ?? Icons.calendar_today;
 
-  (String, Color) get uiData => (label, color);
+  Color get color => switch (this) {
+    CookCategory.breakfast => AppColors.tertiaryContainer,
+    CookCategory.lunch => AppColors.primaryContainer,
+    CookCategory.box => AppColors.primaryContainer,
+    CookCategory.dinner => AppColors.secondaryContainer,
+    CookCategory.none => AppColors.surfaceContainerHighest,
+  };
 }

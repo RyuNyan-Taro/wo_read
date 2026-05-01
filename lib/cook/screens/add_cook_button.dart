@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 
 import 'cook_form_page.dart';
+import '../../common/app_theme.dart';
 
 Widget addCookButton({required BuildContext context, Function? returnAction}) {
   return FloatingActionButton.extended(
-    icon: const Icon(Icons.restaurant),
-    label: const Text('記録する'),
-
-    backgroundColor: Colors.orangeAccent,
-    foregroundColor: Colors.white,
-
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-
+    icon: Icon(Icons.photo_camera),
+    label: const Text('食事を記録'),
+    foregroundColor: AppTheme.themeData.colorScheme.onPrimary,
     onPressed: () async {
       await Navigator.of(
         context,
       ).push(MaterialPageRoute(builder: (context) => const CookFormPage()));
       if (returnAction != null) returnAction();
     },
-    heroTag: 'addCook',
+    heroTag: null,
   );
 }
