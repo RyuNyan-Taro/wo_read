@@ -111,11 +111,17 @@ class _FeelingDonutChart extends StatelessWidget {
       children: [
         Text(
           '記録数',
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+            color: AppColors.outline,
+            fontSize: 12,
+          ),
+        ),
+        Text(
+          '$total',
           style: Theme.of(
             context,
-          ).textTheme.labelMedium?.copyWith(color: AppColors.outline),
+          ).textTheme.headlineSmall?.copyWith(fontSize: 18),
         ),
-        Text('$total', style: Theme.of(context).textTheme.headlineSmall),
       ],
     );
   }
