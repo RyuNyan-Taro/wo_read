@@ -12,7 +12,7 @@ class RecordService {
         .from(_tableName)
         .select()
         .order('timestamp', ascending: false)
-        .limit(100);
+        .limit(200);
 
     return response
         .map(
