@@ -181,7 +181,7 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
         Expanded(
           child: DropdownButtonFormField<String>(
             value: _controller.feeling.name,
-            decoration: const InputDecoration(labelText: 'きもち'),
+            decoration: const InputDecoration(labelText: '感情'),
             items: FeelingType.values
                 .map(
                   (feeling) => DropdownMenuItem(
