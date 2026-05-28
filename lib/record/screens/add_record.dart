@@ -17,7 +17,16 @@ class _AddRecordPageState extends State<AddRecordPage> {
   final AddRecordController _controller = AddRecordController();
 
   @override
+  void initState() {
+    super.initState();
+    _controller.descriptionController.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() => setState(() {});
+
+  @override
   dispose() {
+    _controller.descriptionController.removeListener(_onTextChanged);
     super.dispose();
     _controller.dispose();
   }
@@ -120,9 +129,11 @@ class _AddRecordPageState extends State<AddRecordPage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    showActionIndicator(context, _saveRecord());
-                  },
+                  onPressed: _controller.descriptionController.text.trim().isEmpty
+                      ? null
+                      : () {
+                          showActionIndicator(context, _saveRecord());
+                        },
                   child: const Text('追加'),
                 ),
               ),
