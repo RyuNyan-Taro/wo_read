@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:wo_read/common/app_theme.dart';
 import 'package:wo_read/gallery/models/gallery_item.dart';
 import 'package:wo_read/gallery/screens/add_category_button.dart';
 import 'package:wo_read/gallery/screens/add_image_button.dart';
@@ -29,6 +30,8 @@ class _GalleryBodyState extends State<GalleryBody> {
     final GalleryService galleryService = GalleryService();
     final List<GalleryItem> items = await galleryService.getGalleryUrls();
 
+    if (!mounted) return;
+
     setState(() {
       galleries = items;
     });
@@ -41,11 +44,27 @@ class _GalleryBodyState extends State<GalleryBody> {
         galleries == null
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
-                child: Column(children: _galleriesList(galleries!)),
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'ギャラリー',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildSectionHeader(
+                      Icons.photo_library_outlined,
+                      '思い出の写真',
+                    ),
+                    const SizedBox(height: 12),
+                    ..._bentoGrid(galleries!),
+                  ],
+                ),
               ),
         Positioned(
-          left: 16,
-          bottom: 16,
+          right: 16,
+          bottom: 20,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -59,27 +78,169 @@ class _GalleryBodyState extends State<GalleryBody> {
     );
   }
 
-  List<Widget> _galleriesList(List<GalleryItem> galleries) {
-    return galleries
-        .map(
-          (gallery) => InkWell(
-            onTap: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return ModifyCategoryPage(gallery: gallery);
-                  },
-                ),
-              );
+  Widget _buildSectionHeader(IconData icon, String title) {
+    return Row(
+      children: [
+        Icon(icon, color: AppColors.outlineVariant, size: 22),
+        const SizedBox(width: 6),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: AppColors.onSurface,
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _bentoGrid(List<GalleryItem> galleries) {
+    if (galleries.isEmpty) {
+      return const [_EmptyGalleryState()];
+    }
+
+    final widgets = <Widget>[
+      _tappableCard(galleries[0], isFeatured: true),
+    ];
+
+    final rest = galleries.skip(1).toList();
+    for (var i = 0; i < rest.length; i += 2) {
+      final left = rest[i];
+      final right = i + 1 < rest.length ? rest[i + 1] : null;
+
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: _tappableCard(left, isFeatured: false)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: right != null
+                    ? _tappableCard(right, isFeatured: false)
+                    : const SizedBox.shrink(),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return widgets;
+  }
+
+  Widget _tappableCard(GalleryItem gallery, {required bool isFeatured}) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(isFeatured ? 24 : 16),
+      onTap: () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return ModifyCategoryPage(gallery: gallery);
             },
-            child: CachedNetworkImage(
-              imageUrl: gallery.url,
-              fit: BoxFit.cover,
-              placeholder: (context, url) =>
-                  const Center(child: CircularProgressIndicator()),
+          ),
+        );
+        _getGalleries();
+      },
+      child: _GalleryPhotoCard(gallery: gallery, isFeatured: isFeatured),
+    );
+  }
+}
+
+class _GalleryPhotoCard extends StatelessWidget {
+  final GalleryItem gallery;
+  final bool isFeatured;
+
+  const _GalleryPhotoCard({required this.gallery, required this.isFeatured});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(isFeatured ? 24 : 16),
+        border: Border.all(color: AppColors.surfaceContainerHigh, width: 0.5),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.08),
+            blurRadius: 30,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: SizedBox(
+        height: isFeatured ? 192 : 132,
+        width: double.infinity,
+        child: CachedNetworkImage(
+          imageUrl: gallery.url,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => Container(
+            color: AppColors.surfaceContainerHigh,
+            child: const Center(child: CircularProgressIndicator()),
+          ),
+          errorWidget: (context, url, error) => Container(
+            color: AppColors.surfaceContainerHigh,
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.no_photography,
+                  size: 32,
+                  color: AppColors.outlineVariant,
+                ),
+                SizedBox(height: 4),
+                Text(
+                  '写真なし',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.onSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
           ),
-        )
-        .toList();
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyGalleryState extends StatelessWidget {
+  const _EmptyGalleryState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.outlineVariant.withValues(alpha: 0.3),
+        ),
+      ),
+      child: const Column(
+        children: [
+          Icon(
+            Icons.photo_library_outlined,
+            size: 40,
+            color: AppColors.outlineVariant,
+          ),
+          SizedBox(height: 8),
+          Text(
+            '写真がありません',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppColors.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

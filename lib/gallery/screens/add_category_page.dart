@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wo_read/common/action_indicator.dart';
+import 'package:wo_read/common/app_theme.dart';
 import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/gallery/service/gallery_service.dart';
 
@@ -29,6 +30,8 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
   }
 
   void _validateForm() {
+    if (!mounted) return;
+
     setState(() {
       _isFormValid = formKey.currentState?.validate() ?? false;
     });
@@ -37,13 +40,15 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
   Future<void> _getCategories() async {
     final List<String> items = await _galleryService.getCategories();
 
+    if (!mounted) return;
+
     setState(() {
       _categories = items;
     });
   }
 
   Future<void> _saveCategory(String newCategory) async {
-    await _galleryService.addCategory(newCategory);
+    await _galleryService.addCategory(newCategory.trim());
 
     if (!mounted) {
       return;
@@ -62,48 +67,137 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final categoriesLoaded = _categories != null;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add record'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('カテゴリーを追加'),
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 12),
-          Form(
-            autovalidateMode: AutovalidateMode.always,
-            key: formKey,
-            child: TextFormField(
-              autofocus: true,
-              controller: descriptionController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(), // 外枠付きデザイン
-                labelText: "category",
-              ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return '';
-                }
-                if (_categories!.contains(value)) {
-                  return '既に存在するカテゴリーです';
-                }
-                return null;
-              },
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('カテゴリーを追加', style: Theme.of(context).textTheme.headlineMedium),
+            const SizedBox(height: 6),
+            Text(
+              '写真を整理するためのカテゴリーを作成します。',
+              style: Theme.of(
+                context,
+              ).textTheme.labelMedium?.copyWith(color: AppColors.outline),
             ),
-          ),
-          ElevatedButton(
-            onPressed: _isFormValid
-                ? () {
-                    showActionIndicator(
-                      context,
-                      _saveCategory(descriptionController.text),
-                    );
-                  }
-                : null,
-            child: const Text('追加'),
+            const SizedBox(height: 20),
+            _CategoryFormCard(
+              formKey: formKey,
+              controller: descriptionController,
+              categories: _categories,
+            ),
+            if (!categoriesLoaded) ...[
+              const SizedBox(height: 12),
+              const _LoadingCategoriesHint(),
+            ],
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: FilledButton.icon(
+                onPressed: _isFormValid && categoriesLoaded
+                    ? () {
+                        showActionIndicator(
+                          context,
+                          _saveCategory(descriptionController.text.trim()),
+                        );
+                      }
+                    : null,
+                icon: const Icon(Icons.add_circle_outline),
+                label: const Text('カテゴリーを追加'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CategoryFormCard extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
+  final TextEditingController controller;
+  final List<String>? categories;
+
+  const _CategoryFormCard({
+    required this.formKey,
+    required this.controller,
+    required this.categories,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.outlineVariant.withValues(alpha: 0.3),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
+      child: Form(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        key: formKey,
+        child: TextFormField(
+          autofocus: true,
+          enabled: categories != null,
+          controller: controller,
+          decoration: const InputDecoration(
+            prefixIcon: Icon(Icons.sell_outlined),
+            labelText: 'カテゴリー名',
+            hintText: '例: おでかけ',
+          ),
+          validator: (value) {
+            final text = value?.trim() ?? '';
+            if (text.isEmpty) {
+              return 'カテゴリー名を入力してください';
+            }
+            if ((categories ?? const <String>[]).contains(text)) {
+              return '既に存在するカテゴリーです';
+            }
+            return null;
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _LoadingCategoriesHint extends StatelessWidget {
+  const _LoadingCategoriesHint();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const SizedBox(
+          width: 16,
+          height: 16,
+          child: CircularProgressIndicator(strokeWidth: 2),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          'カテゴリーを読み込み中',
+          style: Theme.of(
+            context,
+          ).textTheme.labelMedium?.copyWith(color: AppColors.outline),
+        ),
+      ],
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:wo_read/common/app_theme.dart';
 import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/record/controllers/modify_record_controller.dart';
 import 'package:wo_read/record/models/record_item.dart';
@@ -69,25 +70,64 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Modify record'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('記録を編集'),
       ),
-      body: Column(
-        children: [
-          _buildDatePicker(context),
-          _buildTypeSelectors(context),
-          _buildContentField(context),
-          _buildActionButtons(context),
-        ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildDatePicker(context),
+              const SizedBox(height: 20),
+              const Row(
+                children: [
+                  Icon(Icons.label_outline, color: AppColors.outlineVariant, size: 22),
+                  SizedBox(width: 6),
+                  Text(
+                    'タグ',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              _buildTypeSelectors(context),
+              const SizedBox(height: 20),
+              const Row(
+                children: [
+                  Icon(Icons.edit_note, color: AppColors.outlineVariant, size: 22),
+                  SizedBox(width: 6),
+                  Text(
+                    '活動内容',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              _buildContentField(context),
+              const SizedBox(height: 24),
+              _buildActionButtons(context),
+            ],
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildDatePicker(BuildContext context) {
-    final formatter = DateFormat('MM/dd');
+    final formatter = DateFormat('yyyy/MM/dd');
 
-    return ElevatedButton(
-      onPressed: () async {
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: () async {
         final selectedDate = await showDatePicker(
           context: context,
           initialDate: _controller.date,
@@ -100,50 +140,86 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
           });
         }
       },
-      child: Text(formatter.format(_controller.date)),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceContainerLowest,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: AppColors.outlineVariant.withValues(alpha: 0.3),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.calendar_today, size: 18, color: AppColors.outline),
+            const SizedBox(width: 10),
+            Text(
+              formatter.format(_controller.date),
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: AppColors.onSurface,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildTypeSelectors(BuildContext context) {
     return Row(
       children: [
-        DropdownButton(
-          value: _controller.feeling.name,
-          items: FeelingType.values
-              .map(
-                (feeling) => DropdownMenuItem(
-                  value: feeling.name,
-                  child: Text(feelingToJp[feeling]!),
-                ),
-              )
-              .toList(),
-          onChanged: (String? newValue) {
-            // Handle the change
-            if (newValue != null) {
-              setState(() {
-                _controller.feeling = convertToFeelingType(label: newValue);
-              });
-            }
-          },
+        Expanded(
+          child: DropdownButtonFormField<String>(
+            value: _controller.feeling.name,
+            decoration: const InputDecoration(labelText: '感情'),
+            items: FeelingType.values
+                .map(
+                  (feeling) => DropdownMenuItem(
+                    value: feeling.name,
+                    child: Text(feelingToJp[feeling]!),
+                  ),
+                )
+                .toList(),
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                setState(() {
+                  _controller.feeling = convertToFeelingType(label: newValue);
+                });
+              }
+            },
+          ),
         ),
-        DropdownButton(
-          value: _controller.denver.name,
-          items: DenverType.values
-              .map(
-                (denver) => DropdownMenuItem(
-                  value: denver.name,
-                  child: Text(denverToJp[denver]!),
-                ),
-              )
-              .toList(),
-          onChanged: (String? newValue) {
-            // Handle the change
-            if (newValue != null) {
-              setState(() {
-                _controller.denver = convertToDenverType(label: newValue);
-              });
-            }
-          },
+        const SizedBox(width: 12),
+        Expanded(
+          child: DropdownButtonFormField<String>(
+            value: _controller.denver.name,
+            decoration: const InputDecoration(labelText: '発達'),
+            items: DenverType.values
+                .map(
+                  (denver) => DropdownMenuItem(
+                    value: denver.name,
+                    child: Text(denverToJp[denver]!),
+                  ),
+                )
+                .toList(),
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                setState(() {
+                  _controller.denver = convertToDenverType(label: newValue);
+                });
+              }
+            },
+          ),
         ),
         Visibility(
           visible:
@@ -167,28 +243,36 @@ class _ModifyRecordPageState extends State<ModifyRecordPage> {
       key: formKey,
       controller: _controller.descriptionController,
       decoration: const InputDecoration(
-        // icon: Icon(Icons.email),
-        border: OutlineInputBorder(), // 外枠付きデザイン
-        labelText: "content",
+        hintText: 'メモ',
       ),
     );
   }
 
   Widget _buildActionButtons(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
       children: [
-        ElevatedButton(
-          onPressed: () {
-            showActionIndicator(context, _updateRecord());
-          },
-          child: const Text('変更'),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              showActionIndicator(context, _updateRecord());
+            },
+            child: const Text('変更'),
+          ),
         ),
-        ElevatedButton(
-          onPressed: () {
-            showActionIndicator(context, _deleteRecord());
-          },
-          child: const Text('削除', style: TextStyle(color: Colors.red)),
+        const SizedBox(height: 12),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton(
+            onPressed: () {
+              showActionIndicator(context, _deleteRecord());
+            },
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.error,
+              side: const BorderSide(color: AppColors.error),
+            ),
+            child: const Text('削除'),
+          ),
         ),
       ],
     );
