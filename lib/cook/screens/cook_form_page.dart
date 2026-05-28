@@ -7,6 +7,7 @@ import 'package:wo_read/common/success_dialog.dart';
 import 'package:wo_read/cook/controllers/cook_form_controller.dart';
 import 'package:wo_read/cook/models/cook_item.dart';
 import '../../common/action_indicator.dart';
+import '../../common/app_theme.dart';
 import '../use_cases/convert_enum_use_case.dart';
 
 class CookFormPage extends StatefulWidget {
@@ -67,8 +68,7 @@ class _CookFormPageState extends State<CookFormPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_controller.isEditMode ? 'Edit Cook' : 'Add Cook'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(_controller.isEditMode ? '記録を編集する' : '記録を追加する'),
         actions: [
           if (_controller.isEditMode)
             IconButton(
@@ -168,15 +168,15 @@ class CookImagePreview extends StatelessWidget {
       aspectRatio: 4 / 3,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey.shade50,
+          color: AppColors.surfaceContainerLowest,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.grey.shade200),
+          border: Border.all(color: AppColors.outlineVariant),
         ),
         clipBehavior: Clip.antiAlias,
         child: Stack(
           fit: StackFit.expand,
           children: [
-            _buildImage(),
+            _buildImage(context),
             Material(
               color: Colors.transparent,
               child: InkWell(onTap: isProcessing ? null : onTap),
@@ -189,19 +189,19 @@ class CookImagePreview extends StatelessWidget {
     );
   }
 
-  Widget _buildImage() {
+  Widget _buildImage(BuildContext context) {
     if (imageFile != null) {
       return Image.file(File(imageFile!.path), fit: BoxFit.cover);
     }
     if (imageUrl != null) return Image.network(imageUrl!, fit: BoxFit.cover);
-    return const Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.restaurant_menu, size: 48, color: Colors.orangeAccent),
-        SizedBox(height: 8),
+        const Icon(Icons.restaurant_menu, size: 48, color: AppColors.primaryContainer),
+        const SizedBox(height: 8),
         Text(
           '写真をのせる',
-          style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+          style: TextStyle(color: AppColors.onSurfaceVariant, fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -320,8 +320,8 @@ class SaveButton extends StatelessWidget {
         // Material 3のFilledButtonを使用
         onPressed: onPressed,
         style: FilledButton.styleFrom(
-          backgroundColor: Colors.orangeAccent, // ここはアクセントカラーで固定
-          foregroundColor: Colors.white,
+          backgroundColor: AppColors.primaryContainer,
+          foregroundColor: AppColors.onPrimaryContainer,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
@@ -448,7 +448,7 @@ class _AiCommentSection extends StatelessWidget {
             Text(
               comment!,
               style: TextStyle(
-                color: Colors.grey.shade800,
+                color: AppColors.onSurfaceVariant,
                 fontSize: 14,
                 height: 1.5,
               ),
