@@ -48,16 +48,6 @@ class _GalleryBodyState extends State<GalleryBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'ギャラリー',
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildSectionHeader(
-                      Icons.photo_library_outlined,
-                      '思い出の写真',
-                    ),
-                    const SizedBox(height: 12),
                     ..._bentoGrid(galleries!),
                   ],
                 ),
@@ -72,23 +62,6 @@ class _GalleryBodyState extends State<GalleryBody> {
               const SizedBox(height: 12),
               addCategoryButton(context: context, returnAction: _getGalleries),
             ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSectionHeader(IconData icon, String title) {
-    return Row(
-      children: [
-        Icon(icon, color: AppColors.outlineVariant, size: 22),
-        const SizedBox(width: 6),
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: AppColors.onSurface,
           ),
         ),
       ],

@@ -50,11 +50,6 @@ class _CookBodyState extends State<CookBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '食事の記録',
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    const SizedBox(height: 16),
                     ..._bentoGrid(cooks!),
                   ],
                 ),
