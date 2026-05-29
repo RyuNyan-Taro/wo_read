@@ -3,10 +3,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:wo_read/common/add_record_button.dart';
 import 'package:wo_read/common/app_theme.dart';
+import 'package:wo_read/record/models/morning_ready_record.dart';
 import 'package:wo_read/record/models/record_item.dart';
+import 'package:wo_read/record/screens/morning_ready_section.dart';
 import 'package:wo_read/record/screens/modify_record.dart';
 import 'package:wo_read/record/service/record_service.dart';
 import 'package:wo_read/record/screens/record_analysis_section.dart';
+import 'package:wo_read/record/service/morning_ready_service.dart';
 import 'package:wo_read/record/use_cases/lunar_age_use_case.dart';
 
 class RecordBody extends StatefulWidget {
@@ -18,43 +21,110 @@ class RecordBody extends StatefulWidget {
 
 class _RecordBodyState extends State<RecordBody> {
   List<RecordItem>? records;
+  List<MorningReadyRecord>? morningReadyRecords;
+  bool isSavingMorningReady = false;
 
   @override
   void initState() {
     super.initState();
 
-    if (records == null) {
-      _getRecords();
+    if (records == null || morningReadyRecords == null) {
+      _loadRecordPageData();
     }
   }
 
-  Future<void> _getRecords() async {
+  Future<void> _loadRecordPageData() async {
     final RecordService recordService = RecordService();
+    final MorningReadyService morningReadyService = MorningReadyService();
     final List<RecordItem> items = await recordService.getRecords();
+    List<MorningReadyRecord> morningItems = [];
+
+    try {
+      morningItems = await morningReadyService.getRecords();
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('朝の準備記録を読み込めませんでした')),
+        );
+      }
+    }
+
+    if (!mounted) return;
 
     setState(() {
       records = items;
+      morningReadyRecords = morningItems;
     });
+  }
+
+  Future<void> _refreshMorningReadyRecords() async {
+    final MorningReadyService morningReadyService = MorningReadyService();
+    final items = await morningReadyService.getRecords();
+
+    if (!mounted) return;
+
+    setState(() {
+      morningReadyRecords = items;
+    });
+  }
+
+  Future<void> _saveMorningReady() async {
+    setState(() {
+      isSavingMorningReady = true;
+    });
+
+    try {
+      final MorningReadyService morningReadyService = MorningReadyService();
+      await morningReadyService.addTodayReady(DateTime.now());
+      await _refreshMorningReadyRecords();
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('朝の準備完了時刻を記録できませんでした')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          isSavingMorningReady = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        records == null
+        records == null || morningReadyRecords == null
             ? const Center(child: CircularProgressIndicator())
-            : _recordsSet(records!, _getRecords),
+            : _recordsSet(
+                records!,
+                morningReadyRecords!,
+                _loadRecordPageData,
+                _saveMorningReady,
+                isSavingMorningReady,
+              ),
         Positioned(
           right: 16,
           bottom: 20,
-          child: addRecordButton(context: context, returnAction: _getRecords),
+          child: addRecordButton(
+            context: context,
+            returnAction: _loadRecordPageData,
+          ),
         ),
       ],
     );
   }
 }
 
-Widget _recordsSet(List<RecordItem> records, Function() backAction) {
+Widget _recordsSet(
+  List<RecordItem> records,
+  List<MorningReadyRecord> morningReadyRecords,
+  Function() backAction,
+  Future<void> Function() saveMorningReady,
+  bool isSavingMorningReady,
+) {
   final DateTime birthday = DateTime.parse(
     dotenv.env['CHILD_BIRTHDAY'] ?? '1970-01-01 00:00:00',
   );
@@ -65,9 +135,19 @@ Widget _recordsSet(List<RecordItem> records, Function() backAction) {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          MorningReadySection(
+            records: morningReadyRecords,
+            isSaving: isSavingMorningReady,
+            onRecord: saveMorningReady,
+          ),
+          const SizedBox(height: 32),
           RecordAnalysisSection(records: records),
           const SizedBox(height: 48),
-          _buildSectionHeader(Icons.history_edu, '日々の活動', AppColors.outlineVariant),
+          _buildSectionHeader(
+            Icons.history_edu,
+            '日々の活動',
+            AppColors.outlineVariant,
+          ),
           const SizedBox(height: 12),
           _RecordTimeline(
             records: records,
