@@ -70,16 +70,12 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
     final categoriesLoaded = _categories != null;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('カテゴリーを追加'),
-      ),
+      appBar: AppBar(title: const Text('カテゴリーを追加')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('カテゴリーを追加', style: Theme.of(context).textTheme.headlineMedium),
-            const SizedBox(height: 6),
             Text(
               '写真を整理するためのカテゴリーを作成します。',
               style: Theme.of(

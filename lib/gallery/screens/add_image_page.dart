@@ -40,16 +40,12 @@ class _AddImagePageState extends State<AddImagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('画像を追加'),
-      ),
+      appBar: AppBar(title: const Text('画像を追加')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('画像を追加', style: Theme.of(context).textTheme.headlineMedium),
-            const SizedBox(height: 6),
             Text(
               'ギャラリーに残したい写真を選んで保存します。',
               style: Theme.of(
