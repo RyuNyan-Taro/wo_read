@@ -11,12 +11,15 @@ class CookService {
     dotenv.env['SUPABASE_ANON_KEY'] ?? '',
   );
 
-  Future<List<CookItem>> getCookUrls() async {
+  Future<List<CookItem>> getCookUrls({
+    int offset = 0,
+    int limit = 20,
+  }) async {
     final PostgrestList response = await _supabase
         .from('cook_record')
         .select()
-        .limit(100)
-        .order('createdAt', ascending: false);
+        .order('createdAt', ascending: false)
+        .range(offset, offset + limit - 1);
     final String url = dotenv.env['SUPABASE_PROJECT_URL'] ?? '';
     final String directory = dotenv.env['SUPABASE_COOK_DIRECTORY'] ?? '';
 

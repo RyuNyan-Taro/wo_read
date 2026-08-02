@@ -10,11 +10,15 @@ class GalleryService {
     dotenv.env['SECONDARY_SUPABASE_ANON_KEY'] ?? '',
   );
 
-  Future<List<GalleryItem>> getGalleryUrls() async {
+  Future<List<GalleryItem>> getGalleryUrls({
+    int offset = 0,
+    int limit = 20,
+  }) async {
     final PostgrestList response = await _supabase
         .from('photo_name')
         .select()
-        .limit(100);
+        .order('id', ascending: false)
+        .range(offset, offset + limit - 1);
     final String url = dotenv.env['SECONDARY_SUPABASE_URL'] ?? '';
     final String directory =
         dotenv.env['SECONDARY_SUPABASE_PHOTO_DIRECTORY'] ?? '';
