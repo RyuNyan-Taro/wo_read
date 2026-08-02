@@ -15,6 +15,7 @@ class GalleryBody extends StatefulWidget {
 }
 
 class _GalleryBodyState extends State<GalleryBody> {
+  static const _initialPageSize = 21;
   static const _pageSize = 20;
 
   List<GalleryItem>? galleries;
@@ -38,7 +39,7 @@ class _GalleryBodyState extends State<GalleryBody> {
 
     setState(() {
       galleries = items;
-      _hasMoreGalleries = items.length == _pageSize;
+      _hasMoreGalleries = items.length == _initialPageSize;
     });
   }
 

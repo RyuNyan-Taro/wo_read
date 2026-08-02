@@ -13,7 +13,7 @@ class CookService {
 
   Future<List<CookItem>> getCookUrls({
     int offset = 0,
-    int limit = 20,
+    int limit = 21,
   }) async {
     final PostgrestList response = await _supabase
         .from('cook_record')
