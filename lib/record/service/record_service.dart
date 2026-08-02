@@ -7,10 +7,7 @@ const String _tableName = 'glow_record';
 class RecordService {
   final _supabase = Supabase.instance.client;
 
-  Future<List<RecordItem>> getRecords({
-    int offset = 0,
-    int limit = 20,
-  }) async {
+  Future<List<RecordItem>> getRecords({int offset = 0, int limit = 20}) async {
     final List<Map<String, dynamic>> response = await _supabase
         .from(_tableName)
         .select()
