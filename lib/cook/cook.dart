@@ -13,7 +13,12 @@ class CookBody extends StatefulWidget {
 }
 
 class _CookBodyState extends State<CookBody> {
+  static const _initialPageSize = 11;
+  static const _pageSize = 10;
+
   List<CookItem>? cooks;
+  bool _isLoadingMoreCooks = false;
+  bool _hasMoreCooks = true;
 
   @override
   void initState() {
@@ -29,7 +34,39 @@ class _CookBodyState extends State<CookBody> {
 
     setState(() {
       cooks = items;
+      _hasMoreCooks = items.length == _initialPageSize;
     });
+  }
+
+  Future<void> _loadMoreCooks() async {
+    final currentCooks = cooks;
+    if (currentCooks == null || _isLoadingMoreCooks || !_hasMoreCooks) {
+      return;
+    }
+
+    setState(() {
+      _isLoadingMoreCooks = true;
+    });
+
+    try {
+      final items = await CookService().getCookUrls(
+        offset: currentCooks.length,
+        limit: _pageSize,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        cooks = [...currentCooks, ...items];
+        _hasMoreCooks = items.length == _pageSize;
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingMoreCooks = false;
+        });
+      }
+    }
   }
 
   Future<void> _openDetail(CookItem cook) async {
@@ -45,13 +82,26 @@ class _CookBodyState extends State<CookBody> {
       children: [
         cooks == null
             ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ..._bentoGrid(cooks!),
-                  ],
+            : NotificationListener<ScrollNotification>(
+                onNotification: (notification) {
+                  if (notification.metrics.extentAfter < 200) {
+                    _loadMoreCooks();
+                  }
+                  return false;
+                },
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ..._bentoGrid(cooks!),
+                      if (_isLoadingMoreCooks)
+                        const Padding(
+                          padding: EdgeInsets.only(top: 24),
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                    ],
+                  ),
                 ),
               ),
         Positioned(

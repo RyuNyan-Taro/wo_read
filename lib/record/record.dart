@@ -20,9 +20,13 @@ class RecordBody extends StatefulWidget {
 }
 
 class _RecordBodyState extends State<RecordBody> {
+  static const _pageSize = 20;
+
   List<RecordItem>? records;
   List<MorningReadyRecord>? morningReadyRecords;
   bool isSavingMorningReady = false;
+  bool _isLoadingMoreRecords = false;
+  bool _hasMoreRecords = true;
 
   @override
   void initState() {
@@ -54,7 +58,41 @@ class _RecordBodyState extends State<RecordBody> {
     setState(() {
       records = items;
       morningReadyRecords = morningItems;
+      _hasMoreRecords = items.length == _pageSize;
     });
+  }
+
+  Future<void> _loadMoreRecords() async {
+    final currentRecords = records;
+    if (currentRecords == null ||
+        _isLoadingMoreRecords ||
+        !_hasMoreRecords) {
+      return;
+    }
+
+    setState(() {
+      _isLoadingMoreRecords = true;
+    });
+
+    try {
+      final items = await RecordService().getRecords(
+        offset: currentRecords.length,
+        limit: _pageSize,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        records = [...currentRecords, ...items];
+        _hasMoreRecords = items.length == _pageSize;
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingMoreRecords = false;
+        });
+      }
+    }
   }
 
   Future<void> _refreshMorningReadyRecords() async {
@@ -104,6 +142,8 @@ class _RecordBodyState extends State<RecordBody> {
                 _loadRecordPageData,
                 _saveMorningReady,
                 isSavingMorningReady,
+                _loadMoreRecords,
+                _isLoadingMoreRecords,
               ),
         Positioned(
           right: 16,
@@ -124,37 +164,52 @@ Widget _recordsSet(
   Function() backAction,
   Future<void> Function() saveMorningReady,
   bool isSavingMorningReady,
+  Future<void> Function() loadMoreRecords,
+  bool isLoadingMoreRecords,
 ) {
   final DateTime birthday = DateTime.parse(
     dotenv.env['CHILD_BIRTHDAY'] ?? '1970-01-01 00:00:00',
   );
 
-  return SingleChildScrollView(
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          MorningReadySection(
-            records: morningReadyRecords,
-            isSaving: isSavingMorningReady,
-            onRecord: saveMorningReady,
-          ),
-          const SizedBox(height: 32),
-          RecordAnalysisSection(records: records),
-          const SizedBox(height: 48),
-          _buildSectionHeader(
-            Icons.history_edu,
-            '日々の活動',
-            AppColors.outlineVariant,
-          ),
-          const SizedBox(height: 12),
-          _RecordTimeline(
-            records: records,
-            backAction: backAction,
-            birthday: birthday,
-          ),
-        ],
+  return NotificationListener<ScrollNotification>(
+    onNotification: (notification) {
+      if (notification.metrics.extentAfter < 200) {
+        loadMoreRecords();
+      }
+      return false;
+    },
+    child: SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            MorningReadySection(
+              records: morningReadyRecords,
+              isSaving: isSavingMorningReady,
+              onRecord: saveMorningReady,
+            ),
+            const SizedBox(height: 32),
+            RecordAnalysisSection(records: records),
+            const SizedBox(height: 48),
+            _buildSectionHeader(
+              Icons.history_edu,
+              '日々の活動',
+              AppColors.outlineVariant,
+            ),
+            const SizedBox(height: 12),
+            _RecordTimeline(
+              records: records,
+              backAction: backAction,
+              birthday: birthday,
+            ),
+            if (isLoadingMoreRecords)
+              const Padding(
+                padding: EdgeInsets.only(top: 24),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+          ],
+        ),
       ),
     ),
   );

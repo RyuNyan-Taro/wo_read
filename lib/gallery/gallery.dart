@@ -15,7 +15,12 @@ class GalleryBody extends StatefulWidget {
 }
 
 class _GalleryBodyState extends State<GalleryBody> {
+  static const _initialPageSize = 11;
+  static const _pageSize = 10;
+
   List<GalleryItem>? galleries;
+  bool _isLoadingMoreGalleries = false;
+  bool _hasMoreGalleries = true;
 
   @override
   void initState() {
@@ -34,7 +39,41 @@ class _GalleryBodyState extends State<GalleryBody> {
 
     setState(() {
       galleries = items;
+      _hasMoreGalleries = items.length == _initialPageSize;
     });
+  }
+
+  Future<void> _loadMoreGalleries() async {
+    final currentGalleries = galleries;
+    if (currentGalleries == null ||
+        _isLoadingMoreGalleries ||
+        !_hasMoreGalleries) {
+      return;
+    }
+
+    setState(() {
+      _isLoadingMoreGalleries = true;
+    });
+
+    try {
+      final items = await GalleryService().getGalleryUrls(
+        offset: currentGalleries.length,
+        limit: _pageSize,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        galleries = [...currentGalleries, ...items];
+        _hasMoreGalleries = items.length == _pageSize;
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingMoreGalleries = false;
+        });
+      }
+    }
   }
 
   @override
@@ -43,13 +82,26 @@ class _GalleryBodyState extends State<GalleryBody> {
       children: [
         galleries == null
             ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ..._bentoGrid(galleries!),
-                  ],
+            : NotificationListener<ScrollNotification>(
+                onNotification: (notification) {
+                  if (notification.metrics.extentAfter < 200) {
+                    _loadMoreGalleries();
+                  }
+                  return false;
+                },
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ..._bentoGrid(galleries!),
+                      if (_isLoadingMoreGalleries)
+                        const Padding(
+                          padding: EdgeInsets.only(top: 24),
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                    ],
+                  ),
                 ),
               ),
         Positioned(
