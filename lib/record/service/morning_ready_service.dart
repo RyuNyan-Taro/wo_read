@@ -6,7 +6,7 @@ const String _tableName = 'morning_ready_records';
 class MorningReadyService {
   final _supabase = Supabase.instance.client;
 
-  Future<List<MorningReadyRecord>> getRecords({int limit = 20}) async {
+  Future<List<MorningReadyRecord>> getRecords({int limit = 10}) async {
     final List<Map<String, dynamic>> response = await _supabase
         .from(_tableName)
         .select()
