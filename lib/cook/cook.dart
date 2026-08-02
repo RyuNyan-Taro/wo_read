@@ -13,8 +13,8 @@ class CookBody extends StatefulWidget {
 }
 
 class _CookBodyState extends State<CookBody> {
-  static const _initialPageSize = 21;
-  static const _pageSize = 20;
+  static const _initialPageSize = 11;
+  static const _pageSize = 10;
 
   List<CookItem>? cooks;
   bool _isLoadingMoreCooks = false;

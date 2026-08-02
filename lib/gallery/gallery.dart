@@ -15,8 +15,8 @@ class GalleryBody extends StatefulWidget {
 }
 
 class _GalleryBodyState extends State<GalleryBody> {
-  static const _initialPageSize = 21;
-  static const _pageSize = 20;
+  static const _initialPageSize = 11;
+  static const _pageSize = 10;
 
   List<GalleryItem>? galleries;
   bool _isLoadingMoreGalleries = false;
