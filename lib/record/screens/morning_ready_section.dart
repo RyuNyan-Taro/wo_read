@@ -23,8 +23,8 @@ class MorningReadySection extends StatelessWidget {
     final comparison = todayRecord == null
         ? null
         : compareWithPastAverage(target: todayRecord, records: records);
-    final averageMinutes = comparison?.averageMinutes ??
-        calculateRecentAverageMinutes(records);
+    final averageMinutes =
+        comparison?.averageMinutes ?? calculateRecentAverageMinutes(records);
 
     return Container(
       width: double.infinity,
@@ -68,25 +68,25 @@ class MorningReadySection extends StatelessWidget {
               label: Text(hasTodayRecord ? '今日は記録済み' : '今の時刻で記録'),
             ),
           ),
-          if (records.isNotEmpty) ...[
-            const SizedBox(height: 20),
-            Text(
-              '履歴',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontSize: 16,
-                  ),
-            ),
-            const SizedBox(height: 8),
-            ...records.take(10).map(
-                  (record) => _HistoryRow(
-                    record: record,
-                    comparison: compareWithPastAverage(
-                      target: record,
-                      records: records,
-                    ),
-                  ),
-                ),
-          ],
+          // if (records.isNotEmpty) ...[
+          //   const SizedBox(height: 20),
+          //   Text(
+          //     '履歴',
+          //     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+          //           fontSize: 16,
+          //         ),
+          //   ),
+          //   const SizedBox(height: 8),
+          //   ...records.take(10).map(
+          //         (record) => _HistoryRow(
+          //           record: record,
+          //           comparison: compareWithPastAverage(
+          //             target: record,
+          //             records: records,
+          //           ),
+          //         ),
+          //       ),
+          // ],
         ],
       ),
     );
@@ -112,16 +112,9 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Icon(
-          Icons.alarm_on,
-          color: AppColors.secondary,
-          size: 22,
-        ),
+        const Icon(Icons.alarm_on, color: AppColors.secondary, size: 22),
         const SizedBox(width: 6),
-        Text(
-          '朝の準備',
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
+        Text('朝の準備', style: Theme.of(context).textTheme.headlineSmall),
       ],
     );
   }
@@ -170,9 +163,9 @@ class _UnrecordedSummary extends StatelessWidget {
       children: [
         Text(
           '今日の準備完了はまだ未記録です',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 6),
         Text(
@@ -190,10 +183,7 @@ class _RecordedSummary extends StatelessWidget {
   final MorningReadyRecord record;
   final MorningReadyComparison? comparison;
 
-  const _RecordedSummary({
-    required this.record,
-    required this.comparison,
-  });
+  const _RecordedSummary({required this.record, required this.comparison});
 
   @override
   Widget build(BuildContext context) {
@@ -205,17 +195,14 @@ class _RecordedSummary extends StatelessWidget {
         Text(
           formatMinutes(record.readyMinutes),
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontSize: 36,
-                color: AppColors.secondary,
-              ),
+            fontSize: 36,
+            color: AppColors.secondary,
+          ),
         ),
         const SizedBox(height: 8),
         if (comparison == null ||
             comparison.status == MorningReadyComparisonStatus.noData)
-          Text(
-            '比較データなし',
-            style: Theme.of(context).textTheme.labelMedium,
-          )
+          Text('比較データなし', style: Theme.of(context).textTheme.labelMedium)
         else
           _ComparisonText(comparison: comparison),
       ],
@@ -233,10 +220,7 @@ class _ComparisonText extends StatelessWidget {
     final average = comparison.averageMinutes;
     final diff = comparison.diffMinutes;
     if (average == null || diff == null) {
-      return Text(
-        '比較データなし',
-        style: Theme.of(context).textTheme.labelMedium,
-      );
+      return Text('比較データなし', style: Theme.of(context).textTheme.labelMedium);
     }
 
     return Wrap(
@@ -268,10 +252,7 @@ class _HistoryRow extends StatelessWidget {
   final MorningReadyRecord record;
   final MorningReadyComparison comparison;
 
-  const _HistoryRow({
-    required this.record,
-    required this.comparison,
-  });
+  const _HistoryRow({required this.record, required this.comparison});
 
   @override
   Widget build(BuildContext context) {
@@ -306,18 +287,18 @@ class _HistoryRow extends StatelessWidget {
                 Text(
                   diff == null ? '比較データなし' : formatDiffMinutes(diff),
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: AppColors.outline,
-                        fontSize: 12,
-                      ),
+                    color: AppColors.outline,
+                    fontSize: 12,
+                  ),
                 ),
               ],
             ),
           ),
           Text(
             formatMinutes(record.readyMinutes),
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
         ],
       ),
@@ -329,10 +310,7 @@ class _Pill extends StatelessWidget {
   final String label;
   final Color color;
 
-  const _Pill({
-    required this.label,
-    required this.color,
-  });
+  const _Pill({required this.label, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -345,9 +323,9 @@ class _Pill extends StatelessWidget {
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w700,
-            ),
+          color: color,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }
