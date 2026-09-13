@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
 import 'package:wo_read/common/add_record_button.dart';
 import 'package:wo_read/cook/screens/add_cook_button.dart';
 import 'package:wo_read/hair/hair.dart';
 import 'package:wo_read/hiragana/hiragana.dart';
 import 'package:wo_read/shape_move/shape_move.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key, required this.onSelectTab});
+@Preview(name: 'HomePage Preview')
+Widget homePagePreview() {
+  return const HomePage();
+}
 
-  final ValueChanged<int> onSelectTab;
+class HomePage extends StatelessWidget {
+  const HomePage({super.key, this.onSelectTab});
+
+  final ValueChanged<int>? onSelectTab;
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +29,14 @@ class HomePage extends StatelessWidget {
               title: '成長記録',
               subtitle: '今日のお子様の様子や活動を記録しましょう',
               icon: Icons.child_care,
-              onTap: () => onSelectTab(1),
+              onTap: () => onSelectTab?.call(1),
             ),
             const SizedBox(height: 12),
             _HeroCard(
               title: '料理・献立',
               subtitle: '作った料理を記録しましょう',
               icon: Icons.restaurant,
-              onTap: () => onSelectTab(2),
+              onTap: () => onSelectTab?.call(2),
             ),
             const SizedBox(height: 20),
             _FeatureGrid(
@@ -38,7 +44,7 @@ class HomePage extends StatelessWidget {
                 _FeatureItem(
                   label: 'ギャラリー',
                   icon: Icons.photo_library,
-                  onTap: () => onSelectTab(3),
+                  onTap: () => onSelectTab?.call(3),
                 ),
                 _FeatureItem(
                   label: 'ヘアカタログ',
