@@ -101,8 +101,8 @@ class _HeroCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: cs.primaryContainer.withOpacity(0.15),
-          border: Border.all(color: cs.primaryContainer.withOpacity(0.3)),
+          color: cs.primaryContainer.withValues(alpha: 0.15),
+          border: Border.all(color: cs.primaryContainer.withValues(alpha: 0.3)),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -111,7 +111,7 @@ class _HeroCard extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: cs.primaryContainer.withOpacity(0.3),
+                color: cs.primaryContainer.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: cs.primary, size: 28),
@@ -196,7 +196,7 @@ class _FeatureCell extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: cs.surfaceContainerLowest,
-          border: Border.all(color: cs.outlineVariant.withOpacity(0.4)),
+          border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.4)),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
