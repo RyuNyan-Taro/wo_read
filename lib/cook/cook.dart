@@ -1,12 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
 import 'package:wo_read/cook/models/cook_item.dart';
 import 'package:wo_read/cook/screens/add_cook_button.dart';
 import 'package:wo_read/cook/screens/cook_form_page.dart';
 import 'package:wo_read/cook/screens/cook_item_card.dart';
 import 'package:wo_read/cook/service/cook_service.dart';
 
+@Preview(name: 'CookBody Preview')
+Widget cookBodyPreview() {
+  return CookBodyView(
+    cooks: [
+      CookItem(
+        id: 1,
+        category: CookCategory.breakfast,
+        imageUrl: '',
+        date: DateTime(2026, 9, 13, 8, 0),
+        aiComment: '栄養満点でおいしそうな朝食ですね！',
+      ),
+      CookItem(
+        id: 2,
+        category: CookCategory.lunch,
+        imageUrl: '',
+        date: DateTime(2026, 9, 13, 12, 30),
+        aiComment: 'super beautiful!!!\nnyantaroaaaaaaaaaaaaaaaaaa',
+      ),
+      CookItem(
+        id: 3,
+        category: CookCategory.box,
+        imageUrl: '',
+        date: DateTime(2026, 9, 12, 12, 0),
+        aiComment: '色鮮やかでバランスの良いお弁当です。',
+      ),
+      CookItem(
+        id: 4,
+        category: CookCategory.dinner,
+        imageUrl: '',
+        date: DateTime(2026, 9, 11, 19, 0),
+      ),
+    ],
+  );
+}
+
 class CookBody extends StatefulWidget {
-  const CookBody({super.key});
+  final CookService? cookService;
+
+  const CookBody({super.key, this.cookService});
 
   @override
   State<CookBody> createState() => _CookBodyState();
@@ -16,6 +54,7 @@ class _CookBodyState extends State<CookBody> {
   static const _initialPageSize = 11;
   static const _pageSize = 10;
 
+  late final CookService _cookService;
   List<CookItem>? cooks;
   bool _isLoadingMoreCooks = false;
   bool _hasMoreCooks = true;
@@ -23,12 +62,12 @@ class _CookBodyState extends State<CookBody> {
   @override
   void initState() {
     super.initState();
+    _cookService = widget.cookService ?? CookService();
     _getCooks();
   }
 
   Future<void> _getCooks() async {
-    final CookService cookService = CookService();
-    final List<CookItem> items = await cookService.getCookUrls();
+    final List<CookItem> items = await _cookService.getCookUrls();
 
     if (!mounted) return;
 
@@ -49,7 +88,7 @@ class _CookBodyState extends State<CookBody> {
     });
 
     try {
-      final items = await CookService().getCookUrls(
+      final items = await _cookService.getCookUrls(
         offset: currentCooks.length,
         limit: _pageSize,
       );
@@ -70,11 +109,39 @@ class _CookBodyState extends State<CookBody> {
   }
 
   Future<void> _openDetail(CookItem cook) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => CookFormPage(item: cook)),
-    );
+    await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => CookFormPage(item: cook)));
     _getCooks();
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return CookBodyView(
+      cooks: cooks,
+      isLoadingMore: _isLoadingMoreCooks,
+      onLoadMore: _loadMoreCooks,
+      onTapCook: _openDetail,
+      onAddCook: _getCooks,
+    );
+  }
+}
+
+class CookBodyView extends StatelessWidget {
+  final List<CookItem>? cooks;
+  final bool isLoadingMore;
+  final VoidCallback? onLoadMore;
+  final ValueChanged<CookItem>? onTapCook;
+  final VoidCallback? onAddCook;
+
+  const CookBodyView({
+    super.key,
+    required this.cooks,
+    this.isLoadingMore = false,
+    this.onLoadMore,
+    this.onTapCook,
+    this.onAddCook,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +152,7 @@ class _CookBodyState extends State<CookBody> {
             : NotificationListener<ScrollNotification>(
                 onNotification: (notification) {
                   if (notification.metrics.extentAfter < 200) {
-                    _loadMoreCooks();
+                    onLoadMore?.call();
                   }
                   return false;
                 },
@@ -95,7 +162,7 @@ class _CookBodyState extends State<CookBody> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ..._bentoGrid(cooks!),
-                      if (_isLoadingMoreCooks)
+                      if (isLoadingMore)
                         const Padding(
                           padding: EdgeInsets.only(top: 24),
                           child: Center(child: CircularProgressIndicator()),
@@ -107,7 +174,7 @@ class _CookBodyState extends State<CookBody> {
         Positioned(
           right: 16,
           bottom: 20,
-          child: addCookButton(context: context, returnAction: _getCooks),
+          child: addCookButton(context: context, returnAction: onAddCook),
         ),
       ],
     );
@@ -152,7 +219,7 @@ class _CookBodyState extends State<CookBody> {
   Widget _tappableCard(CookItem cook, {required bool isFeatured}) {
     return InkWell(
       borderRadius: BorderRadius.circular(isFeatured ? 24 : 16),
-      onTap: () => _openDetail(cook),
+      onTap: () => onTapCook?.call(cook),
       child: CookItemCard(cook: cook, isFeatured: isFeatured),
     );
   }
